@@ -1,4 +1,3 @@
-import Head from "next/head";
 import type { PageProps } from "@/app/utils/ts/definitions";
 
 const FullPageLayout = ({ children }: PageProps) => (
