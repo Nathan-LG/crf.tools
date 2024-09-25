@@ -1,7 +1,6 @@
 "use server";
 
 import { signIn } from "@/auth";
-import { cookies } from "next/headers";
 
 export const handleGoogleSignIn = async () => {
   try {
@@ -9,8 +8,4 @@ export const handleGoogleSignIn = async () => {
   } catch (error) {
     throw error;
   }
-};
-
-export const isConnected = () => {
-  return cookies().get("authjs.session-token") !== undefined;
 };

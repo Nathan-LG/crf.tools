@@ -1,7 +1,5 @@
 import { auth } from "@/auth";
 import { prisma } from "@/prisma";
-import { IconLogout } from "@tabler/icons-react";
-import { signOut } from "next-auth/react";
 import Image from "next/image";
 import { SignOutButton } from "@/components/SignOutButton";
 
