@@ -2,6 +2,7 @@ import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@/prisma";
+import { Prisma } from "@prisma/client";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PrismaAdapter(prisma),
@@ -22,16 +23,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async jwt({ token, user, session, trigger }) {
       if (trigger === "update" && session?.name !== token.name) {
         token.name = session.name;
-
-        try {
-          console.log(session);
-        } catch (error) {
-          console.error("Failed to set user name:", error);
-        }
       }
 
       if (user) {
-        console.log("Token cleared");
+        const deletedSessions: Prisma.BatchPayload =
+          await prisma.session.deleteMany({
+            where: {
+              expires: {
+                lt: new Date(),
+              },
+            },
+          });
+
         return {
           ...token,
           id: user.id,
@@ -41,7 +44,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
 
     async session({ session, token }) {
-      console.log("session callback", { session, token });
       return {
         ...session,
         user: {
