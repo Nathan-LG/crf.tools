@@ -12,7 +12,7 @@ const Dashboard = async () => {
       <Head>
         <meta charSet="utf-8" />
       </Head>
-      <PageLayout></PageLayout>
+      <PageLayout pageGroup="dashboard"></PageLayout>
     </div>
   );
 };

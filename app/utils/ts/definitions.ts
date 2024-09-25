@@ -8,5 +8,5 @@ export type User = {
 
 export type PageProps = {
   children?: ReactNode;
-  title?: string;
+  pageGroup?: string;
 };

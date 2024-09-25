@@ -2,8 +2,19 @@ import { auth } from "@/auth";
 import { prisma } from "@/prisma";
 import Image from "next/image";
 import { SignOutButton } from "@/components/SignOutButton";
+import {
+  IconBandage,
+  IconBriefcase2,
+  IconBuildingWarehouse,
+  IconHome,
+  IconReplace,
+  IconSettings,
+  IconUsers,
+} from "@tabler/icons-react";
+import Link from "next/link";
+import clsx from "clsx";
 
-async function Header() {
+async function Header({ pageGroup }) {
   const session = await auth();
 
   const user = await prisma.user.findUnique({
@@ -54,6 +65,111 @@ async function Header() {
                 </div>
               </a>
               <SignOutButton />
+            </div>
+          </div>
+        </div>
+      </header>
+      <header className="navbar-expand-md">
+        <div className="collapse navbar-collapse" id="navbar-menu">
+          <div className="navbar">
+            <div className="container-xl">
+              <div className="row flex-fill align-items-center">
+                <div className="col">
+                  <ul className="navbar-nav">
+                    <li
+                      className={clsx(
+                        "nav-item",
+                        pageGroup === "dashboard" && "active",
+                      )}
+                    >
+                      <a className="nav-link" href="/dashboard">
+                        <span className="nav-link-icon d-md-none d-lg-inline-block">
+                          <IconHome className="Icon" />
+                        </span>
+                        <span className="nav-link-title">Dashboard</span>
+                      </a>
+                    </li>
+                    <li
+                      className={clsx(
+                        "nav-item",
+                        pageGroup === "locations" && "active",
+                      )}
+                    >
+                      <Link className="nav-link" href="/dashboard/locations">
+                        <span className="nav-link-icon d-md-none d-lg-inline-block">
+                          <IconBuildingWarehouse className="Icon" />
+                        </span>
+                        <span className="nav-link-title">Emplacements</span>
+                      </Link>
+                    </li>
+                    <li
+                      className={clsx(
+                        "nav-item",
+                        pageGroup === "items" && "active",
+                      )}
+                    >
+                      <Link className="nav-link" href="/dashboard/items">
+                        <span className="nav-link-icon d-md-none d-lg-inline-block">
+                          <IconBandage className="Icon" />
+                        </span>
+                        <span className="nav-link-title">Consommables</span>
+                      </Link>
+                    </li>
+                    <li
+                      className={clsx(
+                        "nav-item",
+                        pageGroup === "movements" && "active",
+                      )}
+                    >
+                      <Link className="nav-link" href="/dashboard/movements">
+                        <span className="nav-link-icon d-md-none d-lg-inline-block">
+                          <IconReplace className="Icon" />
+                        </span>
+                        <span className="nav-link-title">Mouvements</span>
+                      </Link>
+                    </li>
+                    <li
+                      className={clsx(
+                        "nav-item",
+                        pageGroup === "missions" && "active",
+                      )}
+                    >
+                      <Link className="nav-link" href="/dashboard/missions">
+                        <span className="nav-link-icon d-md-none d-lg-inline-block">
+                          <IconBriefcase2 className="Icon" />
+                        </span>
+                        <span className="nav-link-title">Missions</span>
+                      </Link>
+                    </li>
+                    <li
+                      className={clsx(
+                        "nav-item",
+                        pageGroup === "userse" && "active",
+                      )}
+                    >
+                      <Link className="nav-link" href="/dashboard/users">
+                        <span className="nav-link-icon d-md-none d-lg-inline-block">
+                          <IconUsers className="Icon" />
+                        </span>
+                        <span className="nav-link-title">Secouristes</span>
+                      </Link>
+                    </li>
+                    <li
+                      className={clsx(
+                        "nav-item",
+                        pageGroup === "admin" && "active",
+                      )}
+                    >
+                      <Link className="nav-link" href="/dashboard/admin">
+                        <span className="nav-link-icon d-md-none d-lg-inline-block">
+                          <IconSettings className="Icon" />
+                        </span>
+                        <span className="nav-link-title">Administration</span>
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </div>
           </div>
         </div>
