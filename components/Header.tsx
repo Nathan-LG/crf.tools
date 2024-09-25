@@ -36,14 +36,14 @@ async function Header({ pageGroup }) {
       <header className="navbar navbar-expand-sm navbar-light d-print-none">
         <div className="container-xl">
           <h1 className="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3">
-            <a href="#">
+            <Link href="/dashboard">
               <Image
                 src="/stockcrf.svg"
                 alt="stock.crf"
                 width="187"
                 height="32"
               />
-            </a>
+            </Link>
           </h1>
 
           <div className="navbar-nav flex-row order-md-last">
@@ -82,12 +82,12 @@ async function Header({ pageGroup }) {
                         pageGroup === "dashboard" && "active",
                       )}
                     >
-                      <a className="nav-link" href="/dashboard">
+                      <Link className="nav-link" href="/dashboard">
                         <span className="nav-link-icon d-md-none d-lg-inline-block">
                           <IconHome className="Icon" />
                         </span>
                         <span className="nav-link-title">Dashboard</span>
-                      </a>
+                      </Link>
                     </li>
                     <li
                       className={clsx(

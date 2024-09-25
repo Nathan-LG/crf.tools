@@ -1,19 +1,17 @@
-import Head from "next/head";
-import PageLayout from "@/components/PageLayout";
 import type { Metadata } from "next";
+import ContentLayout from "@/components/ContentLayout";
 
 export const metadata: Metadata = {
   title: "Dashboard",
 };
 
-const Dashboard = async () => {
-  return (
-    <div>
-      <Head>
-        <meta charSet="utf-8" />
-      </Head>
-      <PageLayout pageGroup="dashboard"></PageLayout>
-    </div>
-  );
+const pageData = {
+  ariane: [{ label: "stock.crf", href: "/dashboard" }],
+  title: "Dashboard",
+  button: "",
+  buttonIcon: undefined,
+  buttonLink: "",
 };
+
+const Dashboard = () => <ContentLayout pageData={pageData}></ContentLayout>;
 export default Dashboard;

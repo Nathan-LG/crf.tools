@@ -10,6 +10,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   session: {
     strategy: "jwt",
   },
+  debug: process.env.NODE_ENV === "development",
 
   callbacks: {
     async signIn({ account, profile }) {
