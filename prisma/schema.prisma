@@ -13,6 +13,10 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// ------------------------------------------------------
+// Users and Groups
+// ------------------------------------------------------
+
 model User {
   id            String    @id @default(cuid())
   name          String?
@@ -75,4 +79,56 @@ model VerificationToken {
   expires    DateTime
 
   @@id([identifier, token])
+}
+
+// ------------------------------------------------------
+// Locations and Items
+// ------------------------------------------------------
+
+model LocationType {
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String?
+
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  Location  Location[]
+}
+
+model Location {
+  id          Int          @id @default(autoincrement())
+  name        String
+  description String?
+  type        LocationType @relation(fields: [locationTypeId], references: [id])
+
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  LocationItem   LocationItem[]
+  locationTypeId Int
+}
+
+model Item {
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String?
+  image       String?
+  lotA        Int
+  lotB        Int
+  lotC        Int
+  vpsp        Int
+
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  LocationItem LocationItem[]
+}
+
+model LocationItem {
+  locationId Int
+  itemId     Int
+  count      Int @default(0)
+
+  location Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  item     Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@id([locationId, itemId])
 }
