@@ -40,8 +40,19 @@ async function Header({ pageGroup }) {
 
   return (
     <div className="page">
-      <header className="navbar navbar-expand-sm navbar-light d-print-none">
+      <header className="navbar navbar-expand-md navbar-light d-print-none">
         <div className="container-xl">
+          <button
+            className="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbar-menu"
+            aria-controls="navbar-menu"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span className="navbar-toggler-icon"></span>
+          </button>
           <h1 className="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3">
             <Link href="/dashboard">
               <Image
@@ -49,6 +60,7 @@ async function Header({ pageGroup }) {
                 alt="stock.crf"
                 width="187"
                 height="32"
+                priority={true}
               />
             </Link>
           </h1>
