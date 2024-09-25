@@ -6,16 +6,20 @@ import {
   IconBandage,
   IconBriefcase2,
   IconBuildingWarehouse,
-  IconHome,
+  IconHeartbeat,
   IconReplace,
   IconSettings,
   IconUsers,
 } from "@tabler/icons-react";
 import Link from "next/link";
 import clsx from "clsx";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
 async function Header({ pageGroup }) {
   const session = await auth();
+
+  if (!session) redirect("/auth/signin");
 
   const user = await prisma.user.findUnique({
     where: {
@@ -30,6 +34,9 @@ async function Header({ pageGroup }) {
       },
     },
   });
+
+  const fullPath = headers().get("x-current-path");
+  console.log(fullPath);
 
   return (
     <div className="page">
@@ -76,25 +83,15 @@ async function Header({ pageGroup }) {
               <div className="row flex-fill align-items-center">
                 <div className="col">
                   <ul className="navbar-nav">
-                    <li
-                      className={clsx(
-                        "nav-item",
-                        pageGroup === "dashboard" && "active",
-                      )}
-                    >
+                    <li className="nav-item">
                       <Link className="nav-link" href="/dashboard">
                         <span className="nav-link-icon d-md-none d-lg-inline-block">
-                          <IconHome className="Icon" />
+                          <IconHeartbeat className="Icon" />
                         </span>
                         <span className="nav-link-title">Dashboard</span>
                       </Link>
                     </li>
-                    <li
-                      className={clsx(
-                        "nav-item",
-                        pageGroup === "locations" && "active",
-                      )}
-                    >
+                    <li className="nav-item">
                       <Link className="nav-link" href="/dashboard/locations">
                         <span className="nav-link-icon d-md-none d-lg-inline-block">
                           <IconBuildingWarehouse className="Icon" />
@@ -102,12 +99,7 @@ async function Header({ pageGroup }) {
                         <span className="nav-link-title">Emplacements</span>
                       </Link>
                     </li>
-                    <li
-                      className={clsx(
-                        "nav-item",
-                        pageGroup === "items" && "active",
-                      )}
-                    >
+                    <li className="nav-item">
                       <Link className="nav-link" href="/dashboard/items">
                         <span className="nav-link-icon d-md-none d-lg-inline-block">
                           <IconBandage className="Icon" />
@@ -115,12 +107,7 @@ async function Header({ pageGroup }) {
                         <span className="nav-link-title">Consommables</span>
                       </Link>
                     </li>
-                    <li
-                      className={clsx(
-                        "nav-item",
-                        pageGroup === "movements" && "active",
-                      )}
-                    >
+                    <li className="nav-item">
                       <Link className="nav-link" href="/dashboard/movements">
                         <span className="nav-link-icon d-md-none d-lg-inline-block">
                           <IconReplace className="Icon" />
@@ -128,12 +115,7 @@ async function Header({ pageGroup }) {
                         <span className="nav-link-title">Mouvements</span>
                       </Link>
                     </li>
-                    <li
-                      className={clsx(
-                        "nav-item",
-                        pageGroup === "missions" && "active",
-                      )}
-                    >
+                    <li className="nav-item">
                       <Link className="nav-link" href="/dashboard/missions">
                         <span className="nav-link-icon d-md-none d-lg-inline-block">
                           <IconBriefcase2 className="Icon" />
@@ -141,12 +123,7 @@ async function Header({ pageGroup }) {
                         <span className="nav-link-title">Missions</span>
                       </Link>
                     </li>
-                    <li
-                      className={clsx(
-                        "nav-item",
-                        pageGroup === "userse" && "active",
-                      )}
-                    >
+                    <li className="nav-item">
                       <Link className="nav-link" href="/dashboard/users">
                         <span className="nav-link-icon d-md-none d-lg-inline-block">
                           <IconUsers className="Icon" />
@@ -154,12 +131,7 @@ async function Header({ pageGroup }) {
                         <span className="nav-link-title">Secouristes</span>
                       </Link>
                     </li>
-                    <li
-                      className={clsx(
-                        "nav-item",
-                        pageGroup === "admin" && "active",
-                      )}
-                    >
+                    <li className="nav-item">
                       <Link className="nav-link" href="/dashboard/admin">
                         <span className="nav-link-icon d-md-none d-lg-inline-block">
                           <IconSettings className="Icon" />
