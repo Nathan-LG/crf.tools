@@ -6,6 +6,8 @@ import "@tabler/core/dist/css/tabler.min.css";
 import Script from "next/script";
 import type { Metadata } from "next";
 
+import { SessionProvider } from "next-auth/react";
+
 export const metadata: Metadata = {
   title: {
     template: "%s - stock.crf",
@@ -15,10 +17,12 @@ export const metadata: Metadata = {
 
 const RootLayout = ({ children }: PageProps) => (
   <html lang="fr">
-    <body>
-      <main>{children}</main>
-      <Script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/js/tabler.min.js" />
-    </body>
+    <SessionProvider>
+      <body>
+        <main>{children}</main>
+        <Script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/js/tabler.min.js" />
+      </body>
+    </SessionProvider>
   </html>
 );
 

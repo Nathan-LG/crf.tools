@@ -4,10 +4,12 @@
     "build": "next build",
     "dev": "next dev",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "preinstall": "npx only-allow pnpm"
   },
   "dependencies": {
-    "@prisma/client": "^5.19.1",
+    "@auth/prisma-adapter": "^2.5.0",
+    "@prisma/client": "^5.20.0",
     "@tabler/core": "^1.0.0-beta21",
     "@tabler/icons": "^3.17.0",
     "@tabler/icons-react": "^3.17.0",

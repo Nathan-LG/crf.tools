@@ -4,19 +4,33 @@ import google from "next-auth/providers/google";
 export const authConfig = {
   pages: {
     signIn: "/login",
+    signOut: "/logout",
   },
+
   callbacks: {
-    authorized({ auth, request: { nextUrl } }) {
-      const isLoggedIn = !!auth?.user;
-      const isOnDashboard = nextUrl.pathname.startsWith("/dashboard");
-      if (isOnDashboard) {
-        if (isLoggedIn) return true;
-        return false; // Redirect unauthenticated users to login page
-      } else if (isLoggedIn) {
-        return Response.redirect(new URL("/dashboard", nextUrl));
+    async session({ session, token }) {
+      try {
+        if (session.user) {
+          session.user.id = token.sub as string;
+        }
+        return session;
+      } catch (error) {
+        console.error("Error in session callback:", error);
+        throw error;
       }
-      return true;
+    },
+
+    async redirect({ url, baseUrl }) {
+      try {
+        if (url.startsWith(baseUrl)) return url;
+        else if (url.startsWith("/")) return new URL(url, baseUrl).toString();
+        return baseUrl;
+      } catch (error) {
+        console.error("Error in redirect callback:", error);
+        throw error;
+      }
     },
   },
+
   providers: [google],
 } satisfies NextAuthConfig;
