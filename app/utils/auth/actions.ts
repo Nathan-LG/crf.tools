@@ -14,7 +14,6 @@ export const handleGoogleSignOut = async () => {
   try {
     await signOut({ redirectTo: "/auth/signin" });
   } catch (error) {
-    console.log(error);
     throw error;
   }
 };

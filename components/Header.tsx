@@ -13,7 +13,6 @@ import {
   IconUsers,
 } from "@tabler/icons-react";
 import Link from "next/link";
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 async function Header() {
@@ -34,9 +33,6 @@ async function Header() {
       },
     },
   });
-
-  const fullPath = headers().get("x-current-path");
-  console.log(fullPath);
 
   return (
     <div className="page">
