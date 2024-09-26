@@ -1,8 +1,10 @@
 # stock.crf
 
-![Logo stock.crf](https://raw.githubusercontent.com/Nathan-LG/stock.crf/refs/heads/main/public/stockcrf.svg)
+<p align="center">
+![Logo stock.crf](public/stockcrf.svg)
+</p>
 
-Application de gestion des stocks faite pour les Unités Locales de la [Croix-Rouge française](https://croix-rouge.fr).
+Application de gestion des stocks pour les Unités Locales de la [Croix-Rouge française](https://croix-rouge.fr).
 
 ## Installation
 
