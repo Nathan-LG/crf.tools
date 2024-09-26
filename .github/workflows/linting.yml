@@ -16,6 +16,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install
       - name: Run ESLint
-        run: eslint . --ext .js,.jsx,.ts,.tsx
+        run: pnpm lint
       - name: Run Prettier
         run: pnpm prettier:check
+        if: success() || failure()
