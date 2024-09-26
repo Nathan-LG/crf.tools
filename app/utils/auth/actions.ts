@@ -1,7 +1,6 @@
 "use server";
 
 import { signIn, signOut } from "@/auth";
-import { redirect } from "next/navigation";
 
 export const handleGoogleSignIn = async () => {
   try {

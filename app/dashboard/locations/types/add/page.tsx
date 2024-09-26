@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import ContentLayout from "@/components/ContentLayout";
-import { prisma } from "@/prisma";
-import { Icon12Hours } from "@tabler/icons-react";
 
 export const metadata: Metadata = {
   title: "Ajouter une catégorie d'emplacement",
@@ -21,12 +19,6 @@ const pageData = {
 };
 
 const AddLocationType = async () => {
-  const categories = await prisma.locationType.findMany({
-    select: {
-      name: true,
-    },
-  });
-
   return (
     <ContentLayout pageData={pageData}>
       <form>
@@ -36,11 +28,11 @@ const AddLocationType = async () => {
               <div className="card-body">
                 <div className="row">
                   <h3 className="card-title">
-                    Nouvelle catégorie d'emplacement de stockage
+                    Nouvelle catégorie d&apos;emplacement de stockage
                   </h3>
                   <p className="card-subtitle">
-                    Une catégorie représente un type d'emplacement de stockage,
-                    comme un local.
+                    Une catégorie représente un type d&apos;emplacement de
+                    stockage, comme un local.
                   </p>
                   <div className="col-xl-6 col-sm-12">
                     <div className="mb-3">

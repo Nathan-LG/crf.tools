@@ -16,7 +16,7 @@ import Link from "next/link";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
-async function Header({ pageGroup }) {
+async function Header() {
   const session = await auth();
 
   if (!session) redirect("/auth/signin");
