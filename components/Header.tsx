@@ -7,12 +7,12 @@ import {
   IconBriefcase2,
   IconBuildingWarehouse,
   IconHeartbeat,
+  IconPlus,
   IconReplace,
   IconSettings,
   IconUsers,
 } from "@tabler/icons-react";
 import Link from "next/link";
-import clsx from "clsx";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -103,13 +103,39 @@ async function Header({ pageGroup }) {
                         <span className="nav-link-title">Dashboard</span>
                       </Link>
                     </li>
-                    <li className="nav-item">
-                      <Link className="nav-link" href="/dashboard/locations">
+                    <li className="nav-item dropdown">
+                      <a
+                        className="nav-link"
+                        data-bs-toggle="dropdown"
+                        role="button"
+                      >
                         <span className="nav-link-icon d-md-none d-lg-inline-block">
                           <IconBuildingWarehouse className="Icon" />
                         </span>
                         <span className="nav-link-title">Emplacements</span>
-                      </Link>
+                      </a>
+                      <div className="dropdown-menu dropdown-menu-start">
+                        <Link
+                          className="dropdown-item"
+                          href="/dashboard/locations"
+                        >
+                          Liste
+                        </Link>
+                        <Link
+                          className="dropdown-item"
+                          href="/dashboard/locations/types"
+                        >
+                          Catégories
+                        </Link>
+                        <div className="dropdown-divider"></div>
+                        <Link
+                          className="dropdown-item"
+                          href="/dashboard/locations/add"
+                        >
+                          <IconPlus className="icon dropdown-item-icon" />{" "}
+                          Emplacement
+                        </Link>
+                      </div>
                     </li>
                     <li className="nav-item">
                       <Link className="nav-link" href="/dashboard/items">
