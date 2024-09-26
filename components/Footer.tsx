@@ -1,3 +1,5 @@
+import { IconHeartFilled, IconMugFilled } from "@tabler/icons-react";
+
 const Footer = () => (
   <footer className="footer footer-transparent d-print-none">
     <div className="container-xl">
@@ -19,7 +21,25 @@ const Footer = () => (
         <div className="col-12 col-lg-auto mt-3 mt-lg-0">
           <ul className="list-inline list-inline-dots mb-0">
             <li className="list-inline-item">
-              stock.crf, pour la Croix-Rouge française
+              stock.crf, pour la{" "}
+              <a
+                href="https://croix-rouge.fr"
+                target="_blank"
+                className="link-secondary"
+              >
+                Croix-Rouge française
+              </a>
+            </li>
+            <li className="list-inline-item">
+              Fait avec <IconHeartFilled className="icon" /> (et{" "}
+              <IconMugFilled className="icon" />) par{" "}
+              <a
+                href="https://github.com/Nathan-LG"
+                target="_blank"
+                className="link-secondary"
+              >
+                Nathan-LG
+              </a>
             </li>
           </ul>
         </div>
