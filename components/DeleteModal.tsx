@@ -1,13 +1,19 @@
 "use client";
 
-import type { PageProps } from "@/app/utils/ts/definitions";
+import toast from "@/app/utils/ui/actions";
 import { IconAlertTriangle } from "@tabler/icons-react";
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import Toastify from "toastify-js";
 
-const DeleteModal = ({ pageData }: PageProps) => {
+type ModalForm = {
+  id: number;
+  url: string;
+  alert: string;
+  message: string;
+};
+
+const DeleteModal = (modalParams: ModalForm) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
 
@@ -15,45 +21,31 @@ const DeleteModal = ({ pageData }: PageProps) => {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${pageData.url}${pageData.id}`, {
+      const response = await fetch(`${modalParams.url}${modalParams.id}`, {
         method: "DELETE",
       });
 
       const data = await response.json();
 
       if (!data.success) {
-        Toastify({
-          text: data.error.message,
-          duration: 3000,
-          style: {
-            background: "linear-gradient(to right, #d63939, #c94f4f)",
-          },
-        }).showToast();
+        toast(true, data.error.message);
       } else {
-        Toastify({
-          text: "Catégorie d'emplacement supprimée avec succès",
-          duration: 3000,
-          style: {
-            background: "linear-gradient(to right, #74b816, #75ad26)",
-          },
-        }).showToast();
+        toast(false, modalParams.message);
       }
     } catch (error) {
-      Toastify({
-        text: error.message,
-        duration: 3000,
-        style: {
-          background: "linear-gradient(to left, #d63939, #c94f4f)",
-        },
-      }).showToast();
+      toast(true, error.message);
     }
     setIsLoading(false);
-    document.getElementById(`close-modal-${pageData.id}`).click();
+    document.getElementById(`close-modal-delete-${modalParams.id}`).click();
     router.refresh();
   };
 
   return (
-    <div className="modal" key={pageData.id} id={"modal-" + pageData.id}>
+    <div
+      className="modal"
+      key={modalParams.id}
+      id={"modal-delete-" + modalParams.id}
+    >
       <div className="modal-dialog modal-sm" role="document">
         <div className="modal-content">
           <button
@@ -66,7 +58,7 @@ const DeleteModal = ({ pageData }: PageProps) => {
           <div className="modal-body text-center py-4">
             <IconAlertTriangle className="icon mb-2 text-danger icon-lg" />
             <h3>&Ecirc;tes-vous sûr ?</h3>
-            <div className="text-secondary">{pageData.alert}</div>
+            <div className="text-secondary">{modalParams.alert}</div>
           </div>
           <div className="modal-footer">
             <div className="w-100">
@@ -76,7 +68,7 @@ const DeleteModal = ({ pageData }: PageProps) => {
                     href="#"
                     className="btn w-100"
                     data-bs-dismiss="modal"
-                    id={"close-modal-" + pageData.id}
+                    id={"close-modal-delete-" + modalParams.id}
                   >
                     Annuler
                   </a>

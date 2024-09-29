@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import ContentLayout from "@/components/ContentLayout";
 import { IconMoodEmpty, IconPlus } from "@tabler/icons-react";
 import { prisma } from "@/prisma";
-import Link from "next/link";
 import DeleteModal from "@/components/DeleteModal";
+import EditLocationTypeForm from "@/components/EditLocationTypeModal";
 
 export const metadata: Metadata = {
   title: "Catégories d'emplacements",
@@ -85,14 +85,18 @@ const LocationsType = async () => {
                       </td>
                       <td>
                         <div className="btn-list flex-nowrap">
-                          <Link href="#" className="btn">
+                          <button
+                            className="btn"
+                            data-bs-toggle="modal"
+                            data-bs-target={"#modal-edit-" + locationType.id}
+                          >
                             &Eacute;diter
-                          </Link>
+                          </button>
                           <button
                             type="button"
                             className="btn"
                             data-bs-toggle="modal"
-                            data-bs-target={"#modal-" + locationType.id}
+                            data-bs-target={"#modal-delete-" + locationType.id}
                           >
                             Supprimer
                           </button>
@@ -105,16 +109,26 @@ const LocationsType = async () => {
             </div>
           </div>
         </div>
+
         {locationsType.map((locationType) => (
-          <DeleteModal
-            key={locationType.id}
-            pageData={{
-              id: locationType.id,
-              alert: "Cela supprimera aussi tous les emplacements de ce type.",
-              message: "Catégorie supprimée avec succès",
-              url: "/api/locations/types/",
-            }}
-          />
+          <>
+            <EditLocationTypeForm
+              id={locationType.id}
+              name={locationType.name}
+              description={locationType.description}
+              icon={locationType.icon}
+              createdAt={undefined}
+              updatedAt={undefined}
+            />
+
+            <DeleteModal
+              key={locationType.id}
+              id={locationType.id}
+              alert="Cela supprimera aussi tous les emplacements de ce type."
+              message="Catégorie supprimée avec succès"
+              url="/api/locations/types/"
+            />
+          </>
         ))}
       </ContentLayout>
     );

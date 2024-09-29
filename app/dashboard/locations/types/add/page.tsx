@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import ContentLayout from "@/components/ContentLayout";
-import AddLocationTypeForm from "./form";
+import AddLocationTypeForm from "@/components/AddLocationTypeForm";
 
 export const metadata: Metadata = {
   title: "Ajouter une catégorie d'emplacement",
