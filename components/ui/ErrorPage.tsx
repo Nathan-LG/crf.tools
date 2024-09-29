@@ -1,4 +1,4 @@
-import FullPageLayout from "@/components/FullPageLayout";
+import FullPageLayout from "@/components/ui/FullPageLayout";
 
 function ErrorPage({ error }) {
   return (

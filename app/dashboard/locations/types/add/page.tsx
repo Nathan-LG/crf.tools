@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import ContentLayout from "@/components/ContentLayout";
-import AddLocationTypeForm from "@/components/AddLocationTypeForm";
+import ContentLayout from "@/components/ui/ContentLayout";
+import AddLocationTypeForm from "@/components/locationType/AddLocationTypeForm";
 
 export const metadata: Metadata = {
   title: "Ajouter une catégorie d'emplacement",
@@ -21,7 +21,7 @@ const pageData = {
 
 const AddLocationType = async () => {
   return (
-    <ContentLayout pageData={pageData}>
+    <ContentLayout subHeaderProps={pageData}>
       <AddLocationTypeForm />
     </ContentLayout>
   );

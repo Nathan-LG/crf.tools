@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import ContentLayout from "@/components/ContentLayout";
+import ContentLayout from "@/components/ui/ContentLayout";
 import { prisma } from "@/prisma";
 import { Icon12Hours } from "@tabler/icons-react";
 
@@ -29,7 +29,7 @@ const AddLocation = async () => {
   });
 
   return (
-    <ContentLayout pageData={pageData}>
+    <ContentLayout subHeaderProps={pageData}>
       <form>
         <div className="row row-cards">
           <div className="col-12">

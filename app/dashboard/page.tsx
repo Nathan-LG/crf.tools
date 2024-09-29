@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import ContentLayout from "@/components/ContentLayout";
+import ContentLayout from "@/components/ui/ContentLayout";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -13,5 +13,7 @@ const pageData = {
   buttonLink: "",
 };
 
-const Dashboard = () => <ContentLayout pageData={pageData}></ContentLayout>;
+const Dashboard = () => (
+  <ContentLayout subHeaderProps={pageData}></ContentLayout>
+);
 export default Dashboard;

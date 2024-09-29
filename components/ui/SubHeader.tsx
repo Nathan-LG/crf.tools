@@ -2,7 +2,7 @@ import clsx from "clsx";
 import Link from "next/link";
 import { ReactElement } from "react";
 
-type SubHeaderProps = {
+export type SubHeaderProps = {
   ariane: Array<{ label: string; href: string }>;
   title: string;
   button: string;

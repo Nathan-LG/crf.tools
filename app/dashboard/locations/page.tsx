@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import ContentLayout from "@/components/ContentLayout";
+import ContentLayout from "@/components/ui/ContentLayout";
 import { IconPlus } from "@tabler/icons-react";
 
 export const metadata: Metadata = {
@@ -17,5 +17,7 @@ const pageData = {
   buttonLink: "/dashboard/locations/add",
 };
 
-const Locations = () => <ContentLayout pageData={pageData}></ContentLayout>;
+const Locations = () => (
+  <ContentLayout subHeaderProps={pageData}></ContentLayout>
+);
 export default Locations;

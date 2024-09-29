@@ -1,5 +1,5 @@
 import Head from "next/head";
-import PageLayout from "@/components/PageLayout";
+import PageLayout from "@/components/ui/PageLayout";
 import { PageProps } from "@/app/utils/ts/definitions";
 
 const Dashboard = ({ children }: PageProps) => {

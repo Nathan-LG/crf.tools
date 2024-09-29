@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
 import { prisma } from "@/prisma";
 import Image from "next/image";
-import { SignOutButton } from "@/components/SignOutButton";
+import { SignOutButton } from "@/components/auth/SignOutButton";
 import {
   IconBandage,
   IconBriefcase2,

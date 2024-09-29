@@ -1,11 +1,11 @@
 "use client";
 
 import Head from "next/head";
-import FullPageLayout from "@/components/FullPageLayout";
+import FullPageLayout from "@/components/ui/FullPageLayout";
 import { IconExclamationCircle } from "@tabler/icons-react";
 import Image from "next/image";
 
-import { SignInButton } from "@/components/SignInButton";
+import { SignInButton } from "@/components/auth/SignInButton";
 import { useSearchParams } from "next/navigation";
 
 function Login() {

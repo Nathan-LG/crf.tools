@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import ContentLayout from "@/components/ContentLayout";
+import ContentLayout from "@/components/ui/ContentLayout";
 import { IconMoodEmpty, IconPlus } from "@tabler/icons-react";
 import { prisma } from "@/prisma";
-import DeleteModal from "@/components/DeleteModal";
-import EditLocationTypeForm from "@/components/EditLocationTypeModal";
+import DeleteModal from "@/components/ui/DeleteModal";
+import EditLocationTypeForm from "@/components/locationType/EditLocationTypeModal";
 
 export const metadata: Metadata = {
   title: "Catégories d'emplacements",
@@ -33,7 +33,7 @@ const LocationsType = async () => {
 
   if (locationsType.length === 0) {
     return (
-      <ContentLayout pageData={pageData}>
+      <ContentLayout subHeaderProps={pageData}>
         <div className="col-12">
           <div className="card">
             <div className="empty">
@@ -52,7 +52,7 @@ const LocationsType = async () => {
     );
   } else {
     return (
-      <ContentLayout pageData={pageData}>
+      <ContentLayout subHeaderProps={pageData}>
         <div className="col-12">
           <div className="card">
             <div className="table-responsive">
