@@ -3,9 +3,8 @@
 import type { PageProps } from "@/app/utils/ts/definitions";
 import { IconAlertTriangle } from "@tabler/icons-react";
 import clsx from "clsx";
-import { revalidatePath } from "next/cache";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Toastify from "toastify-js";
 
 const DeleteModal = ({ pageData }: PageProps) => {
@@ -32,7 +31,7 @@ const DeleteModal = ({ pageData }: PageProps) => {
         }).showToast();
       } else {
         Toastify({
-          text: pageData.message,
+          text: "Catégorie d'emplacement supprimée avec succès",
           duration: 3000,
           style: {
             background: "linear-gradient(to right, #74b816, #75ad26)",

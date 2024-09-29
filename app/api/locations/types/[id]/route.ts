@@ -1,5 +1,4 @@
 import { prisma } from "@/prisma";
-import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function DELETE(
@@ -16,19 +15,18 @@ export async function DELETE(
     return new NextResponse(
       JSON.stringify({
         success: false,
-        message: "Category deleted successfully",
+        error: { message: error.message },
       }),
-      {
-        status: 200,
-      },
+      { status: 400 },
     );
   }
-
   return new NextResponse(
     JSON.stringify({
       success: true,
-      error: { message: "Unknown category id" },
+      message: "Category deleted successfully",
     }),
-    { status: 400 },
+    {
+      status: 200,
+    },
   );
 }
