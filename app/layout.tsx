@@ -2,6 +2,9 @@ import { PageProps } from "@/app/utils/ts/definitions";
 
 import "@/app/utils/styles/globals.css";
 import "@tabler/core/dist/css/tabler.min.css";
+import "@tabler/icons-webfont/dist/tabler-icons.css";
+
+import "toastify-js/src/toastify.css";
 
 import Script from "next/script";
 import type { Metadata } from "next";

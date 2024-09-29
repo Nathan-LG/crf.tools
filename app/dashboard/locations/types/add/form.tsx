@@ -2,6 +2,7 @@
 
 import { IconExclamationCircle } from "@tabler/icons-react";
 import clsx from "clsx";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -9,24 +10,29 @@ const AddLocationTypeForm = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
+  const router = useRouter();
+
   async function onSubmit(data) {
     setIsLoading(true);
     setError(null);
-
-    console.log(errors);
 
     const formData = data;
 
     try {
       const response = await fetch("/api/locations/types", {
         method: "POST",
-        body: formData,
+        body: new URLSearchParams(formData),
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
       });
 
       const data = await response.json();
 
       if (!data.success) {
         setError(data.error.message);
+      } else {
+        router.push("/dashboard/locations/types");
       }
     } catch (error) {
       setError(error.message);
@@ -111,7 +117,7 @@ const AddLocationTypeForm = () => {
                           "form-control",
                           errors.icon && "is-invalid",
                         )}
-                        placeholder="IconLetterA"
+                        placeholder="ti ti-letter-a"
                         {...register("icon", { required: true })}
                       />
                       <div className="invalid-feedback">

@@ -1,4 +1,5 @@
 import { prisma } from "@/prisma";
+import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 import { z, ZodError } from "zod";
 
@@ -12,6 +13,7 @@ const schema = z.object({
 
 export async function POST(req: NextRequest) {
   const formData = await req.formData();
+
   const data = Object.fromEntries(formData);
   const parsed = schema.safeParse(data);
 
