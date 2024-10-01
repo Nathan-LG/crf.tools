@@ -10,7 +10,7 @@
     "prettier:check": "prettier --check \"**/*.{ts,tsx,js,md,mdx,css,yaml}\""
   },
   "dependencies": {
-    "@auth/prisma-adapter": "^2.5.2",
+    "@auth/prisma-adapter": "^2.5.3",
     "@prisma/client": "^5.20.0",
     "@sentry/nextjs": "^8",
     "@tabler/core": "^1.0.0-beta21",
