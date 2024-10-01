@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import ContentLayout from "@/components/ui/ContentLayout";
-import { IconPlus } from "@tabler/icons-react";
+import { IconMoodEmpty, IconPlus } from "@tabler/icons-react";
+import { prisma } from "@/prisma";
+import EditLocationModal from "@/components/location/EditLocationModal";
+import DeleteModal from "@/components/ui/DeleteModal";
 
 export const metadata: Metadata = {
   title: "Emplacements",
@@ -17,7 +20,128 @@ const pageData = {
   buttonLink: "/dashboard/locations/add",
 };
 
-const Locations = () => (
-  <ContentLayout subHeaderProps={pageData}></ContentLayout>
-);
+const Locations = async () => {
+  const locations = await prisma.location.findMany({
+    select: {
+      id: true,
+      name: true,
+      description: true,
+      type: {
+        select: {
+          id: true,
+          icon: true,
+        },
+      },
+    },
+  });
+
+  const locationTypes = await prisma.locationType.findMany();
+
+  if (locations.length === 0) {
+    return (
+      <ContentLayout subHeaderProps={pageData}>
+        <div className="col-12">
+          <div className="card">
+            <div className="empty">
+              <div className="empty-icon">
+                <IconMoodEmpty className="icon" />
+              </div>
+              <p className="empty-title">C&apos;est vide...</p>
+              <p className="empty-subtitle text-secondary">
+                Si vous pensez qu&apos;il s&apos;agit d&apos;une erreur,
+                signalez-le au plus vite.
+              </p>
+            </div>
+          </div>
+        </div>
+      </ContentLayout>
+    );
+  } else {
+    return (
+      <ContentLayout subHeaderProps={pageData}>
+        <div className="col-12">
+          <div className="card">
+            <div className="table-responsive">
+              <table className="table table-vcenter table-mobile-md card-table">
+                <thead>
+                  <tr>
+                    <th className="w-1">Type</th>
+                    <th>Nom</th>
+                    <th>Description</th>
+                    <th className="w-1"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {locations.map((location) => (
+                    <tr key={location.id}>
+                      <td data-label="Type">
+                        <i className={location.type.icon + " icon"}></i>
+                      </td>
+                      <td data-label="Nom">
+                        <div className="d-flex py-1 align-items-center">
+                          <div className="flex-fill">
+                            <div className="font-weight-medium">
+                              {location.name}
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                      <td data-label="Description">
+                        <div>{location.description}</div>
+                      </td>
+                      <td>
+                        <div className="btn-list flex-nowrap">
+                          <button
+                            className="btn"
+                            data-bs-toggle="modal"
+                            data-bs-target={"#modal-edit-" + location.id}
+                          >
+                            &Eacute;diter
+                          </button>
+                          <button
+                            type="button"
+                            className="btn"
+                            data-bs-toggle="modal"
+                            data-bs-target={"#modal-delete-" + location.id}
+                          >
+                            Supprimer
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        {locations.map((location) => (
+          <>
+            <EditLocationModal
+              formProps={{
+                location: {
+                  ...location,
+                  createdAt: undefined,
+                  updatedAt: undefined,
+                  locationTypeId: location.type.id,
+                },
+
+                locationTypes,
+              }}
+            />
+
+            <DeleteModal
+              key={location.id}
+              id={location.id}
+              alert="Cela supprimera définitivement l'emplacement."
+              message="Emplacenent supprimé avec succès"
+              url="/api/locations/"
+            />
+          </>
+        ))}
+      </ContentLayout>
+    );
+  }
+};
 export default Locations;

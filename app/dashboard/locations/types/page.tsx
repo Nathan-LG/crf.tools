@@ -69,7 +69,7 @@ const LocationsType = async () => {
                   {locationsType.map((locationType) => (
                     <tr key={locationType.id}>
                       <td data-label="Type">
-                        <i className={locationType.icon}></i>
+                        <i className={locationType.icon + " icon"}></i>
                       </td>
                       <td data-label="Nom">
                         <div className="d-flex py-1 align-items-center">
