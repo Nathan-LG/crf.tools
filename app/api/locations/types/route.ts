@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
     return new NextResponse(
       JSON.stringify({
         success: true,
-        message: "Category added successfully",
+        message: "LocationType added successfully",
         locationType,
       }),
       {

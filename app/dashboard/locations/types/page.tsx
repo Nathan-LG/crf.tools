@@ -3,7 +3,7 @@ import ContentLayout from "@/components/ui/ContentLayout";
 import { IconMoodEmpty, IconPlus } from "@tabler/icons-react";
 import { prisma } from "@/prisma";
 import DeleteModal from "@/components/ui/DeleteModal";
-import EditLocationTypeForm from "@/components/locationType/EditLocationTypeModal";
+import EditLocationTypeModal from "@/components/locationType/EditLocationTypeModal";
 
 export const metadata: Metadata = {
   title: "Catégories d'emplacements",
@@ -112,7 +112,7 @@ const LocationsType = async () => {
 
         {locationsType.map((locationType) => (
           <>
-            <EditLocationTypeForm
+            <EditLocationTypeModal
               id={locationType.id}
               name={locationType.name}
               description={locationType.description}

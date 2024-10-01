@@ -2,42 +2,46 @@ import type { Metadata } from "next";
 import ContentLayout from "@/components/ui/ContentLayout";
 import { IconMoodEmpty, IconPlus } from "@tabler/icons-react";
 import { prisma } from "@/prisma";
-import EditLocationModal from "@/components/location/EditLocationModal";
 import DeleteModal from "@/components/ui/DeleteModal";
+import EditItemModal from "@/components/item/EditItemModal";
 
 export const metadata: Metadata = {
-  title: "Emplacements",
+  title: "Consommables",
 };
 
 const pageData = {
   ariane: [
     { label: "stock.crf", href: "/dashboard" },
-    { label: "Emplacements", href: "/dashboard/locations" },
+    { label: "Consommables", href: "/dashboard/items" },
   ],
-  title: "Liste des emplacements",
-  button: "Ajouter un emplacement",
+  title: "Liste des consommables",
+  button: "Ajouter un consommable",
   buttonIcon: <IconPlus className="icon" />,
-  buttonLink: "/dashboard/locations/add",
+  buttonLink: "/dashboard/items/add",
 };
 
-const Locations = async () => {
-  const locations = await prisma.location.findMany({
+const Items = async () => {
+  const items = await prisma.item.findMany({
     select: {
       id: true,
       name: true,
       description: true,
-      type: {
+      ItemCategory: {
         select: {
           id: true,
+          name: true,
           icon: true,
         },
       },
     },
+    orderBy: {
+      itemCategoryId: "asc",
+    },
   });
 
-  const locationTypes = await prisma.locationType.findMany();
+  const categories = await prisma.itemCategory.findMany();
 
-  if (locations.length === 0) {
+  if (items.length === 0) {
     return (
       <ContentLayout subHeaderProps={pageData}>
         <div className="col-12">
@@ -72,29 +76,29 @@ const Locations = async () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {locations.map((location) => (
-                    <tr key={location.id}>
+                  {items.map((item) => (
+                    <tr key={item.id}>
                       <td data-label="Type">
-                        <i className={location.type.icon + " icon"}></i>
+                        <i className={item.ItemCategory.icon + " icon"}></i>
                       </td>
                       <td data-label="Nom">
                         <div className="d-flex py-1 align-items-center">
                           <div className="flex-fill">
                             <div className="font-weight-medium">
-                              {location.name}
+                              {item.name}
                             </div>
                           </div>
                         </div>
                       </td>
                       <td data-label="Description">
-                        <div>{location.description}</div>
+                        <div>{item.description}</div>
                       </td>
                       <td>
                         <div className="btn-list flex-nowrap">
                           <button
                             className="btn"
                             data-bs-toggle="modal"
-                            data-bs-target={"#modal-edit-" + location.id}
+                            data-bs-target={"#modal-edit-" + item.id}
                           >
                             &Eacute;diter
                           </button>
@@ -102,7 +106,7 @@ const Locations = async () => {
                             type="button"
                             className="btn"
                             data-bs-toggle="modal"
-                            data-bs-target={"#modal-delete-" + location.id}
+                            data-bs-target={"#modal-delete-" + item.id}
                           >
                             Supprimer
                           </button>
@@ -116,27 +120,27 @@ const Locations = async () => {
           </div>
         </div>
 
-        {locations.map((location) => (
+        {items.map((item) => (
           <>
-            <EditLocationModal
+            <EditItemModal
               formProps={{
-                location: {
-                  ...location,
+                item: {
+                  ...item,
                   createdAt: undefined,
                   updatedAt: undefined,
-                  locationTypeId: location.type.id,
+                  itemCategoryId: item.ItemCategory.id,
                 },
 
-                locationTypes,
+                categories,
               }}
             />
 
             <DeleteModal
-              key={location.id}
-              id={location.id}
-              alert="Cela supprimera définitivement l'emplacement."
-              message="Emplacement supprimé avec succès"
-              url="/api/locations/"
+              key={item.id}
+              id={item.id}
+              alert="Cela supprimera définitivement le consommable."
+              message="Consommable supprimé avec succès"
+              url="/api/items/"
             />
           </>
         ))}
@@ -144,4 +148,4 @@ const Locations = async () => {
     );
   }
 };
-export default Locations;
+export default Items;

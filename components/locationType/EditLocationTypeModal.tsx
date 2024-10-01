@@ -9,7 +9,7 @@ import { IconEdit } from "@tabler/icons-react";
 import toast from "@/app/utils/ui/actions";
 import { LocationType } from "@prisma/client";
 
-const EditLocationTypeForm = (locationType: LocationType) => {
+const EditLocationTypeModal = (locationType: LocationType) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const router = useRouter();
@@ -156,4 +156,4 @@ const EditLocationTypeForm = (locationType: LocationType) => {
   );
 };
 
-export default EditLocationTypeForm;
+export default EditLocationTypeModal;

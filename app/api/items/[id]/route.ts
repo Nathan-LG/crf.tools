@@ -6,11 +6,10 @@ const schema = z.object({
   name: z.string().trim().min(3, {
     message: "Le nom doit faire au moins 3 caractères.",
   }),
-  icon: z.string().trim().min(1, { message: "L'icône est obligatoire." }),
+  locationTypeId: z.string().min(1),
   description: z.string().trim(),
-  id: z.string().trim().min(1),
+  id: z.string().min(1),
 });
-
 export async function PUT(req: NextRequest) {
   const formData = await req.formData();
 
@@ -18,13 +17,13 @@ export async function PUT(req: NextRequest) {
   const parsed = schema.safeParse(data);
 
   if (parsed.success) {
-    const locationType = await prisma.locationType.update({
+    const location = await prisma.location.update({
       where: {
         id: Number(parsed.data.id),
       },
       data: {
         name: parsed.data.name,
-        icon: parsed.data.icon,
+        locationTypeId: Number(parsed.data.locationTypeId),
         description: parsed.data.description,
       },
     });
@@ -32,8 +31,8 @@ export async function PUT(req: NextRequest) {
     return new NextResponse(
       JSON.stringify({
         success: true,
-        message: "LocationType updated successfully",
-        locationType,
+        message: "Location updated successfully",
+        location,
       }),
       {
         status: 201,
@@ -41,6 +40,7 @@ export async function PUT(req: NextRequest) {
     );
   } else {
     const error: ZodError = parsed.error;
+
     let errorMessage = "";
 
     error.errors.map((error) => {
@@ -62,7 +62,7 @@ export async function DELETE(
   params: { params: { id: string } },
 ) {
   try {
-    await prisma.locationType.delete({
+    await prisma.location.delete({
       where: {
         id: Number(params.params.id),
       },
@@ -79,7 +79,7 @@ export async function DELETE(
   return new NextResponse(
     JSON.stringify({
       success: true,
-      message: "LocationType deleted successfully",
+      message: "Location deleted successfully",
     }),
     {
       status: 200,

@@ -1,22 +1,15 @@
 "use client";
 
+import clsx from "clsx";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import revalidate from "@/app/utils/api/actions";
-import toast from "@/app/utils/ui/actions";
-import clsx from "clsx";
-import type { Location, LocationType } from "@prisma/client";
 import { IconEdit } from "@tabler/icons-react";
+import toast from "@/app/utils/ui/actions";
+import { LocationType } from "@prisma/client";
 
-type LocationFormProps = {
-  formProps: {
-    location: Location;
-    locationTypes: Array<LocationType>;
-  };
-};
-
-const EditLocationModal = ({ formProps }: LocationFormProps) => {
+const EditItemCategoryModal = (locationType: LocationType) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const router = useRouter();
@@ -27,7 +20,7 @@ const EditLocationModal = ({ formProps }: LocationFormProps) => {
     const formData = data;
 
     try {
-      const response = await fetch(`/api/locations/${formProps.location.id}`, {
+      const response = await fetch(`/api/items/categories/${locationType.id}`, {
         method: "PUT",
         body: new URLSearchParams(formData),
         headers: {
@@ -41,11 +34,9 @@ const EditLocationModal = ({ formProps }: LocationFormProps) => {
         toast(true, data.error.message);
       } else {
         toast(false, "Catégorie modifiée avec succès");
-        document
-          .getElementById(`close-modal-edit-${formProps.location.id}`)
-          .click();
-        revalidate("/dashboard/locations");
-        router.push("/dashboard/locations");
+        document.getElementById(`close-modal-edit-${locationType.id}`).click();
+        revalidate("/dashboard/items/categories");
+        router.push("/dashboard/items/categories");
       }
     } catch (error) {
       toast(true, error.message);
@@ -60,10 +51,10 @@ const EditLocationModal = ({ formProps }: LocationFormProps) => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      id: formProps.location.id,
-      name: formProps.location.name,
-      description: formProps.location.description,
-      locationTypeId: formProps.location.locationTypeId,
+      id: locationType.id,
+      name: locationType.name,
+      icon: locationType.icon,
+      description: locationType.description,
     },
   });
 
@@ -71,11 +62,13 @@ const EditLocationModal = ({ formProps }: LocationFormProps) => {
     <form onSubmit={handleSubmit(onSubmit)}>
       <input id="name" type="hidden" {...register("id", { required: true })} />
 
-      <div className="modal" id={"modal-edit-" + formProps.location.id}>
+      <div className="modal" id={"modal-edit-" + locationType.id}>
         <div className="modal-dialog modal-lg" role="document">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title">&Eacute;diter l&apos;emplacement</h5>
+              <h5 className="modal-title">
+                &Eacute;diter la catégorie d&apos;emplacement
+              </h5>
               <button
                 type="button"
                 className="btn-close"
@@ -92,7 +85,7 @@ const EditLocationModal = ({ formProps }: LocationFormProps) => {
                   id="name"
                   type="text"
                   className={clsx("form-control", errors.name && "is-invalid")}
-                  placeholder="Lot A1"
+                  placeholder="Lot A"
                   {...register("name", { required: true, minLength: 3 })}
                 />
                 <div className="invalid-feedback">
@@ -104,29 +97,33 @@ const EditLocationModal = ({ formProps }: LocationFormProps) => {
                   )}
                 </div>
               </div>
-
               <div className="mb-3">
-                <label className="form-label required">Catégorie</label>
-                <select
-                  typeof="text"
-                  className="form-select tomselected ts-hidden-accessible"
-                  id="category"
-                  {...register("locationTypeId", { required: true })}
-                >
-                  {formProps.locationTypes.map((locationType) => (
-                    <option key={locationType.id} value={locationType.id}>
-                      {locationType.name}
-                    </option>
-                  ))}
-                </select>
+                <label className="form-label required">Icône</label>
+                <input
+                  type="text"
+                  className={clsx("form-control", errors.icon && "is-invalid")}
+                  placeholder="ti ti-letter-a"
+                  {...register("icon", { required: true })}
+                />
+                <div className="invalid-feedback">
+                  {errors.icon?.type === "required" && (
+                    <>L&apos;icône est obligatoire.</>
+                  )}
+                </div>
+                <small className="form-hint">
+                  Les icônes disponibles sont les icônes{" "}
+                  <a href="https://tabler.io/icons" target="_blank">
+                    Tabler.io
+                  </a>
+                  .
+                </small>
               </div>
-
               <div className="mb-3">
                 <label className="form-label">Description</label>
                 <textarea
                   className="form-control"
                   rows={3}
-                  placeholder="Stock contenu dans la salle à droite de l'accueil. Sous cadenas, code 1337."
+                  placeholder="Lot utilisé pour armer un poste de secours."
                   {...register("description")}
                 ></textarea>
               </div>
@@ -135,7 +132,7 @@ const EditLocationModal = ({ formProps }: LocationFormProps) => {
               <a
                 href="#"
                 className="btn btn-link link-secondary"
-                id={"close-modal-edit-" + formProps.location.id}
+                id={"close-modal-edit-" + locationType.id}
                 data-bs-dismiss="modal"
               >
                 Annuler
@@ -159,4 +156,4 @@ const EditLocationModal = ({ formProps }: LocationFormProps) => {
   );
 };
 
-export default EditLocationModal;
+export default EditItemCategoryModal;

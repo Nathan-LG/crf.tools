@@ -8,20 +8,16 @@ const schema = z.object({
   }),
   icon: z.string().trim().min(1, { message: "L'icône est obligatoire." }),
   description: z.string().trim(),
-  id: z.string().trim().min(1),
 });
 
-export async function PUT(req: NextRequest) {
+export async function POST(req: NextRequest) {
   const formData = await req.formData();
 
   const data = Object.fromEntries(formData);
   const parsed = schema.safeParse(data);
 
   if (parsed.success) {
-    const locationType = await prisma.locationType.update({
-      where: {
-        id: Number(parsed.data.id),
-      },
+    const itemCategory = await prisma.itemCategory.create({
       data: {
         name: parsed.data.name,
         icon: parsed.data.icon,
@@ -32,8 +28,8 @@ export async function PUT(req: NextRequest) {
     return new NextResponse(
       JSON.stringify({
         success: true,
-        message: "LocationType updated successfully",
-        locationType,
+        message: "ItemCategory added successfully",
+        itemCategory,
       }),
       {
         status: 201,
@@ -55,34 +51,4 @@ export async function PUT(req: NextRequest) {
       { status: 400 },
     );
   }
-}
-
-export async function DELETE(
-  req: NextRequest,
-  params: { params: { id: string } },
-) {
-  try {
-    await prisma.locationType.delete({
-      where: {
-        id: Number(params.params.id),
-      },
-    });
-  } catch (error) {
-    return new NextResponse(
-      JSON.stringify({
-        success: false,
-        error: { message: error.message },
-      }),
-      { status: 400 },
-    );
-  }
-  return new NextResponse(
-    JSON.stringify({
-      success: true,
-      message: "LocationType deleted successfully",
-    }),
-    {
-      status: 200,
-    },
-  );
 }

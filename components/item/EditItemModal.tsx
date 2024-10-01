@@ -6,17 +6,17 @@ import { useForm } from "react-hook-form";
 import revalidate from "@/app/utils/api/actions";
 import toast from "@/app/utils/ui/actions";
 import clsx from "clsx";
-import type { Location, LocationType } from "@prisma/client";
+import type { Item, ItemCategory } from "@prisma/client";
 import { IconEdit } from "@tabler/icons-react";
 
-type LocationFormProps = {
+type ItemFormProps = {
   formProps: {
-    location: Location;
-    locationTypes: Array<LocationType>;
+    item: Item;
+    categories: Array<ItemCategory>;
   };
 };
 
-const EditLocationModal = ({ formProps }: LocationFormProps) => {
+const EditItemModal = ({ formProps }: ItemFormProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const router = useRouter();
@@ -27,7 +27,7 @@ const EditLocationModal = ({ formProps }: LocationFormProps) => {
     const formData = data;
 
     try {
-      const response = await fetch(`/api/locations/${formProps.location.id}`, {
+      const response = await fetch(`/api/items/${formProps.item.id}`, {
         method: "PUT",
         body: new URLSearchParams(formData),
         headers: {
@@ -40,12 +40,12 @@ const EditLocationModal = ({ formProps }: LocationFormProps) => {
       if (!data.success) {
         toast(true, data.error.message);
       } else {
-        toast(false, "Catégorie modifiée avec succès");
+        toast(false, "Consommable modifié avec succès");
         document
-          .getElementById(`close-modal-edit-${formProps.location.id}`)
+          .getElementById(`close-modal-edit-${formProps.item.id}`)
           .click();
-        revalidate("/dashboard/locations");
-        router.push("/dashboard/locations");
+        revalidate("/dashboard/items");
+        router.push("/dashboard/items");
       }
     } catch (error) {
       toast(true, error.message);
@@ -60,10 +60,10 @@ const EditLocationModal = ({ formProps }: LocationFormProps) => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      id: formProps.location.id,
-      name: formProps.location.name,
-      description: formProps.location.description,
-      locationTypeId: formProps.location.locationTypeId,
+      id: formProps.item.id,
+      name: formProps.item.name,
+      description: formProps.item.description,
+      itemCategoryId: formProps.item.itemCategoryId,
     },
   });
 
@@ -71,11 +71,11 @@ const EditLocationModal = ({ formProps }: LocationFormProps) => {
     <form onSubmit={handleSubmit(onSubmit)}>
       <input id="name" type="hidden" {...register("id", { required: true })} />
 
-      <div className="modal" id={"modal-edit-" + formProps.location.id}>
+      <div className="modal" id={"modal-edit-" + formProps.item.id}>
         <div className="modal-dialog modal-lg" role="document">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title">&Eacute;diter l&apos;emplacement</h5>
+              <h5 className="modal-title">&Eacute;diter le consommable</h5>
               <button
                 type="button"
                 className="btn-close"
@@ -92,7 +92,7 @@ const EditLocationModal = ({ formProps }: LocationFormProps) => {
                   id="name"
                   type="text"
                   className={clsx("form-control", errors.name && "is-invalid")}
-                  placeholder="Lot A1"
+                  placeholder="Boîte de pansements prédécoupés"
                   {...register("name", { required: true, minLength: 3 })}
                 />
                 <div className="invalid-feedback">
@@ -111,11 +111,11 @@ const EditLocationModal = ({ formProps }: LocationFormProps) => {
                   typeof="text"
                   className="form-select tomselected ts-hidden-accessible"
                   id="category"
-                  {...register("locationTypeId", { required: true })}
+                  {...register("itemCategoryId", { required: true })}
                 >
-                  {formProps.locationTypes.map((locationType) => (
-                    <option key={locationType.id} value={locationType.id}>
-                      {locationType.name}
+                  {formProps.categories.map((category) => (
+                    <option key={category.id} value={category.id}>
+                      {category.name}
                     </option>
                   ))}
                 </select>
@@ -126,7 +126,7 @@ const EditLocationModal = ({ formProps }: LocationFormProps) => {
                 <textarea
                   className="form-control"
                   rows={3}
-                  placeholder="Stock contenu dans la salle à droite de l'accueil. Sous cadenas, code 1337."
+                  placeholder="Marque : Urgo"
                   {...register("description")}
                 ></textarea>
               </div>
@@ -135,7 +135,7 @@ const EditLocationModal = ({ formProps }: LocationFormProps) => {
               <a
                 href="#"
                 className="btn btn-link link-secondary"
-                id={"close-modal-edit-" + formProps.location.id}
+                id={"close-modal-edit-" + formProps.item.id}
                 data-bs-dismiss="modal"
               >
                 Annuler
@@ -159,4 +159,4 @@ const EditLocationModal = ({ formProps }: LocationFormProps) => {
   );
 };
 
-export default EditLocationModal;
+export default EditItemModal;

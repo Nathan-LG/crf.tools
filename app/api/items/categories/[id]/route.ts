@@ -18,7 +18,7 @@ export async function PUT(req: NextRequest) {
   const parsed = schema.safeParse(data);
 
   if (parsed.success) {
-    const locationType = await prisma.locationType.update({
+    const itemCategory = await prisma.itemCategory.update({
       where: {
         id: Number(parsed.data.id),
       },
@@ -32,8 +32,8 @@ export async function PUT(req: NextRequest) {
     return new NextResponse(
       JSON.stringify({
         success: true,
-        message: "LocationType updated successfully",
-        locationType,
+        message: "ItemCategory updated successfully",
+        itemCategory,
       }),
       {
         status: 201,
@@ -62,7 +62,7 @@ export async function DELETE(
   params: { params: { id: string } },
 ) {
   try {
-    await prisma.locationType.delete({
+    await prisma.itemCategory.delete({
       where: {
         id: Number(params.params.id),
       },
@@ -79,7 +79,7 @@ export async function DELETE(
   return new NextResponse(
     JSON.stringify({
       success: true,
-      message: "LocationType deleted successfully",
+      message: "ItemCategory deleted successfully",
     }),
     {
       status: 200,

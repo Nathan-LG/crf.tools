@@ -7,7 +7,6 @@ import {
   IconBriefcase2,
   IconBuildingWarehouse,
   IconHeartbeat,
-  IconPlus,
   IconReplace,
   IconSettings,
   IconUsers,
@@ -123,23 +122,30 @@ async function Header() {
                         >
                           Catégories
                         </Link>
-                        <div className="dropdown-divider"></div>
-                        <Link
-                          className="dropdown-item"
-                          href="/dashboard/locations/add"
-                        >
-                          <IconPlus className="icon dropdown-item-icon" />{" "}
-                          Emplacement
-                        </Link>
                       </div>
                     </li>
-                    <li className="nav-item">
-                      <Link className="nav-link" href="/dashboard/items">
+                    <li className="nav-item dropdown">
+                      <a
+                        className="nav-link"
+                        data-bs-toggle="dropdown"
+                        role="button"
+                      >
                         <span className="nav-link-icon d-md-none d-lg-inline-block">
                           <IconBandage className="Icon" />
                         </span>
                         <span className="nav-link-title">Consommables</span>
-                      </Link>
+                      </a>
+                      <div className="dropdown-menu dropdown-menu-start">
+                        <Link className="dropdown-item" href="/dashboard/items">
+                          Liste
+                        </Link>
+                        <Link
+                          className="dropdown-item"
+                          href="/dashboard/items/categories"
+                        >
+                          Catégories
+                        </Link>
+                      </div>
                     </li>
                     <li className="nav-item">
                       <Link className="nav-link" href="/dashboard/movements">
