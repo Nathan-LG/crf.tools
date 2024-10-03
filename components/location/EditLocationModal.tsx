@@ -70,7 +70,6 @@ const EditLocationModal = ({ formProps }: LocationFormProps) => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      id: formProps.location.id,
       name: formProps.location.name,
       description: formProps.location.description,
       locationTypeId: formProps.location.locationTypeId,
@@ -79,8 +78,6 @@ const EditLocationModal = ({ formProps }: LocationFormProps) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <input id="name" type="hidden" {...register("id", { required: true })} />
-
       <div className="modal" id={"modal-edit-" + formProps.location.id}>
         <div className="modal-dialog modal-lg" role="document">
           <div className="modal-content">

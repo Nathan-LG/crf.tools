@@ -8,10 +8,12 @@ const schema = z.object({
   }),
   icon: z.string().trim().min(1, { message: "L'icône est obligatoire." }),
   description: z.string().trim(),
-  id: z.string().trim().min(1),
 });
 
-export async function PUT(req: NextRequest) {
+export async function PUT(
+  req: NextRequest,
+  params: { params: { id: string } },
+) {
   const formData = await req.formData();
 
   const data = Object.fromEntries(formData);
@@ -20,7 +22,7 @@ export async function PUT(req: NextRequest) {
   if (parsed.success) {
     const itemCategory = await prisma.itemCategory.update({
       where: {
-        id: Number(parsed.data.id),
+        id: Number(params.params.id),
       },
       data: {
         name: parsed.data.name,

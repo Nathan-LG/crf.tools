@@ -64,7 +64,6 @@ const EditItemModal = ({ formProps }: ItemFormProps) => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      id: formProps.item.id,
       name: formProps.item.name,
       description: formProps.item.description,
       itemCategoryId: formProps.item.itemCategoryId,
@@ -79,8 +78,6 @@ const EditItemModal = ({ formProps }: ItemFormProps) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <input id="name" type="hidden" {...register("id", { required: true })} />
-
       <div className="modal" id={"modal-edit-" + formProps.item.id}>
         <div className="modal-dialog modal-lg" role="document">
           <div className="modal-content">

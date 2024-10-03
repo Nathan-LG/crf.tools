@@ -8,9 +8,11 @@ const schema = z.object({
   }),
   locationTypeId: z.string().min(1),
   description: z.string().trim(),
-  id: z.string().min(1),
 });
-export async function PUT(req: NextRequest) {
+export async function PUT(
+  req: NextRequest,
+  params: { params: { id: string } },
+) {
   const formData = await req.formData();
 
   const data = Object.fromEntries(formData);
@@ -19,7 +21,7 @@ export async function PUT(req: NextRequest) {
   if (parsed.success) {
     const location = await prisma.location.update({
       where: {
-        id: Number(parsed.data.id),
+        id: Number(params.params.id),
       },
       data: {
         name: parsed.data.name,

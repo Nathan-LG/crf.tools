@@ -51,7 +51,6 @@ const EditLocationTypeModal = (locationType: LocationType) => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      id: locationType.id,
       name: locationType.name,
       icon: locationType.icon,
       description: locationType.description,
@@ -60,8 +59,6 @@ const EditLocationTypeModal = (locationType: LocationType) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <input id="name" type="hidden" {...register("id", { required: true })} />
-
       <div className="modal" id={"modal-edit-" + locationType.id}>
         <div className="modal-dialog modal-lg" role="document">
           <div className="modal-content">
