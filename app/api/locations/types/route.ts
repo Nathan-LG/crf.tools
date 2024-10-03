@@ -38,11 +38,9 @@ export async function POST(req: NextRequest) {
       };
     });
 
-    const locationMandatoryItem = await prisma.locationMandatoryItem.createMany(
-      {
-        data: locationMandatoryItemData,
-      },
-    );
+    await prisma.locationMandatoryItem.createMany({
+      data: locationMandatoryItemData,
+    });
 
     return new NextResponse(
       JSON.stringify({

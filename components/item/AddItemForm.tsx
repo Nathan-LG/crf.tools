@@ -131,7 +131,7 @@ const AddItemForm = ({ categories, locationTypes }) => {
                           onChange={(val) => field.onChange(val.value)}
                           options={options}
                           placeholder="Sélectionner"
-                          styles={selectStyle as any}
+                          styles={selectStyle}
                           value={options.find((c) => c.value === field.value)}
                           components={{ Option: IconOption }}
                         />
@@ -161,28 +161,31 @@ const AddItemForm = ({ categories, locationTypes }) => {
                   d&apos;emplacement.
                 </p>
 
-                {locationTypes.map((locationTypes) => (
-                  <div className="mb-3 col-xl-3 col-sm-12">
-                    <label className="form-label">{locationTypes.name}</label>
+                {locationTypes.map((locationType) => (
+                  <div
+                    className="mb-3 col-xl-3 col-sm-12"
+                    key={locationType.id}
+                  >
+                    <label className="form-label">{locationType.name}</label>
                     <div className="input-group">
                       <span className="input-group-text">
-                        <i className={locationTypes.icon + " icon"} />
+                        <i className={locationType.icon + " icon"} />
                       </span>
                       <input
                         type="number"
                         className="form-control"
                         defaultValue={0}
-                        {...register("locationTypeNumber" + locationTypes.id)}
+                        {...register("locationTypeNumber" + locationType.id)}
                       />
                       <Controller
                         control={control}
-                        name={"locationTypeUnit" + locationTypes.id}
+                        name={"locationTypeUnit" + locationType.id}
                         render={({ field }) => (
                           <Select
                             onChange={(val) => field.onChange(val.value)}
                             options={optionsUnits}
                             placeholder="Unité"
-                            styles={selectStyleWithInput as any}
+                            styles={selectStyleWithInput}
                             value={options.find((c) => c.value === field.value)}
                             defaultValue={"unitê"}
                             components={{ Option: IconOption }}

@@ -126,7 +126,7 @@ const AddLocationForm = ({ locationTypes }) => {
                           onChange={(val) => field.onChange(val.value)}
                           options={options}
                           placeholder="Sélectionner"
-                          styles={selectStyle as any}
+                          styles={selectStyle}
                           value={options.find((c) => c.value === field.value)}
                           components={{ Option: IconOption }}
                         />
