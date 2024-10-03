@@ -2,12 +2,15 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import revalidate from "@/app/utils/api/actions";
 import toast from "@/app/utils/ui/actions";
 import clsx from "clsx";
 import type { Location, LocationType } from "@prisma/client";
 import { IconEdit } from "@tabler/icons-react";
+import Select from "react-select";
+import { selectStyle } from "@/app/utils/ui/actions";
+import IconOption from "@/components/ui/IconOptions";
 
 type LocationFormProps = {
   formProps: {
@@ -54,7 +57,14 @@ const EditLocationModal = ({ formProps }: LocationFormProps) => {
     }
   }
 
+  const options = formProps.locationTypes.map((locationType) => ({
+    value: locationType.id,
+    label: locationType.name,
+    icon: locationType.icon,
+  }));
+
   const {
+    control,
     register,
     handleSubmit,
     formState: { errors },
@@ -107,18 +117,21 @@ const EditLocationModal = ({ formProps }: LocationFormProps) => {
 
               <div className="mb-3">
                 <label className="form-label required">Catégorie</label>
-                <select
-                  typeof="text"
-                  className="form-select tomselected ts-hidden-accessible"
-                  id="category"
-                  {...register("locationTypeId", { required: true })}
-                >
-                  {formProps.locationTypes.map((locationType) => (
-                    <option key={locationType.id} value={locationType.id}>
-                      {locationType.name}
-                    </option>
-                  ))}
-                </select>
+                <Controller
+                  control={control}
+                  defaultValue={formProps.location.locationTypeId}
+                  name="locationTypeId"
+                  render={({ field }) => (
+                    <Select
+                      onChange={(val) => field.onChange(val.value)}
+                      options={options}
+                      placeholder="Sélectionner"
+                      styles={selectStyle as any}
+                      value={options.find((c) => c.value === field.value)}
+                      components={{ Option: IconOption }}
+                    />
+                  )}
+                />
               </div>
 
               <div className="mb-3">

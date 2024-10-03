@@ -67,6 +67,12 @@ export async function DELETE(
         id: Number(params.params.id),
       },
     });
+
+    await prisma.locationMandatoryItem.deleteMany({
+      where: {
+        locationTypeId: Number(params.params.id),
+      },
+    });
   } catch (error) {
     return new NextResponse(
       JSON.stringify({

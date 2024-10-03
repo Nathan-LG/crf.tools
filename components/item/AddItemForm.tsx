@@ -2,12 +2,16 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import revalidate from "@/app/utils/api/actions";
 import { IconExclamationCircle } from "@tabler/icons-react";
 import clsx from "clsx";
+import Select from "react-select";
+import { selectStyle, selectStyleWithInput } from "@/app/utils/ui/actions";
+import IconOption from "@/components/ui/IconOptions";
+import { units } from "@/app/utils/items/units";
 
-const AddLocationForm = ({ locationTypes }) => {
+const AddItemForm = ({ categories, locationTypes }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -20,7 +24,7 @@ const AddLocationForm = ({ locationTypes }) => {
     const formData = data;
 
     try {
-      const response = await fetch("/api/locations", {
+      const response = await fetch("/api/items", {
         method: "POST",
         body: new URLSearchParams(formData),
         headers: {
@@ -33,8 +37,8 @@ const AddLocationForm = ({ locationTypes }) => {
       if (!data.success) {
         setError(data.error.message);
       } else {
-        revalidate("/dashboard/locations");
-        router.push("/dashboard/locations");
+        revalidate("/dashboard/items");
+        router.push("/dashboard/items");
       }
     } catch (error) {
       setError(error.message);
@@ -44,10 +48,22 @@ const AddLocationForm = ({ locationTypes }) => {
   }
 
   const {
+    control,
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
+
+  const options = categories.map((category) => ({
+    value: category.id,
+    label: category.name,
+    icon: category.icon,
+  }));
+
+  const optionsUnits = units.map((unit) => ({
+    value: unit,
+    label: unit,
+  }));
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -90,7 +106,7 @@ const AddLocationForm = ({ locationTypes }) => {
                         "form-control",
                         errors.name && "is-invalid",
                       )}
-                      placeholder="Stock de l'UL"
+                      placeholder="Boîte de pansements prédécoupés"
                       {...register("name", { required: true, minLength: 3 })}
                     />
                     <div className="invalid-feedback">
@@ -107,21 +123,20 @@ const AddLocationForm = ({ locationTypes }) => {
                 <div className="col-xl-6 col-sm-12">
                   <div className="mb-3">
                     <label className="form-label required">Catégorie</label>
-                    <select
-                      typeof="text"
-                      className="form-select tomselected ts-hidden-accessible"
-                      id="category"
-                      {...register("locationType", { required: true })}
-                    >
-                      <option value="" selected disabled hidden>
-                        Sélectionnez un type
-                      </option>
-                      {locationTypes.map((locationType) => (
-                        <option key={locationType.id} value={locationType.id}>
-                          {locationType.name}
-                        </option>
-                      ))}
-                    </select>
+                    <Controller
+                      control={control}
+                      name="itemCategoryId"
+                      render={({ field }) => (
+                        <Select
+                          onChange={(val) => field.onChange(val.value)}
+                          options={options}
+                          placeholder="Sélectionner"
+                          styles={selectStyle as any}
+                          value={options.find((c) => c.value === field.value)}
+                          components={{ Option: IconOption }}
+                        />
+                      )}
+                    />
                   </div>
                 </div>
 
@@ -132,11 +147,51 @@ const AddLocationForm = ({ locationTypes }) => {
                       className="form-control"
                       name="description"
                       rows={3}
-                      placeholder="Stock contenu dans la salle à droite de l'accueil. Sous cadenas, code 1337."
+                      placeholder="Marque : ZéroBobo, 100 pansements prédécoupés."
                       {...register("description")}
                     ></textarea>
                   </div>
                 </div>
+
+                <div className="hr-text">Stock obligatoire</div>
+
+                <p className="card-subtitle">
+                  Si nécessaire, il est possible de noter ici le nombre
+                  obligatoire de ce nouveau consommable dans chaque type
+                  d&apos;emplacement.
+                </p>
+
+                {locationTypes.map((locationTypes) => (
+                  <div className="mb-3 col-xl-3 col-sm-12">
+                    <label className="form-label">{locationTypes.name}</label>
+                    <div className="input-group">
+                      <span className="input-group-text">
+                        <i className={locationTypes.icon + " icon"} />
+                      </span>
+                      <input
+                        type="number"
+                        className="form-control"
+                        defaultValue={0}
+                        {...register("locationTypeNumber" + locationTypes.id)}
+                      />
+                      <Controller
+                        control={control}
+                        name={"locationTypeUnit" + locationTypes.id}
+                        render={({ field }) => (
+                          <Select
+                            onChange={(val) => field.onChange(val.value)}
+                            options={optionsUnits}
+                            placeholder="Unité"
+                            styles={selectStyleWithInput as any}
+                            value={options.find((c) => c.value === field.value)}
+                            defaultValue={"unitê"}
+                            components={{ Option: IconOption }}
+                          />
+                        )}
+                      />
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
             <div className="card-footer text-end">
@@ -155,4 +210,4 @@ const AddLocationForm = ({ locationTypes }) => {
   );
 };
 
-export default AddLocationForm;
+export default AddItemForm;

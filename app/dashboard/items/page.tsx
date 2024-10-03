@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import ContentLayout from "@/components/ui/ContentLayout";
-import { IconMoodEmpty, IconPlus } from "@tabler/icons-react";
+import { IconMoodEmpty, IconPlus, IconSearch } from "@tabler/icons-react";
 import { prisma } from "@/prisma";
 import DeleteModal from "@/components/ui/DeleteModal";
 import EditItemModal from "@/components/item/EditItemModal";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Consommables",
@@ -41,6 +42,8 @@ const Items = async () => {
 
   const categories = await prisma.itemCategory.findMany();
 
+  let lastCategory = -1;
+
   if (items.length === 0) {
     return (
       <ContentLayout subHeaderProps={pageData}>
@@ -66,7 +69,7 @@ const Items = async () => {
         <div className="col-12">
           <div className="card">
             <div className="table-responsive">
-              <table className="table table-vcenter table-mobile-md card-table">
+              <table className="table card-table table-vcenter text-nowrap datatable">
                 <thead>
                   <tr>
                     <th className="w-1">Type</th>
@@ -75,75 +78,85 @@ const Items = async () => {
                     <th className="w-1"></th>
                   </tr>
                 </thead>
-                <tbody>
-                  {items.map((item) => (
-                    <tr key={item.id}>
-                      <td data-label="Type">
-                        <i className={item.ItemCategory.icon + " icon"}></i>
-                      </td>
-                      <td data-label="Nom">
-                        <div className="d-flex py-1 align-items-center">
-                          <div className="flex-fill">
-                            <div className="font-weight-medium">
-                              {item.name}
-                            </div>
+
+                {items.map((item) => {
+                  let header = <></>;
+
+                  if (lastCategory !== item.ItemCategory.id) {
+                    header = (
+                      <tr>
+                        <th colSpan={4}>{item.ItemCategory.name}</th>
+                      </tr>
+                    );
+                  }
+
+                  lastCategory = item.ItemCategory.id;
+
+                  return (
+                    <tbody key={item.id}>
+                      {header}
+                      <tr>
+                        <td>
+                          <i className={`icon ${item.ItemCategory.icon}`}></i>
+                        </td>
+                        <td>
+                          <Link href={"/dashboard/items/" + item.id}>
+                            {item.name}
+                          </Link>
+                        </td>
+                        <td>{item.description}</td>
+                        <td>
+                          <div className="btn-list flex-nowrap">
+                            <button
+                              className="btn"
+                              data-bs-toggle="modal"
+                              data-bs-target={"#modal-edit-" + item.id}
+                            >
+                              &Eacute;diter
+                            </button>
+                            <button
+                              type="button"
+                              className="btn"
+                              data-bs-toggle="modal"
+                              data-bs-target={"#modal-delete-" + item.id}
+                            >
+                              Supprimer
+                            </button>
                           </div>
-                        </div>
-                      </td>
-                      <td data-label="Description">
-                        <div>{item.description}</div>
-                      </td>
-                      <td>
-                        <div className="btn-list flex-nowrap">
-                          <button
-                            className="btn"
-                            data-bs-toggle="modal"
-                            data-bs-target={"#modal-edit-" + item.id}
-                          >
-                            &Eacute;diter
-                          </button>
-                          <button
-                            type="button"
-                            className="btn"
-                            data-bs-toggle="modal"
-                            data-bs-target={"#modal-delete-" + item.id}
-                          >
-                            Supprimer
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
+                        </td>
+                      </tr>
+                    </tbody>
+                  );
+                })}
               </table>
             </div>
           </div>
+
+          {items.map((item) => (
+            <>
+              <EditItemModal
+                formProps={{
+                  item: {
+                    ...item,
+                    createdAt: undefined,
+                    updatedAt: undefined,
+                    itemCategoryId: item.ItemCategory.id,
+                  },
+
+                  categories,
+                }}
+              />
+
+              <DeleteModal
+                key={item.id}
+                id={item.id}
+                alert="Cela supprimera définitivement le consommable."
+                message="Consommable supprimé avec succès"
+                url="/api/items/"
+              />
+            </>
+          ))}
         </div>
-
-        {items.map((item) => (
-          <>
-            <EditItemModal
-              formProps={{
-                item: {
-                  ...item,
-                  createdAt: undefined,
-                  updatedAt: undefined,
-                  itemCategoryId: item.ItemCategory.id,
-                },
-
-                categories,
-              }}
-            />
-
-            <DeleteModal
-              key={item.id}
-              id={item.id}
-              alert="Cela supprimera définitivement le consommable."
-              message="Consommable supprimé avec succès"
-              url="/api/items/"
-            />
-          </>
-        ))}
       </ContentLayout>
     );
   }

@@ -6,7 +6,7 @@ const schema = z.object({
   name: z.string().trim().min(3, {
     message: "Le nom doit faire au moins 3 caractères.",
   }),
-  locationTypeId: z.string().min(1),
+  itemCategoryId: z.string().min(1),
   description: z.string().trim(),
   id: z.string().min(1),
 });
@@ -17,13 +17,13 @@ export async function PUT(req: NextRequest) {
   const parsed = schema.safeParse(data);
 
   if (parsed.success) {
-    const location = await prisma.location.update({
+    const location = await prisma.item.update({
       where: {
         id: Number(parsed.data.id),
       },
       data: {
         name: parsed.data.name,
-        locationTypeId: Number(parsed.data.locationTypeId),
+        itemCategoryId: Number(parsed.data.itemCategoryId),
         description: parsed.data.description,
       },
     });
@@ -31,7 +31,7 @@ export async function PUT(req: NextRequest) {
     return new NextResponse(
       JSON.stringify({
         success: true,
-        message: "Location updated successfully",
+        message: "Item updated successfully",
         location,
       }),
       {
@@ -62,9 +62,15 @@ export async function DELETE(
   params: { params: { id: string } },
 ) {
   try {
-    await prisma.location.delete({
+    await prisma.item.delete({
       where: {
         id: Number(params.params.id),
+      },
+    });
+
+    await prisma.locationMandatoryItem.deleteMany({
+      where: {
+        itemId: Number(params.params.id),
       },
     });
   } catch (error) {
@@ -79,7 +85,7 @@ export async function DELETE(
   return new NextResponse(
     JSON.stringify({
       success: true,
-      message: "Location deleted successfully",
+      message: "Item deleted successfully",
     }),
     {
       status: 200,

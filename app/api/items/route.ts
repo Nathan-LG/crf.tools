@@ -6,7 +6,7 @@ const schema = z.object({
   name: z.string().trim().min(3, {
     message: "Le nom doit faire au moins 3 caractères.",
   }),
-  locationType: z.string().trim().min(1),
+  itemCategoryId: z.string().trim().min(1),
   description: z.string().trim(),
 });
 
@@ -17,18 +17,38 @@ export async function POST(req: NextRequest) {
   const parsed = schema.safeParse(data);
 
   if (parsed.success) {
-    const location = await prisma.location.create({
+    const location = await prisma.item.create({
       data: {
         name: parsed.data.name,
-        locationTypeId: Number(parsed.data.locationType),
+        itemCategoryId: Number(parsed.data.itemCategoryId),
         description: parsed.data.description,
       },
     });
 
+    const locationTypes = await prisma.locationType.findMany({
+      select: {
+        id: true,
+      },
+    });
+
+    const locationMandatoryItemData = locationTypes.map((locationType) => {
+      return {
+        locationTypeId: locationType.id,
+        itemId: location.id,
+        count: parsed.data["locationTypeNumber" + location.id],
+        unit: parsed.data["locationTypeUnit" + location.id],
+      };
+    });
+
+    const locationMandatoryItems =
+      await prisma.locationMandatoryItem.createMany({
+        data: locationMandatoryItemData,
+      });
+
     return new NextResponse(
       JSON.stringify({
         success: true,
-        message: "Location added successfully",
+        message: "Item added successfully",
         location,
       }),
       {

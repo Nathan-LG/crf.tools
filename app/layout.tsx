@@ -2,7 +2,9 @@ import { PageProps } from "@/app/utils/ts/definitions";
 
 import "@/app/utils/styles/globals.css";
 import "@tabler/core/dist/css/tabler.min.css";
+import "@tabler/core/dist/css/tabler-vendors.min.css";
 import "@tabler/icons-webfont/dist/tabler-icons.css";
+import "tom-select/dist/css/tom-select.default.css";
 
 import "toastify-js/src/toastify.css";
 
@@ -23,8 +25,9 @@ const RootLayout = ({ children }: PageProps) => (
     <SessionProvider>
       <body>
         <main>{children}</main>
-        <Script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/js/tabler.min.js" />
       </body>
+      <Script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/js/tabler.min.js" />
+      <Script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js" />
     </SessionProvider>
   </html>
 );
