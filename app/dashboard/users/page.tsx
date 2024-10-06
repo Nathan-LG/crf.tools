@@ -3,7 +3,6 @@ import ContentLayout from "@/components/ui/ContentLayout";
 import { IconMoodEmpty, IconPlus } from "@tabler/icons-react";
 import { prisma } from "@/prisma";
 import config from "@/config.json";
-import DeleteModal from "@/components/ui/DeleteModal";
 import AddUserModal from "@/components/users/AddUserModal";
 
 export const metadata: Metadata = {

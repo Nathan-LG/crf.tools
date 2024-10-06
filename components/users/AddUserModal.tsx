@@ -43,11 +43,7 @@ const AddUserModal = () => {
     }
   }
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+  const { register, handleSubmit } = useForm();
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
