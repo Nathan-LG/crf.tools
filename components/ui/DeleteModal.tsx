@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 type ModalForm = {
-  id: number;
+  id: number | string;
   url: string;
   alert: string;
   message: string;

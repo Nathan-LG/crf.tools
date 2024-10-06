@@ -168,15 +168,7 @@ async function Header() {
                         <span className="nav-link-icon d-md-none d-lg-inline-block">
                           <IconUsers className="Icon" />
                         </span>
-                        <span className="nav-link-title">Secouristes</span>
-                      </Link>
-                    </li>
-                    <li className="nav-item">
-                      <Link className="nav-link" href="/dashboard/admin">
-                        <span className="nav-link-icon d-md-none d-lg-inline-block">
-                          <IconSettings className="Icon" />
-                        </span>
-                        <span className="nav-link-title">Administration</span>
+                        <span className="nav-link-title">Bénévoles</span>
                       </Link>
                     </li>
                   </ul>

@@ -15,9 +15,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     async signIn({ account, profile }) {
       if (account.provider === "google") {
-        return (
-          profile.email_verified && profile.email.endsWith("@croix-rouge.fr")
-        );
+        return profile.email.endsWith("@croix-rouge.fr");
       }
     },
 
@@ -35,6 +33,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               },
             },
           });
+
+        await prisma.user.update({
+          where: {
+            id: user.id,
+          },
+          data: {
+            emailVerified: true,
+          },
+        });
 
         return {
           ...token,

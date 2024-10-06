@@ -23,10 +23,20 @@ model User {
   email         String    @unique
   emailVerified Boolean?
   image         String?
+  phoneNumber   String?
   groupId       Int       @default(0)
   group         Group     @relation(fields: [groupId], references: [id], onDelete: Cascade)
   accounts      Account[]
   sessions      Session[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model TempUser {
+  id          String  @id @default(cuid())
+  email       String  @unique
+  phoneNumber String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

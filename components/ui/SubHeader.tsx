@@ -8,6 +8,7 @@ export type SubHeaderProps = {
   button: string;
   buttonIcon: ReactElement;
   buttonLink: string;
+  buttonModal?: string;
 };
 
 const SubHeader = ({
@@ -16,6 +17,7 @@ const SubHeader = ({
   button,
   buttonIcon,
   buttonLink,
+  buttonModal,
 }: SubHeaderProps) => {
   return (
     <div className="page-header d-print-none">
@@ -45,25 +47,31 @@ const SubHeader = ({
           </div>
           <div className="col-auto ms-auto d-print-none">
             <div className="btn-list">
-              <Link
-                href={buttonLink}
-                className={clsx(
-                  "btn btn-primary d-none d-sm-inline-block",
-                  button === "" && "visually-hidden",
-                )}
-              >
-                {buttonIcon}
-                {button}
-              </Link>
-              <Link
-                href={buttonLink}
-                className={clsx(
-                  "btn btn-primary d-sm-none btn-icon",
-                  button === "" && "visually-hidden",
-                )}
-              >
-                {buttonIcon}
-              </Link>
+              {buttonModal === undefined ? (
+                <Link
+                  href={buttonLink}
+                  className={clsx(
+                    "btn btn-primary d-none d-sm-inline-block",
+                    button === "" && "visually-hidden",
+                  )}
+                >
+                  {buttonIcon}
+                  {button}
+                </Link>
+              ) : (
+                <a
+                  href="#"
+                  className={clsx(
+                    "btn btn-primary d-none d-sm-inline-block",
+                    button === "" && "visually-hidden",
+                  )}
+                  data-bs-toggle="modal"
+                  data-bs-target={"#" + buttonModal}
+                >
+                  {buttonIcon}
+                  {button}
+                </a>
+              )}
             </div>
           </div>
         </div>
