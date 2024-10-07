@@ -4,6 +4,9 @@ import { IconMoodEmpty, IconPlus } from "@tabler/icons-react";
 import { prisma } from "@/prisma";
 import config from "@/config.json";
 import AddUserModal from "@/components/users/AddUserModal";
+import EditUserModal from "@/components/users/EditUserModal";
+import EditTempUserModal from "@/components/users/EditTempUserModal";
+import DeleteModal from "@/components/ui/DeleteModal";
 
 export const metadata: Metadata = {
   title: "Bénévoles",
@@ -31,10 +34,10 @@ const Users = async () => {
       image: true,
       group: {
         select: {
-          id: true,
           name: true,
         },
       },
+      groupId: true,
     },
     orderBy: {
       email: "asc",
@@ -51,6 +54,8 @@ const Users = async () => {
       email: "asc",
     },
   });
+
+  const groups = await prisma.group.findMany();
 
   let tempUsersJSX = <></>;
 
@@ -144,9 +149,9 @@ const Users = async () => {
                 {users.map((user) => {
                   let color = "blue";
 
-                  if (user.group.id === Number(config.groups.superadmin)) {
+                  if (user.groupId === Number(config.groups.superadmin)) {
                     color = "red";
-                  } else if (user.group.id === Number(config.groups.admin)) {
+                  } else if (user.groupId === Number(config.groups.admin)) {
                     color = "green";
                   }
 
@@ -204,10 +209,38 @@ const Users = async () => {
     <ContentLayout subHeaderProps={pageData}>
       <div className="row">
         {tempUsersJSX}
-
         {usersJSX}
       </div>
       <AddUserModal />
+
+      {tempUsers.map((tempUser) => (
+        <>
+          <EditTempUserModal tempUser={tempUser} key={tempUser.id} />
+          <DeleteModal
+            key={tempUser.id}
+            id={tempUser.id}
+            alert="Vous pourrez rajouter le bénévole plus tard."
+            message="Bénévole supprimé avec succès"
+            url="/api/users/"
+          />
+        </>
+      ))}
+
+      {users.map((user) => (
+        <EditUserModal
+          formProps={{
+            user: {
+              ...user,
+              createdAt: undefined,
+              updatedAt: undefined,
+              emailVerified: false,
+            },
+
+            groups,
+          }}
+          key={user.id}
+        />
+      ))}
     </ContentLayout>
   );
 };

@@ -34,14 +34,31 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             },
           });
 
-        await prisma.user.update({
-          where: {
-            id: user.id,
+        const tempUser = await prisma.tempUser.findFirst({
+          select: {
+            phoneNumber: true,
           },
-          data: {
-            emailVerified: true,
+          where: {
+            email: user.email,
           },
         });
+
+        if (tempUser) {
+          await prisma.user.update({
+            where: {
+              id: user.id,
+            },
+            data: {
+              phoneNumber: tempUser.phoneNumber,
+            },
+          });
+
+          await prisma.tempUser.delete({
+            where: {
+              email: user.email,
+            },
+          });
+        }
 
         return {
           ...token,
