@@ -25,6 +25,13 @@ export async function POST(req: NextRequest) {
       },
     });
 
+    await prisma.globalUser.create({
+      data: {
+        email: parsed.data.email + "@croix-rouge.fr",
+        type: "temp",
+      },
+    });
+
     return new NextResponse(
       JSON.stringify({
         success: true,

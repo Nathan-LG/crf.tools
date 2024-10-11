@@ -29,8 +29,10 @@ model User {
   accounts      Account[]
   sessions      Session[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Move      Move[]
+  Mission   Mission[]
 }
 
 model TempUser {
@@ -40,6 +42,15 @@ model TempUser {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model GlobalUser {
+  email String @id @unique
+  type  String
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Mission   Mission[]
 }
 
 model Group {
@@ -117,6 +128,7 @@ model Location {
   updatedAt      DateTime       @updatedAt
   LocationItem   LocationItem[]
   locationTypeId Int
+  Move           Move[]
 }
 
 model Item {
@@ -164,4 +176,42 @@ model LocationItem {
   item     Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
 
   @@id([locationId, itemId])
+}
+
+// ------------------------------------------------------
+// Missions and Moves
+// ------------------------------------------------------
+
+model Move {
+  id       Int      @id @default(autoincrement())
+  name     String
+  user     User     @relation(fields: [userId], references: [id])
+  location Location @relation(fields: [locationId], references: [id])
+  number   Int
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  locationId Int
+  userId     String
+  Mission    Mission? @relation(fields: [missionId], references: [id])
+  missionId  Int?
+}
+
+model Mission {
+  id          Int        @id @default(autoincrement())
+  name        String
+  description String?
+  moves       Move[]
+  comment     String?
+  code        String?
+  user        GlobalUser @relation(fields: [userEmail], references: [email])
+  userEmail   String
+  startAt     DateTime
+  endAt       DateTime
+  state       Int        @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  User      User?    @relation(fields: [userId], references: [id])
+  userId    String?
 }

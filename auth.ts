@@ -34,16 +34,25 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             },
           });
 
-        const tempUser = await prisma.tempUser.findFirst({
+        const globalUser = await prisma.globalUser.findFirst({
           select: {
-            phoneNumber: true,
+            type: true,
           },
           where: {
             email: user.email,
           },
         });
 
-        if (tempUser) {
+        if (globalUser?.type === "temp") {
+          const tempUser = await prisma.tempUser.delete({
+            select: {
+              phoneNumber: true,
+            },
+            where: {
+              email: user.email,
+            },
+          });
+
           await prisma.user.update({
             where: {
               id: user.id,
@@ -53,9 +62,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             },
           });
 
-          await prisma.tempUser.delete({
+          await prisma.globalUser.update({
             where: {
               email: user.email,
+            },
+            data: {
+              type: "complete",
+            },
+          });
+        } else if (globalUser === null) {
+          await prisma.globalUser.create({
+            data: {
+              email: user.email,
+              type: "complete",
             },
           });
         }

@@ -7,7 +7,6 @@ import {
   IconBriefcase2,
   IconBuildingWarehouse,
   IconHeartbeat,
-  IconReplace,
   IconUsers,
 } from "@tabler/icons-react";
 import Link from "next/link";
@@ -146,21 +145,31 @@ async function Header() {
                         </Link>
                       </div>
                     </li>
-                    <li className="nav-item">
-                      <Link className="nav-link" href="/dashboard/movements">
-                        <span className="nav-link-icon d-md-none d-lg-inline-block">
-                          <IconReplace className="Icon" />
-                        </span>
-                        <span className="nav-link-title">Mouvements</span>
-                      </Link>
-                    </li>
-                    <li className="nav-item">
-                      <Link className="nav-link" href="/dashboard/missions">
+                    <li className="nav-item dropdown">
+                      <a
+                        className="nav-link"
+                        data-bs-toggle="dropdown"
+                        role="button"
+                      >
                         <span className="nav-link-icon d-md-none d-lg-inline-block">
                           <IconBriefcase2 className="Icon" />
                         </span>
                         <span className="nav-link-title">Missions</span>
-                      </Link>
+                      </a>
+                      <div className="dropdown-menu dropdown-menu-start">
+                        <Link
+                          className="dropdown-item"
+                          href="/dashboard/missions"
+                        >
+                          Liste
+                        </Link>
+                        <Link
+                          className="dropdown-item"
+                          href="/dashboard/missions/search"
+                        >
+                          Recherche
+                        </Link>
+                      </div>
                     </li>
                     <li className="nav-item">
                       <Link className="nav-link" href="/dashboard/users">
