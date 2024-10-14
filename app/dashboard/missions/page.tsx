@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import ContentLayout from "@/components/ui/ContentLayout";
 import { IconMoodEmpty, IconPlus } from "@tabler/icons-react";
 import { prisma } from "@/prisma";
-import EditLocationModal from "@/components/location/EditLocationModal";
 import DeleteModal from "@/components/ui/DeleteModal";
 import Link from "next/link";
 
