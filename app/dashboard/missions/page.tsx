@@ -1,6 +1,13 @@
 import type { Metadata } from "next";
 import ContentLayout from "@/components/ui/ContentLayout";
-import { IconMoodEmpty, IconPlus } from "@tabler/icons-react";
+import {
+  IconAmbulance,
+  IconBuildingHospital,
+  IconFolderQuestion,
+  IconForklift,
+  IconMoodEmpty,
+  IconPlus,
+} from "@tabler/icons-react";
 import { prisma } from "@/prisma";
 import DeleteModal from "@/components/ui/DeleteModal";
 import Link from "next/link";
@@ -28,6 +35,7 @@ const Missions = async () => {
       userEmail: true,
       startAt: true,
       state: true,
+      type: true,
     },
   });
 
@@ -59,6 +67,7 @@ const Missions = async () => {
               <table className="table table-vcenter table-mobile-md card-table">
                 <thead>
                   <tr>
+                    <th className="w-1">Type</th>
                     <th>Nom</th>
                     <th>Responsable</th>
                     <th>Date</th>
@@ -67,47 +76,67 @@ const Missions = async () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {missions.map((mission) => (
-                    <tr key={mission.id}>
-                      <td data-label="Nom">
-                        <div className="d-flex py-1 align-items-center">
-                          <div className="flex-fill">
-                            <div className="font-weight-medium">
-                              <Link href={"/dashboard/missions/" + mission.id}>
-                                {mission.name}
-                              </Link>
+                  {missions.map((mission) => {
+                    switch (mission.type) {
+                      case "PAPS / DPS":
+                        var icon = <IconBuildingHospital className="icon" />;
+                        break;
+                      case "Réseau de secours":
+                        var icon = <IconAmbulance className="icon" />;
+                        break;
+                      case "Logistique":
+                        var icon = <IconForklift className="icon" />;
+                        break;
+                      default:
+                        var icon = <IconFolderQuestion className="icon" />;
+                        break;
+                    }
+
+                    return (
+                      <tr key={mission.id}>
+                        <td>{icon}</td>
+                        <td data-label="Nom">
+                          <div className="d-flex py-1 align-items-center">
+                            <div className="flex-fill">
+                              <div className="font-weight-medium">
+                                <Link
+                                  href={"/dashboard/missions/" + mission.id}
+                                >
+                                  {mission.name}
+                                </Link>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </td>
-                      <td data-label="Responsable">
-                        <div>
-                          {mission.userEmail.replace("@croix-rouge.fr", "")}
-                        </div>
-                      </td>
-                      <td data-label="Date">{mission.startAt.toString()}</td>
-                      <td>{mission.state}</td>
-                      <td>
-                        <div className="btn-list flex-nowrap">
-                          <button
-                            className="btn"
-                            data-bs-toggle="modal"
-                            data-bs-target={"#modal-edit-" + mission.id}
-                          >
-                            &Eacute;diter
-                          </button>
-                          <button
-                            type="button"
-                            className="btn"
-                            data-bs-toggle="modal"
-                            data-bs-target={"#modal-delete-" + mission.id}
-                          >
-                            Supprimer
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
+                        </td>
+                        <td data-label="Responsable">
+                          <div>
+                            {mission.userEmail.replace("@croix-rouge.fr", "")}
+                          </div>
+                        </td>
+                        <td data-label="Date">{mission.startAt.toString()}</td>
+                        <td>{mission.state}</td>
+                        <td>
+                          <div className="btn-list flex-nowrap">
+                            <button
+                              className="btn"
+                              data-bs-toggle="modal"
+                              data-bs-target={"#modal-edit-" + mission.id}
+                            >
+                              &Eacute;diter
+                            </button>
+                            <button
+                              type="button"
+                              className="btn"
+                              data-bs-toggle="modal"
+                              data-bs-target={"#modal-delete-" + mission.id}
+                            >
+                              Supprimer
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>

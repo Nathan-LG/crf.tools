@@ -198,17 +198,17 @@ model Move {
 }
 
 model Mission {
-  id          Int        @id @default(autoincrement())
-  name        String
-  description String?
-  moves       Move[]
-  comment     String?
-  code        String?
-  user        GlobalUser @relation(fields: [userEmail], references: [email])
-  userEmail   String
-  startAt     DateTime
-  endAt       DateTime
-  state       Int        @default(0)
+  id        Int        @id @default(autoincrement())
+  name      String
+  moves     Move[]
+  comment   String?
+  code      String?
+  user      GlobalUser @relation(fields: [userEmail], references: [email])
+  userEmail String
+  startAt   DateTime
+  endAt     DateTime
+  type      String
+  state     Int        @default(0)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

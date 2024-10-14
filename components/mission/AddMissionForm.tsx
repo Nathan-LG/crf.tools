@@ -8,6 +8,7 @@ import { IconExclamationCircle } from "@tabler/icons-react";
 import clsx from "clsx";
 import Select from "react-select";
 import { selectStyle } from "@/app/utils/ui/actions";
+import IconOption from "../ui/IconOptions";
 
 const AddMissionForm = ({ users }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -56,6 +57,24 @@ const AddMissionForm = ({ users }) => {
     value: user.email,
     label: user.email,
   }));
+
+  const optionsType = [
+    {
+      value: "PAPS / DPS",
+      label: "PAPS / DPS",
+      icon: "ti ti-building-hospital",
+    },
+    {
+      value: "Réseau de secours",
+      label: "Réseau de secours",
+      icon: "ti ti-ambulance",
+    },
+    {
+      value: "Logistique",
+      label: "Logistique",
+      icon: "ti ti-forklift",
+    },
+  ];
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -115,7 +134,7 @@ const AddMissionForm = ({ users }) => {
                 <div className="col-xl-6 col-sm-12">
                   <div className="mb-3">
                     <label className="form-label required">
-                      Responsble matériel
+                      Adresse mail du responsbale matériel
                     </label>
 
                     <Controller
@@ -127,10 +146,83 @@ const AddMissionForm = ({ users }) => {
                           options={options}
                           placeholder="Sélectionner"
                           styles={selectStyle}
+                          required
                           value={options.find((c) => c.value === field.value)}
                         />
                       )}
                     />
+                  </div>
+                </div>
+
+                <div className="col-xl-4 col-sm-12">
+                  <div className="mb-3">
+                    <label className="form-label required">
+                      Type de mission
+                    </label>
+                    <Controller
+                      control={control}
+                      name="type"
+                      render={({ field }) => (
+                        <Select
+                          onChange={(val) => field.onChange(val.value)}
+                          options={optionsType}
+                          placeholder="Sélectionner"
+                          styles={selectStyle}
+                          value={optionsType.find(
+                            (c) => c.value === field.value,
+                          )}
+                          components={{ Option: IconOption }}
+                        />
+                      )}
+                    />
+                  </div>
+                </div>
+
+                <div className="col-xl-4 col-sm-12">
+                  <div className="mb-3">
+                    <label className="form-label required">
+                      Début de mission
+                    </label>
+                    <input
+                      type="text"
+                      data-mask="00/00/0000 00:00"
+                      data-mask-visible="true"
+                      placeholder="00/00/0000 00:00"
+                      className={clsx(
+                        "form-control",
+                        errors.startAt && "is-invalid",
+                      )}
+                      {...register("startAt", { required: true })}
+                    ></input>
+                    <div className="invalid-feedback">
+                      {errors.startAt?.type === "required" && (
+                        <>Le début est obligatoire.</>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="col-xl-4 col-sm-12">
+                  <div className="mb-3">
+                    <label className="form-label required">
+                      Fin de mission
+                    </label>
+                    <input
+                      type="text"
+                      data-mask="00/00/0000 00:00"
+                      data-mask-visible="true"
+                      placeholder="00/00/0000 00:00"
+                      className={clsx(
+                        "form-control",
+                        errors.endAt && "is-invalid",
+                      )}
+                      {...register("endAt", { required: true })}
+                    ></input>
+                    <div className="invalid-feedback">
+                      {errors.endAt?.type === "required" && (
+                        <>La fin est obligatoire.</>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
