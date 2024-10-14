@@ -77,18 +77,20 @@ const Missions = async () => {
                 </thead>
                 <tbody>
                   {missions.map((mission) => {
+                    let icon = <IconFolderQuestion className="icon" />;
+
                     switch (mission.type) {
                       case "PAPS / DPS":
-                        var icon = <IconBuildingHospital className="icon" />;
+                        icon = <IconBuildingHospital className="icon" />;
                         break;
                       case "Réseau de secours":
-                        var icon = <IconAmbulance className="icon" />;
+                        icon = <IconAmbulance className="icon" />;
                         break;
                       case "Logistique":
-                        var icon = <IconForklift className="icon" />;
+                        icon = <IconForklift className="icon" />;
                         break;
                       default:
-                        var icon = <IconFolderQuestion className="icon" />;
+                        icon = <IconFolderQuestion className="icon" />;
                         break;
                     }
 
