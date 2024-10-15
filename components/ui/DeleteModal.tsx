@@ -11,6 +11,7 @@ type ModalForm = {
   url: string;
   alert: string;
   message: string;
+  button?: string;
 };
 
 const DeleteModal = (modalParams: ModalForm) => {
@@ -70,7 +71,7 @@ const DeleteModal = (modalParams: ModalForm) => {
                     data-bs-dismiss="modal"
                     id={"close-modal-delete-" + modalParams.id}
                   >
-                    Annuler
+                    Retour
                   </a>
                 </div>
                 <div className="col">
@@ -82,7 +83,7 @@ const DeleteModal = (modalParams: ModalForm) => {
                     disabled={isLoading}
                     onClick={handleDelete}
                   >
-                    Supprimer
+                    {modalParams.button || "Supprimer"}
                   </button>
                 </div>
               </div>

@@ -4,16 +4,17 @@ import { NextRequest, NextResponse } from "next/server";
 import { z, ZodError } from "zod";
 
 const schema = z.object({
-  name: z.string().trim().min(3, {
-    message: "Le nom doit faire au moins 3 caractères.",
-  }),
-  userEmail: z.string().trim().min(1),
-  type: z.string().trim().min(1),
-  startAt: z.string().trim().min(1),
-  endAt: z.string().trim().min(1),
+  name: z.string().trim(),
+  userEmail: z.string().trim(),
+  type: z.string().trim(),
+  startAt: z.string().trim(),
+  endAt: z.string().trim(),
 });
 
-export async function POST(req: NextRequest) {
+export async function PUT(
+  req: NextRequest,
+  params: { params: { id: string } },
+) {
   const formData = await req.formData();
 
   const data = Object.fromEntries(formData);
@@ -35,10 +36,10 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const minCeiled = Math.ceil(100_000);
-    const maxFloored = Math.floor(999_999);
-
-    const mission = await prisma.mission.create({
+    const mission = await prisma.mission.update({
+      where: {
+        id: Number(params.params.id),
+      },
       data: {
         name: parsed.data.name,
         userEmail: parsed.data.userEmail,
@@ -47,16 +48,13 @@ export async function POST(req: NextRequest) {
           moment(parsed.data.startAt, "DD/MM/YYYY hh:mm").format(),
         ),
         endAt: new Date(moment(parsed.data.endAt, "DD/MM/YYYY hh:mm").format()),
-        code: Math.floor(
-          Math.random() * (maxFloored - minCeiled) + minCeiled,
-        ).toString(),
       },
     });
 
     return new NextResponse(
       JSON.stringify({
         success: true,
-        message: "Mission added successfully",
+        message: "Mission updated successfully",
         mission,
       }),
       {
@@ -65,6 +63,7 @@ export async function POST(req: NextRequest) {
     );
   } else {
     const error: ZodError = parsed.error;
+
     let errorMessage = "";
 
     error.errors.map((error) => {
@@ -79,4 +78,37 @@ export async function POST(req: NextRequest) {
       { status: 400 },
     );
   }
+}
+
+export async function DELETE(
+  req: NextRequest,
+  params: { params: { id: string } },
+) {
+  try {
+    await prisma.mission.update({
+      where: {
+        id: Number(params.params.id),
+      },
+      data: {
+        state: -1,
+      },
+    });
+  } catch (error) {
+    return new NextResponse(
+      JSON.stringify({
+        success: false,
+        error: { message: error.message },
+      }),
+      { status: 400 },
+    );
+  }
+  return new NextResponse(
+    JSON.stringify({
+      success: true,
+      message: "Mission cancelled successfully",
+    }),
+    {
+      status: 200,
+    },
+  );
 }

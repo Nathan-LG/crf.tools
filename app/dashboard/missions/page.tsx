@@ -5,9 +5,7 @@ import {
   IconBuildingHospital,
   IconFolderQuestion,
   IconForklift,
-  IconMoodEmpty,
   IconPlus,
-  IconSearch,
 } from "@tabler/icons-react";
 import { prisma } from "@/prisma";
 import DeleteModal from "@/components/ui/DeleteModal";
@@ -15,6 +13,7 @@ import Link from "next/link";
 import moment from "moment";
 import SearchMissions from "@/components/mission/SearchMission";
 import PaginationMissions from "@/components/mission/PaginationMissions";
+import EditMissionModal from "@/components/mission/EditMissionModal";
 
 export const metadata: Metadata = {
   title: "Missions",
@@ -48,6 +47,7 @@ const Missions = async ({
       name: true,
       userEmail: true,
       startAt: true,
+      endAt: true,
       state: true,
       type: true,
     },
@@ -62,6 +62,12 @@ const Missions = async ({
     },
     skip: (currentPage - 1) * 20,
     take: 20,
+  });
+
+  const globalUsers = await prisma.globalUser.findMany({
+    select: {
+      email: true,
+    },
   });
 
   return (
@@ -140,6 +146,7 @@ const Missions = async ({
                           Annulée
                         </span>
                       );
+                      break;
                   }
 
                   return (
@@ -148,7 +155,7 @@ const Missions = async ({
                       <td data-label="Nom">
                         <div className="d-flex py-1 align-items-center">
                           <div className="flex-fill">
-                            <div className="font-weight-medium">
+                            <div>
                               <Link href={"/dashboard/missions/" + mission.id}>
                                 {mission.name}
                               </Link>
@@ -196,14 +203,21 @@ const Missions = async ({
         </div>
       </div>
 
-      {missions.map((location) => (
+      {missions.map((mission) => (
         <>
+          <EditMissionModal
+            key={mission.id}
+            mission={mission}
+            globalUsers={globalUsers}
+          />
+
           <DeleteModal
-            key={location.id}
-            id={location.id}
+            key={mission.id}
+            id={mission.id}
             alert="Cela annulera définitivement la mission."
             message="Mission annulée avec succès"
             url="/api/missions/"
+            button="Annuler la mission"
           />
         </>
       ))}
