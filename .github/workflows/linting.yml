@@ -16,8 +16,11 @@ jobs:
           node-version: 22
       - name: Install dependencies
         run: pnpm install
-      - name: Run ESLint
-        run: pnpm lint
+
+      # ESlint disabled while waiting for ESlint 9 support
+      # - name: Run ESLint
+      #   run: pnpm lint
+
       - name: Run Prettier
         run: pnpm prettier:check
         if: success() || failure()

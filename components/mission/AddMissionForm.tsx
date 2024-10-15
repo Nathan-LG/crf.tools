@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { createRef, RefCallback, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import revalidate from "@/app/utils/api/actions";
 import { IconExclamationCircle } from "@tabler/icons-react";
@@ -9,6 +9,9 @@ import clsx from "clsx";
 import Select from "react-select";
 import { selectStyle } from "@/app/utils/ui/actions";
 import IconOption from "../ui/IconOptions";
+import { forwardRef } from "react";
+import IMask from "imask";
+import { IMaskInput } from "react-imask";
 
 const AddMissionForm = ({ users }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -75,6 +78,34 @@ const AddMissionForm = ({ users }) => {
       icon: "ti ti-forklift",
     },
   ];
+
+  interface CustomProps {
+    onChange: (event: { target: { name: string; value: string } }) => void;
+    name: string;
+    mask: any;
+  }
+
+  const MaskedTextField = forwardRef<IMask.MaskElement, CustomProps>(
+    (props, inputRef) => {
+      const { onChange, mask, ...other } = props;
+      const ref = createRef();
+
+      return (
+        <IMaskInput
+          {...other}
+          placeholder="00/00/0000 00:00"
+          inputRef={inputRef as RefCallback<IMask.MaskElement>}
+          className={clsx("form-control", errors.startAt && "is-invalid")}
+          ref={ref}
+          mask={mask}
+          // unmask={true}
+          onAccept={(value: any) => {
+            onChange({ target: { name: other.name, value } });
+          }}
+        />
+      );
+    },
+  );
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -167,6 +198,7 @@ const AddMissionForm = ({ users }) => {
                           onChange={(val) => field.onChange(val.value)}
                           options={optionsType}
                           placeholder="Sélectionner"
+                          required
                           styles={selectStyle}
                           value={optionsType.find(
                             (c) => c.value === field.value,
@@ -183,17 +215,10 @@ const AddMissionForm = ({ users }) => {
                     <label className="form-label required">
                       Début de mission
                     </label>
-                    <input
-                      type="text"
-                      data-mask="00/00/0000 00:00"
-                      data-mask-visible="true"
-                      placeholder="00/00/0000 00:00"
-                      className={clsx(
-                        "form-control",
-                        errors.startAt && "is-invalid",
-                      )}
+                    <MaskedTextField
+                      mask="00/00/0000 00:00"
                       {...register("startAt", { required: true })}
-                    ></input>
+                    />
                     <div className="invalid-feedback">
                       {errors.startAt?.type === "required" && (
                         <>Le début est obligatoire.</>
@@ -207,17 +232,10 @@ const AddMissionForm = ({ users }) => {
                     <label className="form-label required">
                       Fin de mission
                     </label>
-                    <input
-                      type="text"
-                      data-mask="00/00/0000 00:00"
-                      data-mask-visible="true"
-                      placeholder="00/00/0000 00:00"
-                      className={clsx(
-                        "form-control",
-                        errors.endAt && "is-invalid",
-                      )}
+                    <MaskedTextField
+                      mask="00/00/0000 00:00"
                       {...register("endAt", { required: true })}
-                    ></input>
+                    />
                     <div className="invalid-feedback">
                       {errors.endAt?.type === "required" && (
                         <>La fin est obligatoire.</>
