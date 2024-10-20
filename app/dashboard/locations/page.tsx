@@ -117,7 +117,7 @@ const Locations = async () => {
         </div>
 
         {locations.map((location) => (
-          <>
+          <div key={location.id}>
             <EditLocationModal
               formProps={{
                 location: {
@@ -132,13 +132,12 @@ const Locations = async () => {
             />
 
             <DeleteModal
-              key={location.id}
               id={location.id}
               alert="Cela supprimera définitivement l'emplacement."
               message="Emplacement supprimé avec succès"
               url="/api/locations/"
             />
-          </>
+          </div>
         ))}
       </ContentLayout>
     );

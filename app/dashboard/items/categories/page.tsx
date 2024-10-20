@@ -111,7 +111,7 @@ const LocationsType = async () => {
         </div>
 
         {itemCategories.map((itemCategory) => (
-          <>
+          <div key={itemCategory.id}>
             <EditItemCategoryForm
               id={itemCategory.id}
               name={itemCategory.name}
@@ -122,13 +122,12 @@ const LocationsType = async () => {
             />
 
             <DeleteModal
-              key={itemCategory.id}
               id={itemCategory.id}
               alert="Cela supprimera aussi tous les consommables de ce type."
               message="Catégorie supprimée avec succès"
               url="/api/items/categories/"
             />
-          </>
+          </div>
         ))}
       </ContentLayout>
     );

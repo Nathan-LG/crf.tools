@@ -142,6 +142,7 @@ model Item {
   ItemCategory          ItemCategory?           @relation(fields: [itemCategoryId], references: [id])
   itemCategoryId        Int?
   LocationMandatoryItem LocationMandatoryItem[]
+  Move                  Move[]
 }
 
 model ItemCategory {
@@ -183,16 +184,21 @@ model LocationItem {
 // ------------------------------------------------------
 
 model Move {
-  id       Int      @id @default(autoincrement())
-  name     String
-  user     User     @relation(fields: [userId], references: [id])
-  location Location @relation(fields: [locationId], references: [id])
-  number   Int
+  id           Int       @id @default(autoincrement())
+  name         String
+  user         User      @relation(fields: [userId], references: [id])
+  toPatient    Boolean
+  fromExternal Boolean
+  fixing       Boolean
+  location     Location? @relation(fields: [locationId], references: [id])
+  item         Item      @relation(fields: [itemId], references: [id])
+  number       Int
 
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   locationId Int
   userId     String
+  itemId     Int
   Mission    Mission? @relation(fields: [missionId], references: [id])
   missionId  Int?
 }

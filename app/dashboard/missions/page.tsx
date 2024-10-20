@@ -52,7 +52,7 @@ const Missions = async ({
       type: true,
     },
     orderBy: {
-      startAt: "asc",
+      startAt: "desc",
     },
     where: {
       name: {
@@ -204,22 +204,17 @@ const Missions = async ({
       </div>
 
       {missions.map((mission) => (
-        <>
-          <EditMissionModal
-            key={mission.id}
-            mission={mission}
-            globalUsers={globalUsers}
-          />
+        <div key={mission.id}>
+          <EditMissionModal mission={mission} globalUsers={globalUsers} />
 
           <DeleteModal
-            key={mission.id}
             id={mission.id}
             alert="Cela annulera définitivement la mission."
             message="Mission annulée avec succès"
             url="/api/missions/"
             button="Annuler la mission"
           />
-        </>
+        </div>
       ))}
     </ContentLayout>
   );

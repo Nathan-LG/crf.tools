@@ -11,10 +11,17 @@ import { prisma } from "@/prisma";
 import { redirect } from "next/navigation";
 import AreaChart from "@/components/ui/AreaChart";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const item = await prisma.item.findFirstOrThrow({
+type Props = {
+  params: { id: string };
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const item = await prisma.item.findFirst({
     select: {
       name: true,
+    },
+    where: {
+      id: Number(params.id),
     },
   });
 

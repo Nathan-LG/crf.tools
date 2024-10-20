@@ -133,7 +133,7 @@ const Items = async () => {
           </div>
 
           {items.map((item) => (
-            <>
+            <div key={item.id}>
               <EditItemModal
                 formProps={{
                   item: {
@@ -148,13 +148,12 @@ const Items = async () => {
               />
 
               <DeleteModal
-                key={item.id}
                 id={item.id}
                 alert="Cela supprimera définitivement le consommable."
                 message="Consommable supprimé avec succès"
                 url="/api/items/"
               />
-            </>
+            </div>
           ))}
         </div>
       </ContentLayout>

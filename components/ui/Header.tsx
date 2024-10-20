@@ -164,10 +164,10 @@ async function Header() {
                           Liste
                         </Link>
                         <Link
-                          className="dropdown-item"
+                          className="dropdown-item disabled"
                           href="/dashboard/missions/search"
                         >
-                          Recherche
+                          Recherche<span className="badge ms-2">WIP</span>
                         </Link>
                       </div>
                     </li>

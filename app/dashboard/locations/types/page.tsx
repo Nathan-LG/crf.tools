@@ -111,7 +111,7 @@ const LocationsType = async () => {
         </div>
 
         {locationsType.map((locationType) => (
-          <>
+          <div key={locationType.id}>
             <EditLocationTypeModal
               id={locationType.id}
               name={locationType.name}
@@ -122,13 +122,12 @@ const LocationsType = async () => {
             />
 
             <DeleteModal
-              key={locationType.id}
               id={locationType.id}
               alert="Cela supprimera aussi tous les emplacements de ce type."
               message="Catégorie supprimée avec succès"
               url="/api/locations/types/"
             />
-          </>
+          </div>
         ))}
       </ContentLayout>
     );
