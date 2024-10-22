@@ -193,6 +193,7 @@ model Move {
   location     Location? @relation(fields: [locationId], references: [id])
   item         Item      @relation(fields: [itemId], references: [id])
   number       Int
+  closed       Boolean
 
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt

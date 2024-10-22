@@ -1,20 +1,15 @@
 import type { Metadata } from "next";
 import ContentLayout from "@/components/ui/ContentLayout";
 import {
-  IconBackpack,
-  IconBuildingWarehouse,
   IconClockPlay,
   IconClockStop,
   IconHash,
   IconHomeQuestion,
   IconInfoCircle,
-  IconLetterA,
-  IconSquareArrowUpFilled,
   IconUserStar,
 } from "@tabler/icons-react";
 import { prisma } from "@/prisma";
 import { redirect } from "next/navigation";
-import AreaChart from "@/components/ui/AreaChart";
 import moment from "moment";
 
 type Props = {
