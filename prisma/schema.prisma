@@ -135,6 +135,7 @@ model Item {
   id          Int     @id @default(autoincrement())
   name        String
   description String?
+  unit        String?
 
   createdAt             DateTime                @default(now())
   updatedAt             DateTime                @updatedAt
@@ -159,8 +160,7 @@ model ItemCategory {
 model LocationMandatoryItem {
   locationTypeId Int
   itemId         Int
-  count          Int     @default(0)
-  suffix         String?
+  count          Int @default(0)
 
   location LocationType @relation(fields: [locationTypeId], references: [id], onDelete: Cascade)
   item     Item         @relation(fields: [itemId], references: [id], onDelete: Cascade)

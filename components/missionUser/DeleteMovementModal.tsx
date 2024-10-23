@@ -2,9 +2,9 @@
 
 import { IconAlertTriangle } from "@tabler/icons-react";
 
-const DeleteMovementModal = ({ index, handleDeleteMovement }) => {
+const DeleteMovementModal = ({ handleDeleteMovement }) => {
   return (
-    <div className="modal" key={index} id={"modal-remove-" + index}>
+    <div className="modal" id="modal-remove">
       <div className="modal-dialog modal-sm" role="document">
         <div className="modal-content">
           <button
@@ -29,7 +29,7 @@ const DeleteMovementModal = ({ index, handleDeleteMovement }) => {
                     href="#"
                     className="btn w-100"
                     data-bs-dismiss="modal"
-                    id={"close-modal-remove-" + index}
+                    id="close-modal-remove"
                   >
                     Retour
                   </a>
@@ -37,7 +37,7 @@ const DeleteMovementModal = ({ index, handleDeleteMovement }) => {
                 <div className="col">
                   <button
                     className="btn btn-danger w-100"
-                    onClick={() => handleDeleteMovement(index)}
+                    onClick={() => handleDeleteMovement()}
                   >
                     Supprimer
                   </button>

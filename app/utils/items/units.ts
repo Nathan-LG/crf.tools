@@ -1,1 +1,1 @@
-export const units = ["unité", "paire", "mètre", "boîte"];
+export const units = ["unité", "paire", "mètre", "boîte", "sachet"];

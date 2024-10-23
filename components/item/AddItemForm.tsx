@@ -7,7 +7,7 @@ import revalidate from "@/app/utils/api/actions";
 import { IconExclamationCircle } from "@tabler/icons-react";
 import clsx from "clsx";
 import Select from "react-select";
-import { selectStyle, selectStyleWithInput } from "@/app/utils/ui/actions";
+import { selectStyle } from "@/app/utils/ui/actions";
 import IconOption from "@/components/ui/IconOptions";
 import { units } from "@/app/utils/items/units";
 
@@ -153,6 +153,29 @@ const AddItemForm = ({ categories, locationTypes }) => {
                   </div>
                 </div>
 
+                <div className="col-12">
+                  <div className="mb-3">
+                    <label className="form-label required">Unité</label>
+                    <Controller
+                      control={control}
+                      name="unit"
+                      render={({ field }) => (
+                        <Select
+                          onChange={(val) => field.onChange(val.value)}
+                          options={optionsUnits}
+                          placeholder="unité"
+                          styles={selectStyle}
+                          value={optionsUnits.find(
+                            (c) => c.value === field.value,
+                          )}
+                          defaultValue={{ value: "unité", label: "unité" }}
+                          components={{ Option: IconOption }}
+                        />
+                      )}
+                    />
+                  </div>
+                </div>
+
                 <div className="hr-text">Stock obligatoire</div>
 
                 <p className="card-subtitle">
@@ -176,21 +199,6 @@ const AddItemForm = ({ categories, locationTypes }) => {
                         className="form-control"
                         defaultValue={0}
                         {...register("locationTypeNumber" + locationType.id)}
-                      />
-                      <Controller
-                        control={control}
-                        name={"locationTypeUnit" + locationType.id}
-                        render={({ field }) => (
-                          <Select
-                            onChange={(val) => field.onChange(val.value)}
-                            options={optionsUnits}
-                            placeholder="Unité"
-                            styles={selectStyleWithInput}
-                            value={options.find((c) => c.value === field.value)}
-                            defaultValue={"unitê"}
-                            components={{ Option: IconOption }}
-                          />
-                        )}
                       />
                     </div>
                   </div>

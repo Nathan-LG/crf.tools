@@ -68,7 +68,21 @@ const MissionUser = async ({ params, searchParams }: Props) => {
       },
     });
 
-    const items = await prisma.item.findMany();
+    const items = await prisma.item.findMany({
+      select: {
+        id: true,
+        name: true,
+        unit: true,
+        ItemCategory: {
+          select: {
+            id: true,
+            name: true,
+            icon: true,
+          },
+        },
+      },
+    });
+
     const locations = await prisma.location.findMany({
       select: {
         id: true,

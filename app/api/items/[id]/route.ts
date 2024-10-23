@@ -8,6 +8,7 @@ const schema = z.object({
   }),
   itemCategoryId: z.string().min(1),
   description: z.string().trim(),
+  unit: z.string().trim().min(1),
 });
 export async function PUT(
   req: NextRequest,
@@ -27,6 +28,7 @@ export async function PUT(
         name: parsed.data.name,
         itemCategoryId: Number(parsed.data.itemCategoryId),
         description: parsed.data.description,
+        unit: parsed.data.unit,
       },
     });
 

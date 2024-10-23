@@ -27,6 +27,7 @@ const Items = async () => {
       id: true,
       name: true,
       description: true,
+      unit: true,
       ItemCategory: {
         select: {
           id: true,

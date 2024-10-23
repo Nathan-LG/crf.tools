@@ -8,6 +8,7 @@ const schema = z.object({
   }),
   itemCategoryId: z.string().trim().min(1),
   description: z.string().trim(),
+  unit: z.string().trim().min(1),
 });
 
 export async function POST(req: NextRequest) {
@@ -22,6 +23,7 @@ export async function POST(req: NextRequest) {
         name: parsed.data.name,
         itemCategoryId: Number(parsed.data.itemCategoryId),
         description: parsed.data.description,
+        unit: parsed.data.unit,
       },
     });
 
@@ -36,7 +38,6 @@ export async function POST(req: NextRequest) {
         locationTypeId: locationType.id,
         itemId: location.id,
         count: parsed.data["locationTypeNumber" + location.id],
-        unit: parsed.data["locationTypeUnit" + location.id],
       };
     });
 

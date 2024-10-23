@@ -11,6 +11,7 @@ import { IconEdit } from "@tabler/icons-react";
 import Select from "react-select";
 import { selectStyle } from "@/app/utils/ui/actions";
 import IconOption from "@/components/ui/IconOptions";
+import { units } from "@/app/utils/items/units";
 
 type ItemFormProps = {
   formProps: {
@@ -23,6 +24,8 @@ const EditItemModal = ({ formProps }: ItemFormProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const router = useRouter();
+
+  console.log(formProps);
 
   async function onSubmit(data) {
     setIsLoading(true);
@@ -67,6 +70,7 @@ const EditItemModal = ({ formProps }: ItemFormProps) => {
       name: formProps.item.name,
       description: formProps.item.description,
       itemCategoryId: formProps.item.itemCategoryId,
+      unit: formProps.item.unit,
     },
   });
 
@@ -74,6 +78,11 @@ const EditItemModal = ({ formProps }: ItemFormProps) => {
     value: category.id,
     label: category.name,
     icon: category.icon,
+  }));
+
+  const optionsUnits = units.map((unit) => ({
+    value: unit,
+    label: unit,
   }));
 
   return (
@@ -128,6 +137,28 @@ const EditItemModal = ({ formProps }: ItemFormProps) => {
                     />
                   )}
                 />
+              </div>
+
+              <div className="col-12">
+                <div className="mb-3">
+                  <label className="form-label required">Unité</label>
+                  <Controller
+                    control={control}
+                    name="unit"
+                    render={({ field }) => (
+                      <Select
+                        onChange={(val) => field.onChange(val.value)}
+                        options={optionsUnits}
+                        placeholder="unité"
+                        styles={selectStyle}
+                        value={optionsUnits.find(
+                          (c) => c.value === field.value,
+                        )}
+                        components={{ Option: IconOption }}
+                      />
+                    )}
+                  />
+                </div>
               </div>
 
               <div className="mb-3">
