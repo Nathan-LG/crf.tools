@@ -2,9 +2,9 @@
 
 import { IconAlertTriangle } from "@tabler/icons-react";
 
-const DeleteMovementModal = ({ handleDeleteMovement }) => {
+const DeleteItemModal = ({ handleDeleteItem }) => {
   return (
-    <div className="modal" id="modal-remove-movement">
+    <div className="modal" id="modal-remove-item">
       <div className="modal-dialog modal-sm" role="document">
         <div className="modal-content">
           <button
@@ -18,7 +18,7 @@ const DeleteMovementModal = ({ handleDeleteMovement }) => {
             <IconAlertTriangle className="icon mb-2 text-danger icon-lg" />
             <h3>&Ecirc;tes-vous sûr ?</h3>
             <div className="text-secondary">
-              Vous allez supprimer le mouvement avec ses consommables.
+              Vous allez supprimer le mouvement du consommable.
             </div>
           </div>
           <div className="modal-footer">
@@ -29,7 +29,7 @@ const DeleteMovementModal = ({ handleDeleteMovement }) => {
                     href="#"
                     className="btn w-100"
                     data-bs-dismiss="modal"
-                    id="close-modal-remove-movement"
+                    id="close-modal-remove-item"
                   >
                     Retour
                   </a>
@@ -37,7 +37,7 @@ const DeleteMovementModal = ({ handleDeleteMovement }) => {
                 <div className="col">
                   <button
                     className="btn btn-danger w-100"
-                    onClick={() => handleDeleteMovement()}
+                    onClick={() => handleDeleteItem()}
                   >
                     Supprimer
                   </button>
@@ -51,4 +51,4 @@ const DeleteMovementModal = ({ handleDeleteMovement }) => {
   );
 };
 
-export default DeleteMovementModal;
+export default DeleteItemModal;

@@ -18,11 +18,17 @@ import toast, {
 import IconOption from "../ui/IconOptions";
 import { useState } from "react";
 import DeleteMovementModal from "./DeleteMovementModal";
+import Link from "next/link";
+import DeleteItemModal from "./DeleteItemModal";
+import closeMission from "@/app/utils/missions/closeMission";
+import clsx from "clsx";
 
 const ItemsSelection = (props) => {
   const [moves, setMoves] = useState([]);
   const [movesModes, setMovesModes] = useState([]);
   const [currentMove, setCurrentMove] = useState(null);
+  const [currentItem, setCurrentItem] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   function onSubmitAddMovement(data) {
     const formData = data;
@@ -50,7 +56,7 @@ const ItemsSelection = (props) => {
         },
       ]);
 
-      setMovesModes([...movesModes, true]);
+      setMovesModes([...movesModes, false]);
 
       document.getElementById("close-modal-add-move").click();
     }
@@ -91,11 +97,76 @@ const ItemsSelection = (props) => {
 
     setMoves(newMoves);
     setCurrentMove(null);
+    resetFieldItem("count");
     document.getElementById("close-modal-add-item").click();
   }
 
+  async function onSubmitCloseMission(data) {
+    setIsLoading(true);
+
+    const formData = data;
+    const result = await closeMission(formData.comment, moves, props.missionId);
+
+    setIsLoading(false);
+
+    if (result === false) {
+      toast(true, "Une erreur est survenue lors de la clôture de la mission.");
+    }
+  }
+
+  const removeLocationMovements = () => {
+    document.getElementById("close-modal-remove-movement").click();
+    setMoves(moves.filter((move, i) => i !== currentMove));
+    setMovesModes(movesModes.filter((mode, i) => i !== currentMove));
+    setCurrentMove(null);
+  };
+
+  const removeItem = () => {
+    document.getElementById("close-modal-remove-item").click();
+
+    let move = null;
+
+    for (let i = 0; i < movesModes.length; i++) {
+      if (movesModes[i]) {
+        move = i;
+        break;
+      }
+    }
+
+    const newMoves = structuredClone(moves);
+    newMoves[move].itemCategories.forEach((itemCategory) => {
+      itemCategory.items = itemCategory.items.filter(
+        (item) => item.id !== currentItem,
+      );
+    });
+
+    setMoves(newMoves);
+
+    const newMovesModes = structuredClone(movesModes);
+
+    for (let i = 0; i < newMovesModes.length; i++) {
+      newMovesModes[i] = false;
+    }
+
+    setMovesModes(newMovesModes);
+
+    setCurrentMove(null);
+    setCurrentItem(null);
+  };
+
+  const onSubmitEditItem = (data) => {};
+
   function switchMode(index) {
-    console.log(index);
+    const newMovesModes = structuredClone(movesModes);
+
+    for (let i = 0; i < newMovesModes.length; i++) {
+      if (i !== index) {
+        newMovesModes[i] = false;
+      }
+    }
+
+    newMovesModes[index] = !newMovesModes[index];
+    setMovesModes(newMovesModes);
   }
 
   const optionsItems = props.items.map((item) => ({
@@ -117,17 +188,15 @@ const ItemsSelection = (props) => {
     return location ? location.name : "Externe";
   };
 
-  const removeLocationMovements = () => {
-    document.getElementById("close-modal-remove").click();
-    setMoves(moves.filter((move, i) => i !== currentMove));
-    setCurrentMove(null);
-  };
-
   const {
     control: controlItem,
     register: registerItem,
+    resetField: resetFieldItem,
     handleSubmit: handleSubmitItem,
   } = useForm();
+
+  const { register: registerClose, handleSubmit: handleSubmitClose } =
+    useForm();
 
   return (
     <>
@@ -138,8 +207,8 @@ const ItemsSelection = (props) => {
       >
         <IconPlus className="icon" /> Ajouter un mouvement
       </button>
-      {moves.map((move, index) => (
-        <div key={index}>
+      {moves.map((move, indexMove) => (
+        <div key={indexMove}>
           <div className="row mt-3 align-items-center">
             <div className="col">
               <div className="card">
@@ -153,14 +222,14 @@ const ItemsSelection = (props) => {
                     <button
                       className="btn-action"
                       data-bs-toggle="modal"
-                      data-bs-target="#modal-remove"
-                      onClick={() => setCurrentMove(index)}
+                      data-bs-target="#modal-remove-movement"
+                      onClick={() => setCurrentMove(indexMove)}
                     >
                       <IconTrash className="icon" />
                     </button>
                     <button
                       className="btn-action"
-                      onClick={() => switchMode(index)}
+                      onClick={() => switchMode(indexMove)}
                     >
                       <IconPencil className="icon" />
                     </button>
@@ -168,7 +237,7 @@ const ItemsSelection = (props) => {
                       className="btn-action"
                       data-bs-toggle="modal"
                       data-bs-target="#modal-add-item"
-                      onClick={() => setCurrentMove(index)}
+                      onClick={() => setCurrentMove(indexMove)}
                     >
                       <IconPlus className="icon" />
                     </button>
@@ -187,7 +256,17 @@ const ItemsSelection = (props) => {
                       <p className="text-secondary">
                         {itemCategory.items.map((item, index) => (
                           <span key={index} className="text-secondary">
-                            <strong>{item.quantity}x</strong> {item.name}
+                            <strong>{item.quantity}x</strong> {item.name}{" "}
+                            {movesModes[indexMove] && (
+                              <Link
+                                href="#"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modal-remove-item"
+                                onClick={() => setCurrentItem(item.id)}
+                              >
+                                <IconTrash className="icon" />
+                              </Link>
+                            )}
                           </span>
                         ))}
                       </p>
@@ -201,7 +280,12 @@ const ItemsSelection = (props) => {
       ))}
 
       <div className="row m-3 align-items-center">
-        <button type="button" className="btn btn-success">
+        <button
+          type="button"
+          className="btn btn-success"
+          data-bs-toggle="modal"
+          data-bs-target="#modal-close-mission"
+        >
           <IconDeviceFloppy className="icon" /> Cloturer la mission
         </button>
       </div>
@@ -271,6 +355,7 @@ const ItemsSelection = (props) => {
       </form>
 
       <DeleteMovementModal handleDeleteMovement={removeLocationMovements} />
+      <DeleteItemModal handleDeleteItem={removeItem} />
 
       <form onSubmit={handleSubmit(onSubmitAddMovement)}>
         <div className="modal" id="modal-add-move">
@@ -350,6 +435,55 @@ const ItemsSelection = (props) => {
                 <button type="submit" className="btn btn-primary ms-auto">
                   <IconCubePlus className="icon" />
                   Ajouter
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <form onSubmit={handleSubmit(onSubmitCloseMission)}>
+        <div className="modal" id="modal-close-mission">
+          <div className="modal-dialog modal-lg" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Cloturer la mission</h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div className="modal-body">
+                <div className="mb-3">
+                  <label className="form-label">Commentaire</label>
+                  <textarea
+                    className="form-control"
+                    placeholder="Champ libre pour ajouter un commentaire sur le matériel"
+                    {...registerClose("comment", { required: false })}
+                  />
+                </div>
+              </div>
+              <div className="modal-footer">
+                <a
+                  href="#"
+                  className="btn btn-link link-secondary"
+                  id="close-modal-close-mission"
+                  data-bs-dismiss="modal"
+                >
+                  Annuler
+                </a>
+                <button
+                  type="submit"
+                  className={clsx(
+                    "btn btn-success ms-auto",
+                    isLoading && "btn-loading",
+                  )}
+                  disabled={isLoading}
+                >
+                  <IconDeviceFloppy className="icon" />
+                  Cloturer
                 </button>
               </div>
             </div>

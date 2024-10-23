@@ -52,7 +52,9 @@ const MissionUser = async ({ params, searchParams }: Props) => {
     const mission = await prisma.mission.findFirstOrThrow({
       select: {
         name: true,
+        id: true,
         endAt: true,
+        state: true,
       },
       where: {
         code: searchParams.code as string,
@@ -132,11 +134,30 @@ const MissionUser = async ({ params, searchParams }: Props) => {
                 </div>
               </div>
 
-              <ItemsSelection
-                items={items}
-                itemCategories={itemCategories}
-                locations={locations}
-              />
+              {mission.state !== 3 && (
+                <ItemsSelection
+                  items={items}
+                  itemCategories={itemCategories}
+                  locations={locations}
+                  missionId={mission.id}
+                />
+              )}
+
+              {mission.state === 3 && (
+                <div className="alert alert-warning mt-3" role="alert">
+                  <div className="d-flex">
+                    <div>
+                      <h4 className="alert-title">
+                        La mission est déjà cloturée.
+                      </h4>
+                      <div className="text-secondary">
+                        Le matériel a déjà été compté et la mission est
+                        terminée.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
