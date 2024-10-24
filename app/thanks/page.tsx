@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 const Thanks = () => {
   const gif = [
     "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExd3JkcGFqY3I3M3duMDQxYm9zYXpkYXJjb2Z3NW5yajV4YXk5MXFocCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/26gsjCZpPolPr3sBy/giphy.gif",
@@ -25,7 +27,11 @@ const Thanks = () => {
         <div className="text-center">
           <div className="mb-3"></div>
           <div className="text-secondary mb-3">Toute la log te dit...</div>
-          <img src={gif[randomNumber]} alt="Merci" className="img-fluid mb-3" />
+          <Image
+            src={gif[randomNumber]}
+            alt="Merci"
+            className="img-fluid mb-3"
+          />
         </div>
       </div>
     </div>

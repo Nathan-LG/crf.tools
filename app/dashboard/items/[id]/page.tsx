@@ -11,11 +11,13 @@ import { prisma } from "@/prisma";
 import { redirect } from "next/navigation";
 import AreaChart from "@/components/ui/AreaChart";
 
-type Props = {
-  params: { id: string };
-};
+type Props = Promise<{ id: string }>;
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata(props: {
+  params: Props;
+}): Promise<Metadata> {
+  const params = await props.params;
+
   const item = await prisma.item.findFirst({
     select: {
       name: true,
@@ -30,8 +32,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-const Item = async (params: { params: { id: string } }) => {
+const Item = async (props: { params: Props }) => {
   let item;
+
+  const params = await props.params;
 
   try {
     item = await prisma.item.findUniqueOrThrow({
@@ -48,7 +52,7 @@ const Item = async (params: { params: { id: string } }) => {
         },
       },
       where: {
-        id: Number(params.params.id),
+        id: Number(params.id),
       },
     });
   } catch {
@@ -251,12 +255,14 @@ const Item = async (params: { params: { id: string } }) => {
                       <td>
                         <IconLetterA className="icon me-2" /> Lot A1
                       </td>
-                      <input
-                        type="text"
-                        className="form-control form-control-flush"
-                        placeholder="xx"
-                        style={{ width: "75px" }}
-                      />
+                      <td>
+                        <input
+                          type="text"
+                          className="form-control form-control-flush"
+                          placeholder="xx"
+                          style={{ width: "75px" }}
+                        />
+                      </td>
                       <td>
                         <input
                           type="text"

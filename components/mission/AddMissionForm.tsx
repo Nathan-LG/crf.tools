@@ -107,6 +107,8 @@ const AddMissionForm = ({ users }) => {
     },
   );
 
+  MaskedTextField.displayName = "MaskedTextField";
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="row row-cards">

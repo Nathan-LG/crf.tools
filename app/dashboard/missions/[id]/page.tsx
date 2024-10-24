@@ -12,11 +12,13 @@ import { prisma } from "@/prisma";
 import { redirect } from "next/navigation";
 import moment from "moment";
 
-type Props = {
-  params: { id: string };
-};
+type Params = Promise<{ id: string }>;
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata(props: {
+  params: Params;
+}): Promise<Metadata> {
+  const params = await props.params;
+
   const mission = await prisma.mission.findFirst({
     select: {
       name: true,
@@ -31,13 +33,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-const Mission = async (params: { params: { id: string } }) => {
+const Mission = async (props: { params: Params }) => {
   let mission;
+
+  const params = await props.params;
 
   try {
     mission = await prisma.mission.findUniqueOrThrow({
       where: {
-        id: Number(params.params.id),
+        id: Number(params.id),
       },
     });
   } catch {

@@ -33,13 +33,15 @@ const pageData = {
 const Missions = async ({
   searchParams,
 }: {
-  searchParams?: {
+  searchParams?: Promise<{
     query?: string;
     page?: string;
-  };
+  }>;
 }) => {
-  const query = searchParams?.query || "";
-  const currentPage = Number(searchParams?.page) || 1;
+  const searchParamsSync = await searchParams;
+
+  const query = searchParamsSync?.query || "";
+  const currentPage = Number(searchParamsSync?.page) || 1;
 
   const missions = await prisma.mission.findMany({
     select: {

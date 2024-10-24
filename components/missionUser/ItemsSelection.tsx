@@ -154,8 +154,6 @@ const ItemsSelection = (props) => {
     setCurrentItem(null);
   };
 
-  const onSubmitEditItem = (data) => {};
-
   function switchMode(index) {
     const newMovesModes = structuredClone(movesModes);
 
@@ -195,8 +193,7 @@ const ItemsSelection = (props) => {
     handleSubmit: handleSubmitItem,
   } = useForm();
 
-  const { register: registerClose, handleSubmit: handleSubmitClose } =
-    useForm();
+  const { register: registerClose } = useForm();
 
   return (
     <>

@@ -130,6 +130,8 @@ const EditMissionModal = (formProps: EditMissionModalProps) => {
     },
   );
 
+  MaskedTextField.displayName = "MaskedTextField";
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="modal" id={"modal-edit-" + formProps.mission.id}>

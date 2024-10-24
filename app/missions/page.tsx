@@ -7,12 +7,10 @@ import config from "@/config.json";
 import ItemsSelection from "@/components/missionUser/ItemsSelection";
 
 type Props = {
-  params: { id: string };
   searchParams: { [key: string]: string | string[] | undefined };
 };
 
 export async function generateMetadata({
-  params,
   searchParams,
 }: Props): Promise<Metadata> {
   if (!searchParams.code) {
@@ -44,7 +42,7 @@ export async function generateMetadata({
   }
 }
 
-const MissionUser = async ({ params, searchParams }: Props) => {
+const MissionUser = async ({ searchParams }: Props) => {
   try {
     const session = await auth();
     if (!session) redirect("/auth/signin");
@@ -124,8 +122,8 @@ const MissionUser = async ({ params, searchParams }: Props) => {
                             La mission est-elle terminée ?
                           </h4>
                           <div className="text-secondary">
-                            Merci de ne remplir ce formulaire qu'une fois que tu
-                            es certain que la mission est terminée.
+                            Merci de ne remplir ce formulaire qu&apos;une fois
+                            que tu es certain que la mission est terminée.
                           </div>
                         </div>
                       </div>
