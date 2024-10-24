@@ -6,8 +6,6 @@ import {
   IconHash,
   IconHomeQuestion,
   IconInfoCircle,
-  IconSquareArrowDownFilled,
-  IconSquareArrowUpFilled,
   IconUserStar,
 } from "@tabler/icons-react";
 import { prisma } from "@/prisma";
