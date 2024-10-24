@@ -6,6 +6,8 @@ import {
   IconHash,
   IconHomeQuestion,
   IconInfoCircle,
+  IconSquareArrowDownFilled,
+  IconSquareArrowUpFilled,
   IconUserStar,
 } from "@tabler/icons-react";
 import { prisma } from "@/prisma";
@@ -60,6 +62,38 @@ const Mission = async (props: { params: Params }) => {
     buttonLink: "",
   };
 
+  const moves = await prisma.move.findMany({
+    where: {
+      missionId: mission.id,
+    },
+    select: {
+      id: true,
+      user: {
+        select: {
+          image: true,
+          name: true,
+        },
+      },
+      item: {
+        select: {
+          name: true,
+          unit: true,
+        },
+      },
+      number: true,
+      location: {
+        select: {
+          name: true,
+          type: {
+            select: {
+              icon: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
   let state = <span className="badge bg-red">Annulée</span>;
 
   switch (mission.state) {
@@ -110,35 +144,44 @@ const Mission = async (props: { params: Params }) => {
                 <thead>
                   <tr>
                     <th>Bénévole</th>
-                    <th>Quantité</th>
                     <th>Consommable</th>
-                    <th>Mouvement</th>
+                    <th>Emplacement</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td className="w-1">
-                      <span className="avatar avatar-sm"></span>
-                    </td>
-                    <td className="td-truncate">
-                      <div className="text-truncate">
-                        Fix dart Sass compatibility (#29755)
-                      </div>
-                    </td>
-                    <td className="text-nowrap text-secondary">28 Nov 2019</td>
-                  </tr>
-                  <tr>
-                    <td className="w-1">
-                      <span className="avatar avatar-sm">JL</span>
-                    </td>
-                    <td className="td-truncate">
-                      <div className="text-truncate">
-                        Change deprecated html tags to text decoration classes
-                        (#29604)
-                      </div>
-                    </td>
-                    <td className="text-nowrap text-secondary">27 Nov 2019</td>
-                  </tr>
+                  {moves.map((move) => (
+                    <tr key={move.id}>
+                      <td className="w-1">
+                        <span
+                          className="avatar avatar-sm"
+                          style={{
+                            backgroundImage: `url(${move.user.image})`,
+                          }}
+                          data-bs-toggle="tooltip"
+                          data-bs-placement="bottom"
+                          title={move.user.name}
+                        />
+                      </td>
+                      <td>
+                        {move.number > 0 && (
+                          <span className="text-green d-inline-flex align-items-center lh-1">
+                            <strong>{move.number}x</strong>&nbsp;
+                            {move.item.name} ({move.item.unit})
+                          </span>
+                        )}
+                        {move.number < 0 && (
+                          <span className="text-red d-inline-flex align-items-center lh-1">
+                            <strong>{move.number}x</strong>&nbsp;
+                            {move.item.name} ({move.item.unit})
+                          </span>
+                        )}
+                      </td>
+                      <td>
+                        <i className={move.location.type.icon + " icon"} />{" "}
+                        {move.location.name}
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>

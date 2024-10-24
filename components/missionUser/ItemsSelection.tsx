@@ -193,7 +193,8 @@ const ItemsSelection = (props) => {
     handleSubmit: handleSubmitItem,
   } = useForm();
 
-  const { register: registerClose } = useForm();
+  const { handleSubmit: handleSubmitClose, register: registerClose } =
+    useForm();
 
   return (
     <>
@@ -439,7 +440,7 @@ const ItemsSelection = (props) => {
         </div>
       </form>
 
-      <form onSubmit={handleSubmit(onSubmitCloseMission)}>
+      <form onSubmit={handleSubmitClose(onSubmitCloseMission)}>
         <div className="modal" id="modal-close-mission">
           <div className="modal-dialog modal-lg" role="document">
             <div className="modal-content">
