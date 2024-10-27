@@ -27,11 +27,7 @@ const Thanks = () => {
         <div className="text-center">
           <div className="mb-3"></div>
           <div className="text-secondary mb-3">Toute la log te dit...</div>
-          <Image
-            src={gif[randomNumber]}
-            alt="Merci"
-            className="img-fluid mb-3"
-          />
+          <img src={gif[randomNumber]} alt="Merci" className="img-fluid mb-3" />
         </div>
       </div>
     </div>

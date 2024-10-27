@@ -105,6 +105,7 @@ const Mission = async (props: { params: Params }) => {
       break;
     case 2:
       state = <span className="badge bg-purple text-purple-fg">Terminée</span>;
+      break;
     case 3:
       state = <span className="badge bg-lime text-lime-fg">Cloturée</span>;
       break;
@@ -163,7 +164,7 @@ const Mission = async (props: { params: Params }) => {
                       <td>
                         {move.number > 0 && (
                           <span className="text-green d-inline-flex align-items-center lh-1">
-                            <strong>{move.number}x</strong>&nbsp;
+                            <strong>+{move.number}x</strong>&nbsp;
                             {move.item.name} ({move.item.unit})
                           </span>
                         )}

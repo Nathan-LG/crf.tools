@@ -4,6 +4,10 @@ import { auth } from "@/auth";
 import { prisma } from "@/prisma";
 import { redirect } from "next/navigation";
 
+export async function redirectMission() {
+  redirect("/thanks");
+}
+
 export default async function closeMission(comment, data, missionId) {
   const session = await auth();
   if (!session) redirect("/auth/signin");
@@ -29,7 +33,7 @@ export default async function closeMission(comment, data, missionId) {
               external: move.to === "ext",
               locationId: move.from,
               itemId: item.id,
-              number: -item.quantity,
+              number: -Number(item.quantity),
               missionId: missionId,
             });
           }
@@ -40,7 +44,7 @@ export default async function closeMission(comment, data, missionId) {
               external: move.from === "ext",
               locationId: move.to,
               itemId: item.id,
-              number: item.quantity,
+              number: Number(item.quantity),
               missionId: missionId,
             });
           }
@@ -50,6 +54,42 @@ export default async function closeMission(comment, data, missionId) {
 
     await prisma.move.createMany({
       data: moves,
+    });
+
+    const changes = [];
+
+    moves.forEach((move) => {
+      const change = changes.find(
+        (change) =>
+          change.locationId === move.locationId &&
+          change.itemId === move.itemId,
+      );
+
+      if (change) {
+        change.number += move.number;
+      } else {
+        changes.push({
+          locationId: move.locationId,
+          itemId: move.itemId,
+          number: move.number,
+        });
+      }
+    });
+
+    changes.forEach(async (change) => {
+      await prisma.locationItem.update({
+        where: {
+          locationId_itemId: {
+            locationId: change.locationId,
+            itemId: change.itemId,
+          },
+        },
+        data: {
+          count: {
+            increment: change.number,
+          },
+        },
+      });
     });
 
     await prisma.mission.update({
@@ -62,8 +102,9 @@ export default async function closeMission(comment, data, missionId) {
       },
     });
 
-    redirect("/thanks");
-  } catch {
+    return true;
+  } catch (e) {
+    console.log(e);
     return false;
   }
 }

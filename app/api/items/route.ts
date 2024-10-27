@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
   const parsed = schema.safeParse(data);
 
   if (parsed.success) {
-    const location = await prisma.item.create({
+    const item = await prisma.item.create({
       data: {
         name: parsed.data.name,
         itemCategoryId: Number(parsed.data.itemCategoryId),
@@ -36,8 +36,8 @@ export async function POST(req: NextRequest) {
     const locationMandatoryItemData = locationTypes.map((locationType) => {
       return {
         locationTypeId: locationType.id,
-        itemId: location.id,
-        count: parsed.data["locationTypeNumber" + location.id],
+        itemId: item.id,
+        count: parsed.data["locationTypeNumber" + item.id],
       };
     });
 
@@ -45,11 +45,29 @@ export async function POST(req: NextRequest) {
       data: locationMandatoryItemData,
     });
 
+    const locations = await prisma.location.findMany({
+      select: {
+        id: true,
+      },
+    });
+
+    const locationItemData = locations.map((location) => {
+      return {
+        locationId: location.id,
+        itemId: item.id,
+        count: 0,
+      };
+    });
+
+    await prisma.locationItem.createMany({
+      data: locationItemData,
+    });
+
     return new NextResponse(
       JSON.stringify({
         success: true,
         message: "Item added successfully",
-        location,
+        item,
       }),
       {
         status: 201,

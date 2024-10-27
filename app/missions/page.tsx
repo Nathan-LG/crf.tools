@@ -6,13 +6,13 @@ import { IconConfetti } from "@tabler/icons-react";
 import config from "@/config.json";
 import ItemsSelection from "@/components/missionUser/ItemsSelection";
 
-type Props = {
-  searchParams: { [key: string]: string | string[] | undefined };
-};
+type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
-export async function generateMetadata({
-  searchParams,
-}: Props): Promise<Metadata> {
+export async function generateMetadata(props: {
+  searchParams: SearchParams;
+}): Promise<Metadata> {
+  const searchParams = await props.searchParams;
+
   if (!searchParams.code) {
     return {
       title: "Erreur",
@@ -42,10 +42,12 @@ export async function generateMetadata({
   }
 }
 
-const MissionUser = async ({ searchParams }: Props) => {
+const MissionUser = async (props: { searchParams: SearchParams }) => {
   try {
     const session = await auth();
     if (!session) redirect("/auth/signin");
+
+    const searchParams = await props.searchParams;
 
     const mission = await prisma.mission.findFirstOrThrow({
       select: {
@@ -114,7 +116,7 @@ const MissionUser = async ({ searchParams }: Props) => {
                 <div className="col">
                   Hey, {user.name} ! Merci de ton investissement pour tenir les
                   stocks à jour. <IconConfetti className="icon" />
-                  {mission.endAt < new Date() && (
+                  {mission.endAt > new Date() && (
                     <div className="alert alert-warning mt-3" role="alert">
                       <div className="d-flex">
                         <div>
@@ -161,7 +163,9 @@ const MissionUser = async ({ searchParams }: Props) => {
         </div>
       </div>
     );
-  } catch {}
+  } catch {
+    redirect("/404");
+  }
 };
 
 export default MissionUser;

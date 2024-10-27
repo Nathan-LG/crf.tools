@@ -135,6 +135,7 @@ const Missions = async ({
                           Terminée
                         </span>
                       );
+                      break;
                     case 3:
                       state = (
                         <span className="badge bg-lime text-lime-fg">

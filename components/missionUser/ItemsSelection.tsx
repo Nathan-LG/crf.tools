@@ -20,8 +20,11 @@ import { useState } from "react";
 import DeleteMovementModal from "./DeleteMovementModal";
 import Link from "next/link";
 import DeleteItemModal from "./DeleteItemModal";
-import closeMission from "@/app/utils/missions/closeMission";
+import closeMission, {
+  redirectMission,
+} from "@/app/utils/missions/closeMission";
 import clsx from "clsx";
+import { redirect } from "next/navigation";
 
 const ItemsSelection = (props) => {
   const [moves, setMoves] = useState([]);
@@ -111,6 +114,8 @@ const ItemsSelection = (props) => {
 
     if (result === false) {
       toast(true, "Une erreur est survenue lors de la clôture de la mission.");
+    } else {
+      redirectMission();
     }
   }
 
