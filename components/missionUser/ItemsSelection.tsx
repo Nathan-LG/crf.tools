@@ -24,7 +24,6 @@ import closeMission, {
   redirectMission,
 } from "@/app/utils/missions/closeMission";
 import clsx from "clsx";
-import { redirect } from "next/navigation";
 
 const ItemsSelection = (props) => {
   const [moves, setMoves] = useState([]);

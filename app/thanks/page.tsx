@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 const Thanks = () => {
   const gif = [
     "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExd3JkcGFqY3I3M3duMDQxYm9zYXpkYXJjb2Z3NW5yajV4YXk5MXFocCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/26gsjCZpPolPr3sBy/giphy.gif",
