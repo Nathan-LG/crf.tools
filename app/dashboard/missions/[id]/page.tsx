@@ -164,13 +164,13 @@ const Mission = async (props: { params: Params }) => {
                       <td>
                         {move.number > 0 && (
                           <span className="text-green d-inline-flex align-items-center lh-1">
-                            <strong>+{move.number}x</strong>&nbsp;
+                            <strong>+{move.number}</strong>&nbsp;
                             {move.item.name} ({move.item.unit})
                           </span>
                         )}
                         {move.number < 0 && (
                           <span className="text-red d-inline-flex align-items-center lh-1">
-                            <strong>{move.number}x</strong>&nbsp;
+                            <strong>{move.number}</strong>&nbsp;
                             {move.item.name} ({move.item.unit})
                           </span>
                         )}
