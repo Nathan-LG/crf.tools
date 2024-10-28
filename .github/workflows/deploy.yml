@@ -24,5 +24,5 @@ jobs:
           port: ${{ vars.SSH_PORT }}
           script: |
             cd /var/docker/${{ inputs.site }}/stock
-            docker-compose down
-            docker-compose up -d
+            docker compose down
+            docker compose up -d
