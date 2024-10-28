@@ -25,4 +25,5 @@ jobs:
           script: |
             cd /var/docker/${{ inputs.site }}/stock
             docker compose down
+            docker compose pull
             docker compose up -d
