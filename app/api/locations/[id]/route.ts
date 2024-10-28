@@ -11,9 +11,10 @@ const schema = z.object({
 });
 export async function PUT(
   req: NextRequest,
-  params: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const formData = await req.formData();
+  const id = (await params).id;
 
   const data = Object.fromEntries(formData);
   const parsed = schema.safeParse(data);
@@ -21,7 +22,7 @@ export async function PUT(
   if (parsed.success) {
     const location = await prisma.location.update({
       where: {
-        id: Number(params.params.id),
+        id: Number(id),
       },
       data: {
         name: parsed.data.name,
@@ -61,12 +62,14 @@ export async function PUT(
 
 export async function DELETE(
   req: NextRequest,
-  params: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
+  const id = (await params).id;
+
   try {
     await prisma.location.delete({
       where: {
-        id: Number(params.params.id),
+        id: Number(id),
       },
     });
   } catch (error) {

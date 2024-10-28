@@ -11,16 +11,17 @@ const schema = z.object({
 
 export async function PUT(
   req: NextRequest,
-  params: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const formData = await req.formData();
+  const id = (await params).id;
 
   const data = Object.fromEntries(formData);
   const parsed = schema.safeParse(data);
 
   const tempUser = await prisma.tempUser.count({
     where: {
-      id: params.params.id,
+      id: id,
     },
   });
 
@@ -28,7 +29,7 @@ export async function PUT(
     if (tempUser === 0) {
       await prisma.user.update({
         where: {
-          id: params.params.id,
+          id: id,
         },
         data: {
           phoneNumber: parsed.data.phoneNumber,
@@ -38,7 +39,7 @@ export async function PUT(
     } else {
       await prisma.tempUser.update({
         where: {
-          id: params.params.id,
+          id: id,
         },
         data: {
           phoneNumber: parsed.data.phoneNumber,
@@ -76,12 +77,14 @@ export async function PUT(
 
 export async function DELETE(
   req: NextRequest,
-  params: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
+  const id = (await params).id;
+
   try {
     await prisma.tempUser.delete({
       where: {
-        id: params.params.id,
+        id: id,
       },
     });
   } catch (error) {

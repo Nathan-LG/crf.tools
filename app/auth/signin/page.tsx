@@ -2,15 +2,13 @@
 
 import Head from "next/head";
 import FullPageLayout from "@/components/ui/FullPageLayout";
-import { IconExclamationCircle } from "@tabler/icons-react";
 import Image from "next/image";
 
 import { SignInButton } from "@/components/auth/SignInButton";
-import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
+import { ConnectionError } from "@/components/auth/ConnectionError";
 
 function Login() {
-  const error = useSearchParams().get("error");
-
   return (
     <div>
       <Head>
@@ -36,21 +34,9 @@ function Login() {
                 <h2 className="h2 text-center mb-4">Se connecter</h2>
                 <div className="row">
                   <div className="col">
-                    {error && (
-                      <div className="alert alert-danger" role="alert">
-                        <div className="d-flex">
-                          <div>
-                            <IconExclamationCircle className="icon alert-icon"></IconExclamationCircle>
-                          </div>
-                          <div>
-                            <h4 className="alert-title">
-                              Impossible de vous connecter.
-                            </h4>
-                            <div className="text-secondary">{error}</div>
-                          </div>
-                        </div>
-                      </div>
-                    )}
+                    <Suspense>
+                      <ConnectionError />
+                    </Suspense>
                     <SignInButton />
                   </div>
                 </div>

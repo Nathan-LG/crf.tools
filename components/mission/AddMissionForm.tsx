@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { createRef, RefCallback, useState } from "react";
+import { createRef, Ref, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import revalidate from "@/app/utils/api/actions";
 import { IconExclamationCircle } from "@tabler/icons-react";
@@ -94,7 +94,7 @@ const AddMissionForm = ({ users }) => {
         <IMaskInput
           {...other}
           placeholder="00/00/0000 00:00"
-          inputRef={inputRef as RefCallback<IMask.MaskElement>}
+          inputRef={inputRef as unknown as Ref<HTMLInputElement>}
           className={clsx("form-control", errors.startAt && "is-invalid")}
           ref={ref}
           mask={mask}
