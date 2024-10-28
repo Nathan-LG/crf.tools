@@ -11,10 +11,10 @@ import {
 } from "@tabler/icons-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import config from "@/config.json";
 
 async function Header() {
   const session = await auth();
-
   if (!session) redirect("/auth/signin");
 
   const user = await prisma.user.findUnique({
@@ -25,11 +25,16 @@ async function Header() {
       name: true,
       group: {
         select: {
+          id: true,
           name: true,
         },
       },
     },
   });
+
+  if (user.group.id === config.groups.user) {
+    redirect("/");
+  }
 
   return (
     <div className="page">

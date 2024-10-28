@@ -13,18 +13,7 @@ module.exports = {
           },
         ],
         permanent: false,
-        destination: "/dashboard",
-      },
-      {
-        source: "/",
-        has: [
-          {
-            type: "cookie",
-            key: "authjs.session-token",
-          },
-        ],
-        permanent: false,
-        destination: "/dashboard",
+        destination: "/",
       },
       {
         source: "/",

@@ -4,7 +4,7 @@ import { signIn, signOut } from "@/auth";
 
 export const handleGoogleSignIn = async () => {
   try {
-    await signIn("google", { redirectTo: "/dashboard" });
+    await signIn("google");
   } catch (error) {
     throw error;
   }
