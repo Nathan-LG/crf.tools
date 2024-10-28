@@ -4,12 +4,12 @@ import {
   IconBackpack,
   IconBuildingWarehouse,
   IconInfoCircle,
-  IconLetterA,
+  IconSquareArrowDownFilled,
+  IconSquareArrowRightFilled,
   IconSquareArrowUpFilled,
 } from "@tabler/icons-react";
 import { prisma } from "@/prisma";
 import { redirect } from "next/navigation";
-import AreaChart from "@/components/ui/AreaChart";
 
 type Props = Promise<{ id: string }>;
 
@@ -43,6 +43,7 @@ const Item = async (props: { params: Props }) => {
         id: true,
         name: true,
         description: true,
+        unit: true,
         ItemCategory: {
           select: {
             id: true,
@@ -59,6 +60,78 @@ const Item = async (props: { params: Props }) => {
     redirect("/dashboard/404");
   }
 
+  const moves = await prisma.move.findMany({
+    select: {
+      id: true,
+      number: true,
+      user: {
+        select: {
+          name: true,
+          image: true,
+        },
+      },
+      location: {
+        select: {
+          name: true,
+          type: {
+            select: {
+              icon: true,
+            },
+          },
+        },
+      },
+      createdAt: true,
+    },
+    where: {
+      itemId: Number(params.id),
+      external: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  const locationItems = await prisma.locationItem.findMany({
+    select: {
+      count: true,
+      location: {
+        select: {
+          id: true,
+          name: true,
+          type: {
+            select: {
+              id: true,
+              icon: true,
+            },
+          },
+        },
+      },
+    },
+    where: {
+      itemId: Number(params.id),
+    },
+  });
+
+  const currentTotal = locationItems.reduce((acc, item) => {
+    return acc + item.count;
+  }, 0);
+
+  const locationMandatoryItems = await prisma.locationMandatoryItem.findMany({
+    select: {
+      locationTypeId: true,
+      count: true,
+    },
+    where: {
+      itemId: Number(params.id),
+    },
+  });
+
+  let locationMandatoryTotal = 0;
+
+  locationMandatoryItems.forEach((item) => {
+    locationMandatoryTotal += item.count;
+  });
+
   const pageData = {
     ariane: [
       { label: "stock.crf", href: "/dashboard" },
@@ -70,64 +143,6 @@ const Item = async (props: { params: Props }) => {
     buttonIcon: undefined,
     buttonLink: "",
   };
-
-  const options = {
-    chart: {
-      type: "area",
-      fontFamily: "inherit",
-      height: 192,
-      sparkline: {
-        enabled: true,
-      },
-      animations: {
-        enabled: false,
-      },
-    },
-    dataLabels: {
-      enabled: true,
-    },
-    fill: {
-      opacity: 0.16,
-      type: "solid",
-    },
-    stroke: {
-      width: 2,
-      lineCap: "round",
-      curve: "smooth",
-    },
-    tooltip: {
-      theme: "dark",
-    },
-    grid: {
-      strokeDashArray: 4,
-    },
-    colors: ["#206bc4"],
-    legend: {
-      show: false,
-    },
-    point: {
-      show: false,
-    },
-    xaxis: {
-      categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999],
-      labels: {
-        padding: 0,
-      },
-      tooltip: {
-        enabled: false,
-      },
-      axisBorder: {
-        show: false,
-      },
-    },
-  };
-
-  const series = [
-    {
-      name: "series-1",
-      data: [30, 40, 35, 50, 49, 60, 70, 91, 125],
-    },
-  ];
 
   return (
     <ContentLayout subHeaderProps={pageData}>
@@ -146,47 +161,60 @@ const Item = async (props: { params: Props }) => {
 
         <div className="col-xl-6 col-sm-12">
           <div className="card">
-            <div className="card-header border-0">
+            <div className="card-header">
               <div className="card-title">Utilisation</div>
-            </div>
-            <div className="position-relative">
-              <div id="chart-development-activity" className="">
-                <AreaChart options={options} series={series} height={200} />
-              </div>
             </div>
             <div className="card-table table-responsive">
               <table className="table table-vcenter">
                 <thead>
                   <tr>
-                    <th>User</th>
-                    <th>Commit</th>
+                    <th>Bénévole</th>
+                    <th>Mouvement</th>
+                    <th>Empalcement</th>
                     <th>Date</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td className="w-1">
-                      <span className="avatar avatar-sm"></span>
-                    </td>
-                    <td className="td-truncate">
-                      <div className="text-truncate">
-                        Fix dart Sass compatibility (#29755)
-                      </div>
-                    </td>
-                    <td className="text-nowrap text-secondary">28 Nov 2019</td>
-                  </tr>
-                  <tr>
-                    <td className="w-1">
-                      <span className="avatar avatar-sm">JL</span>
-                    </td>
-                    <td className="td-truncate">
-                      <div className="text-truncate">
-                        Change deprecated html tags to text decoration classes
-                        (#29604)
-                      </div>
-                    </td>
-                    <td className="text-nowrap text-secondary">27 Nov 2019</td>
-                  </tr>
+                  {moves.map((move) => (
+                    <tr key={move.id}>
+                      <td className="w-1">
+                        <span
+                          className="avatar avatar-sm"
+                          style={{
+                            backgroundImage: `url(${move.user.image})`,
+                          }}
+                          data-bs-toggle="tooltip"
+                          data-bs-placement="bottom"
+                          title={move.user.name}
+                        />
+                      </td>
+                      <td>
+                        {move.number > 0 && (
+                          <span className="text-green d-inline-flex align-items-center lh-1">
+                            <strong>+{move.number}</strong>&nbsp;
+                            {item.name} ({item.unit})
+                          </span>
+                        )}
+                        {move.number < 0 && (
+                          <span className="text-red d-inline-flex align-items-center lh-1">
+                            <strong>{move.number}</strong>&nbsp;
+                            {item.name} ({item.unit})
+                          </span>
+                        )}
+                      </td>
+                      <td>
+                        <i className={move.location.type.icon + " icon"} />{" "}
+                        {move.location.name}
+                      </td>
+                      <td>
+                        {new Date(move.createdAt).toLocaleDateString("fr-FR", {
+                          year: "numeric",
+                          month: "numeric",
+                          day: "numeric",
+                        })}
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
@@ -205,9 +233,11 @@ const Item = async (props: { params: Props }) => {
                   </div>
                   <div className="card-body">
                     <div className="d-flex align-items-center">
-                      <div className="subheader">Paires en stock</div>
+                      <div className="subheader">En stock</div>
                     </div>
-                    <div className="h1">14</div>
+                    <div className="h1">
+                      {currentTotal} {item.unit + (currentTotal > 1 ? "s" : "")}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -223,9 +253,12 @@ const Item = async (props: { params: Props }) => {
                   </div>
                   <div className="card-body">
                     <div className="d-flex align-items-center">
-                      <div className="subheader">Paires nécessaires</div>
+                      <div className="subheader">Stock minimal obligatoire</div>
                     </div>
-                    <div className="h1">14</div>
+                    <div className="h1">
+                      {locationMandatoryTotal}{" "}
+                      {item.unit + (locationMandatoryTotal > 1 ? "s" : "")}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -237,7 +270,7 @@ const Item = async (props: { params: Props }) => {
               <div className="card-header">
                 <h3 className="card-title">
                   &Eacute;tat des emplacements{" "}
-                  <span className="card-subtitle">par paires</span>
+                  <span className="card-subtitle">par {item.unit}</span>
                 </h3>
               </div>
               <div className="card-table table-responsive">
@@ -251,32 +284,52 @@ const Item = async (props: { params: Props }) => {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>
-                        <IconLetterA className="icon me-2" /> Lot A1
-                      </td>
-                      <td>
-                        <input
-                          type="text"
-                          className="form-control form-control-flush"
-                          placeholder="xx"
-                          style={{ width: "75px" }}
-                        />
-                      </td>
-                      <td>
-                        <input
-                          type="text"
-                          className="form-control form-control-flush"
-                          style={{ width: "75px" }}
-                          placeholder="xx"
-                        />
-                      </td>
-                      <td>
+                    {locationItems.map((locationItem) => {
+                      const mandatory = locationMandatoryItems.find(
+                        (locationMandatoryItem) =>
+                          locationMandatoryItem.locationTypeId ===
+                          locationItem.location.type.id,
+                      ).count;
+
+                      let status = (
                         <span className="text-green d-inline-flex align-items-center lh-1">
-                          <IconSquareArrowUpFilled className="icon me-1" /> 7
+                          <IconSquareArrowUpFilled className="icon me-1" />{" "}
+                          {locationItem.count - mandatory}
                         </span>
-                      </td>
-                    </tr>
+                      );
+
+                      if (locationItem.count === mandatory) {
+                        status = (
+                          <span className="text-yellow d-inline-flex align-items-center lh-1">
+                            <IconSquareArrowRightFilled className="icon me-1" />{" "}
+                            {locationItem.count - mandatory}
+                          </span>
+                        );
+                      } else if (locationItem.count < mandatory) {
+                        status = (
+                          <span className="text-red d-inline-flex align-items-center lh-1">
+                            <IconSquareArrowDownFilled className="icon me-1" />{" "}
+                            {locationItem.count - mandatory}
+                          </span>
+                        );
+                      }
+
+                      return (
+                        <tr key={locationItem.location.id}>
+                          <td>
+                            <i
+                              className={
+                                "icon me-2 " + locationItem.location.type.icon
+                              }
+                            />{" "}
+                            {locationItem.location.name}
+                          </td>
+                          <td>{mandatory}</td>
+                          <td>{locationItem.count}</td>
+                          <td>{status}</td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
