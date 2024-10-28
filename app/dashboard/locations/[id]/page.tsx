@@ -1,19 +1,12 @@
 import type { Metadata } from "next";
 import ContentLayout from "@/components/ui/ContentLayout";
 import {
-  IconClockPlay,
-  IconClockStop,
-  IconHash,
-  IconHomeQuestion,
-  IconInfoCircle,
   IconSquareArrowDownFilled,
   IconSquareArrowRightFilled,
   IconSquareArrowUpFilled,
-  IconUserStar,
 } from "@tabler/icons-react";
 import { prisma } from "@/prisma";
 import { redirect } from "next/navigation";
-import moment from "moment";
 import Link from "next/link";
 
 type Params = Promise<{ id: string }>;
