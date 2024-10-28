@@ -4,6 +4,7 @@ import { IconMoodEmpty, IconPlus } from "@tabler/icons-react";
 import { prisma } from "@/prisma";
 import EditLocationModal from "@/components/location/EditLocationModal";
 import DeleteModal from "@/components/ui/DeleteModal";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Emplacements",
@@ -81,7 +82,11 @@ const Locations = async () => {
                         <div className="d-flex py-1 align-items-center">
                           <div className="flex-fill">
                             <div className="font-weight-medium">
-                              {location.name}
+                              <Link
+                                href={"/dashboard/locations/" + location.id}
+                              >
+                                {location.name}
+                              </Link>
                             </div>
                           </div>
                         </div>
