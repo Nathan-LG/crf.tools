@@ -1,4 +1,5 @@
 import { IconHeartFilled, IconMugFilled } from "@tabler/icons-react";
+import { env } from "process";
 
 const Footer = () => (
   <footer className="footer footer-transparent d-print-none">
@@ -16,6 +17,7 @@ const Footer = () => (
                 Code source
               </a>
             </li>
+            {env.GIT_TAG && <li className="list-inline-item">{env.GIT_TAG}</li>}
           </ul>
         </div>
         <div className="col-12 col-lg-auto mt-3 mt-lg-0">
