@@ -1,5 +1,3 @@
-"use client";
-
 import Head from "next/head";
 import FullPageLayout from "@/components/ui/FullPageLayout";
 import Image from "next/image";
@@ -7,8 +5,13 @@ import Image from "next/image";
 import { SignInButton } from "@/components/auth/SignInButton";
 import { Suspense } from "react";
 import { ConnectionError } from "@/components/auth/ConnectionError";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
-function Login() {
+async function Login() {
+  const session = await auth();
+  if (session) redirect("/");
+
   return (
     <div>
       <Head>
