@@ -16,7 +16,7 @@
     "@auth/prisma-adapter": "^2.7.2",
     "@prisma/client": "^5.21.1",
     "@tabler/core": "1.0.0-beta21",
-    "@tabler/icons": "^3.20.0",
+    "@tabler/icons": "^3.21.0",
     "@tabler/icons-react": "^3.20.0",
     "@tabler/icons-webfont": "^3.19.0",
     "apexcharts": "^3.54.1",
