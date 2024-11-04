@@ -28,8 +28,8 @@ importers:
         specifier: ^3.20.0
         version: 3.20.0(react@19.0.0-rc-69d4b800-20241021)
       '@tabler/icons-webfont':
-        specifier: ^3.19.0
-        version: 3.19.0
+        specifier: ^3.21.0
+        version: 3.21.0
       apexcharts:
         specifier: ^3.54.1
         version: 3.54.1
@@ -606,14 +606,14 @@ packages:
     peerDependencies:
       react: '>= 16'
 
-  '@tabler/icons-webfont@3.19.0':
-    resolution: {integrity: sha512-c3axiLTjFFbR+LCqGD4MkWSguIb3KdFacCrwVoytVEMAgqvg12YeqJ9b6EGbpnoHcvve5ZvN5kGJtBVV7r1SQw==}
-
-  '@tabler/icons@3.19.0':
-    resolution: {integrity: sha512-A4WEWqpdbTfnpFEtwXqwAe9qf9sp1yRPvzppqAuwcoF0q5YInqB+JkJtSFToCyBpPVeLxJUxxkapLvt2qQgnag==}
+  '@tabler/icons-webfont@3.21.0':
+    resolution: {integrity: sha512-2Kw6VZeX+GW3LHBItWvwnQEKF4ZVvDtdDXjZYA5ISKwJPR4z/RLhNRXBK6QN4fG4dZQpqmTbl+9v0QF3IfmsDQ==}
 
   '@tabler/icons@3.20.0':
     resolution: {integrity: sha512-nXSeUzsCOxX/Of+kdUVQfxL9bG+ck8XCWNf9dGSpE+nhVexRwk/4HiDQDxFDysfT7vfgSut6GXnrZsU5M5dSlA==}
+
+  '@tabler/icons@3.21.0':
+    resolution: {integrity: sha512-5+GkkmWCr1wgMor5cOF1/YYflTQdc15y10FUikJ3HW8hDiFjfbuoAHJi17FT1vwsr1sA78rkJMn+fDoOOjnnPA==}
 
   '@tsconfig/node10@1.0.11':
     resolution: {integrity: sha512-DcRjDCujK/kCk/cUe8Xz8ZSpm8mS3mNNpta+jGCA6USEDfktlNvm1+IuZ9eTcDbNk41BHwpHHeW+N1lKCz4zOw==}
@@ -2451,13 +2451,13 @@ snapshots:
       '@tabler/icons': 3.20.0
       react: 19.0.0-rc-69d4b800-20241021
 
-  '@tabler/icons-webfont@3.19.0':
+  '@tabler/icons-webfont@3.21.0':
     dependencies:
-      '@tabler/icons': 3.19.0
-
-  '@tabler/icons@3.19.0': {}
+      '@tabler/icons': 3.21.0
 
   '@tabler/icons@3.20.0': {}
+
+  '@tabler/icons@3.21.0': {}
 
   '@tsconfig/node10@1.0.11': {}
 
