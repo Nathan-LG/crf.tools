@@ -2,7 +2,7 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 async function main() {
-  const alice = await prisma.group.createMany({
+  const groups = await prisma.group.createMany({
     data: [
       {
         id: 0,
