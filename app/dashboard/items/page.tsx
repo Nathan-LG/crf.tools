@@ -36,9 +36,14 @@ const Items = async () => {
         },
       },
     },
-    orderBy: {
-      itemCategoryId: "asc",
-    },
+    orderBy: [
+      {
+        itemCategoryId: "asc",
+      },
+      {
+        name: "asc",
+      },
+    ],
   });
 
   const categories = await prisma.itemCategory.findMany();
@@ -143,7 +148,6 @@ const Items = async () => {
                     updatedAt: undefined,
                     itemCategoryId: item.ItemCategory.id,
                   },
-
                   categories,
                 }}
               />
