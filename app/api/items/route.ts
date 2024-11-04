@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
       return {
         locationTypeId: locationType.id,
         itemId: item.id,
-        count: parsed.data["locationTypeNumber" + item.id],
+        count: parsed.data["locationTypeNumber" + locationType.id],
       };
     });
 

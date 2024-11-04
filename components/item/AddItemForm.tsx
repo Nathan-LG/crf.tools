@@ -163,12 +163,11 @@ const AddItemForm = ({ categories, locationTypes }) => {
                         <Select
                           onChange={(val) => field.onChange(val.value)}
                           options={optionsUnits}
-                          placeholder="unité"
+                          placeholder="Sélectionner"
                           styles={selectStyle}
                           value={optionsUnits.find(
                             (c) => c.value === field.value,
                           )}
-                          defaultValue={{ value: "unité", label: "unité" }}
                           components={{ Option: IconOption }}
                         />
                       )}

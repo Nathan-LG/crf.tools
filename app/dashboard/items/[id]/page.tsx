@@ -3,6 +3,7 @@ import ContentLayout from "@/components/ui/ContentLayout";
 import {
   IconBackpack,
   IconBuildingWarehouse,
+  IconEdit,
   IconInfoCircle,
   IconSquareArrowDownFilled,
   IconSquareArrowRightFilled,
@@ -139,9 +140,9 @@ const Item = async (props: { params: Props }) => {
       { label: item.name, href: `/dashboard/items/${item.id}` },
     ],
     title: item.name,
-    button: "",
-    buttonIcon: undefined,
-    buttonLink: "",
+    button: "Éditer les quantités obligatoires",
+    buttonIcon: <IconEdit className="icon" />,
+    buttonLink: `/dashboard/items/${item.id}/edit`,
   };
 
   return (

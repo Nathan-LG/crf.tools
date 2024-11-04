@@ -8,7 +8,7 @@ const schema = z.object({
   }),
   itemCategoryId: z.string().min(1),
   description: z.string().trim(),
-  unit: z.string().trim().min(1),
+  unit: z.string().trim().min(3),
 });
 export async function PUT(
   req: NextRequest,
@@ -21,6 +21,22 @@ export async function PUT(
   const parsed = schema.safeParse(data);
 
   if (parsed.success) {
+    const category = await prisma.itemCategory.findUnique({
+      where: {
+        id: Number(parsed.data.itemCategoryId),
+      },
+    });
+
+    if (category === null || category === undefined) {
+      return new NextResponse(
+        JSON.stringify({
+          success: false,
+          error: { message: "Category not found" },
+        }),
+        { status: 400 },
+      );
+    }
+
     const location = await prisma.item.update({
       where: {
         id: Number(id),
