@@ -25,8 +25,8 @@ importers:
         specifier: ^3.21.0
         version: 3.21.0
       '@tabler/icons-react':
-        specifier: ^3.20.0
-        version: 3.20.0(react@19.0.0-rc-69d4b800-20241021)
+        specifier: ^3.22.0
+        version: 3.22.0(react@19.0.0-rc-69d4b800-20241021)
       '@tabler/icons-webfont':
         specifier: ^3.21.0
         version: 3.21.0
@@ -601,19 +601,19 @@ packages:
       tom-select:
         optional: true
 
-  '@tabler/icons-react@3.20.0':
-    resolution: {integrity: sha512-a47oaL48bb5Cx/WUVfg/NZrsWwFExrcDQO8thUZ7S6h/OQYFu7sm4E5pZsmUtGCjikB3lRzjtmMD+C4s7mr9yw==}
+  '@tabler/icons-react@3.22.0':
+    resolution: {integrity: sha512-pOnn+IqZpnkYsEKRvbXXLXwXhYwg4cy1fEVr5SRrgAYJXkobpDjFTdVHlab0HEBXY5AE1NjsMlVeK6H/8Vv2uQ==}
     peerDependencies:
       react: '>= 16'
 
   '@tabler/icons-webfont@3.21.0':
     resolution: {integrity: sha512-2Kw6VZeX+GW3LHBItWvwnQEKF4ZVvDtdDXjZYA5ISKwJPR4z/RLhNRXBK6QN4fG4dZQpqmTbl+9v0QF3IfmsDQ==}
 
-  '@tabler/icons@3.20.0':
-    resolution: {integrity: sha512-nXSeUzsCOxX/Of+kdUVQfxL9bG+ck8XCWNf9dGSpE+nhVexRwk/4HiDQDxFDysfT7vfgSut6GXnrZsU5M5dSlA==}
-
   '@tabler/icons@3.21.0':
     resolution: {integrity: sha512-5+GkkmWCr1wgMor5cOF1/YYflTQdc15y10FUikJ3HW8hDiFjfbuoAHJi17FT1vwsr1sA78rkJMn+fDoOOjnnPA==}
+
+  '@tabler/icons@3.22.0':
+    resolution: {integrity: sha512-IfgGzhFph5OBr2wTieWL/hyAs0FThnq9O155a6kfGYxqx7h5LQw91wnRswhEaGhXCcfmR7ZVDUr9H+x4b9Pb8g==}
 
   '@tsconfig/node10@1.0.11':
     resolution: {integrity: sha512-DcRjDCujK/kCk/cUe8Xz8ZSpm8mS3mNNpta+jGCA6USEDfktlNvm1+IuZ9eTcDbNk41BHwpHHeW+N1lKCz4zOw==}
@@ -2446,18 +2446,18 @@ snapshots:
       imask: 6.6.3
       tom-select: 2.3.1
 
-  '@tabler/icons-react@3.20.0(react@19.0.0-rc-69d4b800-20241021)':
+  '@tabler/icons-react@3.22.0(react@19.0.0-rc-69d4b800-20241021)':
     dependencies:
-      '@tabler/icons': 3.20.0
+      '@tabler/icons': 3.22.0
       react: 19.0.0-rc-69d4b800-20241021
 
   '@tabler/icons-webfont@3.21.0':
     dependencies:
       '@tabler/icons': 3.21.0
 
-  '@tabler/icons@3.20.0': {}
-
   '@tabler/icons@3.21.0': {}
+
+  '@tabler/icons@3.22.0': {}
 
   '@tsconfig/node10@1.0.11': {}
 
