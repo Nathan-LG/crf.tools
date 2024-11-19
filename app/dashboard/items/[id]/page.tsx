@@ -129,8 +129,12 @@ const Item = async (props: { params: Props }) => {
 
   let locationMandatoryTotal = 0;
 
-  locationMandatoryItems.forEach((item) => {
-    locationMandatoryTotal += item.count;
+  locationItems.forEach((item) => {
+    locationMandatoryItems.forEach((mandatoryItem) => {
+      if (item.location.type.id === mandatoryItem.locationTypeId) {
+        locationMandatoryTotal += mandatoryItem.count;
+      }
+    });
   });
 
   const pageData = {
