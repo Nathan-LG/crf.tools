@@ -34,6 +34,9 @@ const Locations = async () => {
         },
       },
     },
+    orderBy: {
+      name: "asc",
+    },
   });
 
   const locationTypes = await prisma.locationType.findMany();

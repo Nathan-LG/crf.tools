@@ -29,6 +29,9 @@ const LocationsType = async () => {
       description: true,
       icon: true,
     },
+    orderBy: {
+      name: "asc",
+    },
   });
 
   if (locationsType.length === 0) {
