@@ -118,28 +118,14 @@ const Missions = async ({
                     case 0:
                       state = (
                         <span className="badge bg-yellow text-yellow-fg">
-                          Non commencée
+                          Remontée en attente
                         </span>
                       );
                       break;
                     case 1:
                       state = (
-                        <span className="badge bg-azure text-azure-fg">
-                          Commencée
-                        </span>
-                      );
-                      break;
-                    case 2:
-                      state = (
-                        <span className="badge bg-purple text-purple-fg">
-                          Terminée
-                        </span>
-                      );
-                      break;
-                    case 3:
-                      state = (
-                        <span className="badge bg-lime text-lime-fg">
-                          Cloturée
+                        <span className="badge bg-lime text-azure-fg">
+                          Remontée faite
                         </span>
                       );
                       break;

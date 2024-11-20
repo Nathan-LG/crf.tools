@@ -97,17 +97,15 @@ const Mission = async (props: { params: Params }) => {
   switch (mission.state) {
     case 0:
       state = (
-        <span className="badge bg-yellow text-yellow-fg">Non commencée</span>
+        <span className="badge bg-yellow text-yellow-fg">
+          Remontée en attente
+        </span>
       );
       break;
     case 1:
-      state = <span className="badge bg-azure text-azure-fg">Commencée</span>;
-      break;
-    case 2:
-      state = <span className="badge bg-purple text-purple-fg">Terminée</span>;
-      break;
-    case 3:
-      state = <span className="badge bg-lime text-lime-fg">Cloturée</span>;
+      state = (
+        <span className="badge bg-lime text-azure-fg">Remontée faite</span>
+      );
       break;
     default:
       state = <span className="badge bg-cyan text-cyan-fg">Annulée</span>;

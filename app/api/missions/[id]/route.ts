@@ -1,3 +1,4 @@
+import sendSMS from "@/app/utils/api/sendSMS";
 import { prisma } from "@/prisma";
 import moment from "moment";
 import { NextRequest, NextResponse } from "next/server";
@@ -37,20 +38,63 @@ export async function PUT(
       );
     }
 
-    const mission = await prisma.mission.update({
+    const startAt = new Date(
+      moment(parsed.data.startAt, "DD/MM/YYYY hh:mm").format(),
+    );
+
+    const endAt = new Date(
+      moment(parsed.data.endAt, "DD/MM/YYYY hh:mm").format(),
+    );
+
+    let mission = await prisma.mission.findUniqueOrThrow({
       where: {
         id: Number(id),
       },
-      data: {
-        name: parsed.data.name,
-        userEmail: parsed.data.userEmail,
-        type: parsed.data.type,
-        startAt: new Date(
-          moment(parsed.data.startAt, "DD/MM/YYYY hh:mm").format(),
-        ),
-        endAt: new Date(moment(parsed.data.endAt, "DD/MM/YYYY hh:mm").format()),
+      select: {
+        firstSMS: true,
+        secondSMS: true,
+        code: true,
       },
     });
+
+    const user = await prisma.user.findUnique({
+      where: {
+        email: parsed.data.userEmail,
+      },
+    });
+
+    const accountSid = process.env.TWILIO_ACCOUNT_SID;
+    const authToken = process.env.TWILIO_AUTH_TOKEN;
+    const client = require("twilio")(accountSid, authToken);
+
+    try {
+      await client.messages(mission.firstSMS).remove();
+      await client.messages(mission.secondSMS).remove();
+
+      const sids = await sendSMS(
+        startAt,
+        endAt,
+        mission.code,
+        user.phoneNumber,
+      );
+
+      mission = await prisma.mission.update({
+        where: {
+          id: Number(id),
+        },
+        data: {
+          name: parsed.data.name,
+          userEmail: parsed.data.userEmail,
+          type: parsed.data.type,
+          startAt: startAt,
+          endAt: endAt,
+          firstSMS: sids[0],
+          secondSMS: sids[1],
+        },
+      });
+    } catch (error) {
+      console.error("Error deleting message :", error);
+    }
 
     return new NextResponse(
       JSON.stringify({
@@ -88,7 +132,11 @@ export async function DELETE(
   const id = (await params).id;
 
   try {
-    await prisma.mission.update({
+    const accountSid = process.env.TWILIO_ACCOUNT_SID;
+    const authToken = process.env.TWILIO_AUTH_TOKEN;
+    const client = require("twilio")(accountSid, authToken);
+
+    const mission = await prisma.mission.update({
       where: {
         id: Number(id),
       },
@@ -96,6 +144,13 @@ export async function DELETE(
         state: -1,
       },
     });
+
+    try {
+      await client.messages(mission.firstSMS).remove();
+      await client.messages(mission.secondSMS).remove();
+    } catch (error) {
+      console.error("Error deleting message :", error);
+    }
   } catch (error) {
     return new NextResponse(
       JSON.stringify({

@@ -2,6 +2,7 @@ import { prisma } from "@/prisma";
 import moment from "moment";
 import { NextRequest, NextResponse } from "next/server";
 import { z, ZodError } from "zod";
+import sendSMS from "@/app/utils/api/sendSMS";
 
 const schema = z.object({
   name: z.string().trim().min(3, {
@@ -35,21 +36,39 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const startAt = new Date(
+      moment(parsed.data.startAt, "DD/MM/YYYY hh:mm").format(),
+    );
+
+    const endAt = new Date(
+      moment(parsed.data.endAt, "DD/MM/YYYY hh:mm").format(),
+    );
+
+    const user = await prisma.user.findUnique({
+      where: {
+        email: parsed.data.userEmail,
+      },
+    });
+
     const minCeiled = Math.ceil(100_000);
     const maxFloored = Math.floor(999_999);
+
+    const code = Math.floor(
+      Math.random() * (maxFloored - minCeiled) + minCeiled,
+    ).toString();
+
+    const sids = await sendSMS(startAt, endAt, code, user.phoneNumber);
 
     const mission = await prisma.mission.create({
       data: {
         name: parsed.data.name,
         userEmail: parsed.data.userEmail,
         type: parsed.data.type,
-        startAt: new Date(
-          moment(parsed.data.startAt, "DD/MM/YYYY hh:mm").format(),
-        ),
-        endAt: new Date(moment(parsed.data.endAt, "DD/MM/YYYY hh:mm").format()),
-        code: Math.floor(
-          Math.random() * (maxFloored - minCeiled) + minCeiled,
-        ).toString(),
+        startAt: startAt,
+        endAt: endAt,
+        code: code,
+        firstSMS: sids[0],
+        secondSMS: sids[1],
       },
     });
 

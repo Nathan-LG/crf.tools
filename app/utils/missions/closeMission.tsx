@@ -98,7 +98,7 @@ export default async function closeMission(comment, data, missionId) {
       },
       data: {
         comment: comment,
-        state: 3,
+        state: 1,
       },
     });
 

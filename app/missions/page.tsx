@@ -134,7 +134,7 @@ const MissionUser = async (props: { searchParams: SearchParams }) => {
                 </div>
               </div>
 
-              {mission.state !== 3 && (
+              {mission.state !== 1 && (
                 <ItemsSelection
                   items={items}
                   itemCategories={itemCategories}
@@ -143,7 +143,7 @@ const MissionUser = async (props: { searchParams: SearchParams }) => {
                 />
               )}
 
-              {mission.state === 3 && (
+              {mission.state === 1 && (
                 <div className="alert alert-warning mt-3" role="alert">
                   <div className="d-flex">
                     <div>
