@@ -7,59 +7,99 @@ import AddUserModal from "@/components/users/AddUserModal";
 import EditUserModal from "@/components/users/EditUserModal";
 import EditTempUserModal from "@/components/users/EditTempUserModal";
 import DeleteModal from "@/components/ui/DeleteModal";
+import * as Sentry from "@sentry/nextjs";
+import { redirect } from "next/navigation";
+import { Group } from "@prisma/client";
+
+// Metadata
 
 export const metadata: Metadata = {
   title: "Bénévoles",
 };
 
-const pageData = {
-  ariane: [
-    { label: "stock.crf", href: "/dashboard" },
-    { label: "Bénévoles", href: "/dashboard/users" },
-  ],
-  title: "Liste des bénévoles",
-  button: "Ajouter un bénévole",
-  buttonIcon: <IconPlus className="icon" />,
-  buttonLink: "",
-  buttonModal: "modal-add-user",
-};
+// ----------------------------
 
 const Users = async () => {
-  const users = await prisma.user.findMany({
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      phoneNumber: true,
-      image: true,
-      group: {
-        select: {
-          name: true,
+  // Fetch all users
+
+  let users: {
+    group: {
+      name: string;
+    };
+    id: string;
+    name: string;
+    email: string;
+    image: string;
+    phoneNumber: string;
+    groupId: number;
+  }[];
+
+  try {
+    users = await prisma.user.findMany({
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        phoneNumber: true,
+        image: true,
+        group: {
+          select: {
+            name: true,
+          },
         },
+        groupId: true,
       },
-      groupId: true,
-    },
-    orderBy: {
-      email: "asc",
-    },
-  });
+      orderBy: {
+        email: "asc",
+      },
+    });
+  } catch (error) {
+    Sentry.captureException(error);
+    redirect("/errors/500");
+  }
 
-  const tempUsers = await prisma.tempUser.findMany({
-    select: {
-      id: true,
-      email: true,
-      phoneNumber: true,
-    },
-    orderBy: {
-      email: "asc",
-    },
-  });
+  // Fetch all temp users
 
-  const groups = await prisma.group.findMany();
+  let tempUsers: {
+    id: string;
+    email: string;
+    phoneNumber: string;
+  }[];
+
+  try {
+    tempUsers = await prisma.tempUser.findMany({
+      select: {
+        id: true,
+        email: true,
+        phoneNumber: true,
+      },
+      orderBy: {
+        email: "asc",
+      },
+    });
+  } catch (error) {
+    Sentry.captureException(error);
+    redirect("/errors/500");
+  }
+
+  // Fetch all groups
+
+  let groups: Group[];
+
+  try {
+    groups = await prisma.group.findMany();
+  } catch (error) {
+    Sentry.captureException(error);
+    redirect("/errors/500");
+  }
+
+  // DOM generation
 
   let tempUsersJSX = <></>;
 
   if (tempUsers.length !== 0) {
+    // Display temp users
+
     tempUsersJSX = (
       <>
         <div className="col-12 mb-3">
@@ -114,6 +154,8 @@ const Users = async () => {
     );
   }
 
+  // If no users are found
+
   let usersJSX = (
     <div className="col-12">
       <div className="card">
@@ -130,6 +172,8 @@ const Users = async () => {
       </div>
     </div>
   );
+
+  // Otherwise, display users
 
   if (users.length !== 0) {
     usersJSX = (
@@ -204,6 +248,22 @@ const Users = async () => {
       </div>
     );
   }
+
+  // Page data
+
+  const pageData = {
+    ariane: [
+      { label: "stock.crf", href: "/dashboard" },
+      { label: "Bénévoles", href: "/dashboard/users" },
+    ],
+    title: "Liste des bénévoles",
+    button: "Ajouter un bénévole",
+    buttonIcon: <IconPlus className="icon" />,
+    buttonLink: "",
+    buttonModal: "modal-add-user",
+  };
+
+  // DOM rendering
 
   return (
     <ContentLayout subHeaderProps={pageData}>
