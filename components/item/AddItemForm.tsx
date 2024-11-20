@@ -131,6 +131,7 @@ const AddItemForm = ({ categories, locationTypes }) => {
                           onChange={(val) => field.onChange(val.value)}
                           options={options}
                           placeholder="Sélectionner"
+                          required
                           styles={selectStyle}
                           value={options.find((c) => c.value === field.value)}
                           components={{ Option: IconOption }}
@@ -164,6 +165,7 @@ const AddItemForm = ({ categories, locationTypes }) => {
                           onChange={(val) => field.onChange(val.value)}
                           options={optionsUnits}
                           placeholder="Sélectionner"
+                          required
                           styles={selectStyle}
                           value={optionsUnits.find(
                             (c) => c.value === field.value,

@@ -8,7 +8,7 @@ const schema = z.object({
   }),
   itemCategoryId: z.string().trim().min(1),
   description: z.string().trim(),
-  unit: z.string().trim().min(1),
+  unit: z.string().trim().min(3),
 });
 
 export async function POST(req: NextRequest) {
@@ -34,10 +34,12 @@ export async function POST(req: NextRequest) {
     });
 
     const locationMandatoryItemData = locationTypes.map((locationType) => {
+      const countNumber = Number(data["locationTypeNumber" + locationType.id]);
+
       return {
         locationTypeId: locationType.id,
         itemId: item.id,
-        count: parsed.data["locationTypeNumber" + locationType.id],
+        count: countNumber,
       };
     });
 
