@@ -9,7 +9,13 @@ process.env.NODE_ENV === "production" &&
     dsn: process.env.SENTRY_DSN,
 
     // Add optional integrations for additional features
-    integrations: [Sentry.replayIntegration()],
+    integrations: [
+      Sentry.replayIntegration(),
+      Sentry.feedbackIntegration({
+        colorScheme: "system",
+        isNameRequired: true,
+      }),
+    ],
 
     // Define how likely traces are sampled. Adjust this value in production, or use tracesSampler for greater control.
     tracesSampleRate: 1,
