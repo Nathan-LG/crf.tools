@@ -14,21 +14,16 @@ import moment from "moment";
 import SearchMissions from "@/components/mission/SearchMission";
 import PaginationMissions from "@/components/mission/PaginationMissions";
 import EditMissionModal from "@/components/mission/EditMissionModal";
+import * as Sentry from "@sentry/nextjs";
+import { redirect } from "next/navigation";
+
+// Metadata
 
 export const metadata: Metadata = {
   title: "Missions",
 };
 
-const pageData = {
-  ariane: [
-    { label: "stock.crf", href: "/dashboard" },
-    { label: "Missions", href: "/dashboard/missions" },
-  ],
-  title: "Liste des missions",
-  button: "Ajouter une mission",
-  buttonIcon: <IconPlus className="icon" />,
-  buttonLink: "/dashboard/missions/add",
-};
+// ----------------------------
 
 const Missions = async ({
   searchParams,
@@ -38,39 +33,82 @@ const Missions = async ({
     page?: string;
   }>;
 }) => {
+  // Fetch missions filtered by query and paginated
+
   const searchParamsSync = await searchParams;
 
   const query = searchParamsSync?.query || "";
   const currentPage = Number(searchParamsSync?.page) || 1;
 
-  const missions = await prisma.mission.findMany({
-    select: {
-      id: true,
-      name: true,
-      userEmail: true,
-      startAt: true,
-      endAt: true,
-      state: true,
-      type: true,
-    },
-    orderBy: {
-      startAt: "desc",
-    },
-    where: {
-      name: {
-        contains: query,
-        mode: "insensitive",
-      },
-    },
-    skip: (currentPage - 1) * 20,
-    take: 20,
-  });
+  let missions: {
+    name: string;
+    id: number;
+    userEmail: string;
+    startAt: Date;
+    endAt: Date;
+    type: string;
+    state: number;
+  }[];
 
-  const globalUsers = await prisma.globalUser.findMany({
-    select: {
-      email: true,
-    },
-  });
+  try {
+    missions = await prisma.mission.findMany({
+      select: {
+        id: true,
+        name: true,
+        userEmail: true,
+        startAt: true,
+        endAt: true,
+        state: true,
+        type: true,
+      },
+      orderBy: {
+        startAt: "desc",
+      },
+      where: {
+        name: {
+          contains: query,
+          mode: "insensitive",
+        },
+      },
+      skip: (currentPage - 1) * 20,
+      take: 20,
+    });
+  } catch (error) {
+    Sentry.captureException(error);
+    redirect("/errors/500");
+  }
+
+  // Fetch global users to display their names
+
+  let globalUsers: {
+    email: string;
+  }[];
+
+  try {
+    globalUsers = await prisma.globalUser.findMany({
+      select: {
+        email: true,
+      },
+    });
+  } catch (error) {
+    Sentry.captureException(error);
+    redirect("/errors/500");
+  }
+
+  // Page data
+
+  const pageData = {
+    ariane: [
+      { label: "stock.crf", href: "/dashboard" },
+      { label: "Missions", href: "/dashboard/missions" },
+    ],
+    title: "Liste des missions",
+    button: "Ajouter une mission",
+    buttonIcon: <IconPlus className="icon" />,
+    buttonLink: "/dashboard/missions/add",
+  };
+
+  // DOM rendering
 
   return (
     <ContentLayout subHeaderProps={pageData}>

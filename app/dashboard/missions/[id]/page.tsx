@@ -9,34 +9,49 @@ import {
   IconUserStar,
 } from "@tabler/icons-react";
 import { prisma } from "@/prisma";
+import * as Sentry from "@sentry/nextjs";
 import { redirect } from "next/navigation";
 import moment from "moment";
 
 type Params = Promise<{ id: string }>;
+
+// Metadata generation that redirects to 404 if the mission is not found
 
 export async function generateMetadata(props: {
   params: Params;
 }): Promise<Metadata> {
   const params = await props.params;
 
-  const mission = await prisma.mission.findFirst({
-    select: {
-      name: true,
-    },
-    where: {
-      id: Number(params.id),
-    },
-  });
+  let mission: {
+    name: string;
+  };
+
+  try {
+    mission = await prisma.mission.findFirstOrThrow({
+      select: {
+        name: true,
+      },
+      where: {
+        id: Number(params.id),
+      },
+    });
+  } catch {
+    redirect("/errors/404");
+  }
 
   return {
     title: mission.name,
   };
 }
 
-const Mission = async (props: { params: Params }) => {
-  let mission;
+// ----------------------------
 
+const Mission = async (props: { params: Params }) => {
   const params = await props.params;
+
+  // Fetch the mission or redirect to 404 if it doesn't exist
+
+  let mission: any;
 
   try {
     mission = await prisma.mission.findUniqueOrThrow({
@@ -45,54 +60,70 @@ const Mission = async (props: { params: Params }) => {
       },
     });
   } catch {
-    redirect("/dashboard/404");
+    redirect("/errors/404");
   }
 
-  const pageData = {
-    ariane: [
-      { label: "stock.crf", href: "/dashboard" },
-      { label: "Missions", href: "/dashboard/missions" },
-      { label: mission.name, href: `/dashboard/missions/${mission.id}` },
-    ],
-    title: mission.name,
-    button: "",
-    buttonIcon: undefined,
-    buttonLink: "",
-  };
+  // Fetch the moves of the mission
 
-  const moves = await prisma.move.findMany({
-    where: {
-      missionId: mission.id,
-    },
-    select: {
-      id: true,
-      user: {
-        select: {
-          image: true,
-          name: true,
-        },
+  let moves: {
+    number: number;
+    user: {
+      name: string;
+      image: string;
+    };
+    location: {
+      name: string;
+      type: {
+        icon: string;
+      };
+    };
+    item: {
+      name: string;
+      unit: string;
+    };
+    id: number;
+  }[];
+
+  try {
+    moves = await prisma.move.findMany({
+      where: {
+        missionId: mission.id,
       },
-      item: {
-        select: {
-          name: true,
-          unit: true,
+      select: {
+        id: true,
+        user: {
+          select: {
+            image: true,
+            name: true,
+          },
         },
-      },
-      number: true,
-      location: {
-        select: {
-          name: true,
-          type: {
-            select: {
-              icon: true,
+        item: {
+          select: {
+            name: true,
+            unit: true,
+          },
+        },
+        number: true,
+        location: {
+          select: {
+            name: true,
+            type: {
+              select: {
+                icon: true,
+              },
             },
           },
         },
       },
-    },
-  });
+    });
+  } catch (error) {
+    Sentry.captureException(error);
+    redirect("/errors/500");
+  }
 
-  let state = <span className="badge bg-red">Annulée</span>;
+  // Define mission state
+
+  let state = <span className="badge bg-cyan text-cyan-fg">Annulée</span>;
 
   switch (mission.state) {
     case 0:
@@ -107,10 +138,23 @@ const Mission = async (props: { params: Params }) => {
         <span className="badge bg-lime text-azure-fg">Remontée faite</span>
       );
       break;
-    default:
-      state = <span className="badge bg-cyan text-cyan-fg">Annulée</span>;
-      break;
   }
+
+  // Page data
+
+  const pageData = {
+    ariane: [
+      { label: "stock.crf", href: "/dashboard" },
+      { label: "Missions", href: "/dashboard/missions" },
+      { label: mission.name, href: `/dashboard/missions/${mission.id}` },
+    ],
+    title: mission.name,
+    button: "",
+    buttonIcon: undefined,
+    buttonLink: "",
+  };
+
+  // DOM rendering
 
   return (
     <ContentLayout subHeaderProps={pageData}>
