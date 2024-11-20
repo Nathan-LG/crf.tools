@@ -3,32 +3,53 @@ import ContentLayout from "@/components/ui/ContentLayout";
 import { prisma } from "@/prisma";
 import { redirect } from "next/navigation";
 import EditItemQuantities from "@/components/item/EditItemQuantities";
+import * as Sentry from "@sentry/nextjs";
 
 type Props = Promise<{ id: string }>;
+
+// Metadata generation that redirects to 404 if the item is not found
 
 export async function generateMetadata(props: {
   params: Props;
 }): Promise<Metadata> {
   const params = await props.params;
 
-  const item = await prisma.item.findFirst({
-    select: {
-      name: true,
-    },
-    where: {
-      id: Number(params.id),
-    },
-  });
+  let item: {
+    name: string;
+  };
+
+  try {
+    item = await prisma.item.findFirstOrThrow({
+      select: {
+        name: true,
+      },
+      where: {
+        id: Number(params.id),
+      },
+    });
+  } catch {
+    redirect("/errors/404");
+  }
 
   return {
     title: `Éditer les quantités obligatoires de ${item.name}`,
   };
 }
 
+// ----------------------------
+
 const EditItem = async (props: { params: Props }) => {
-  let item;
+  let item: {
+    ItemCategory: { name: string; id: number; icon: string };
+    name: string;
+    id: number;
+    description: string;
+    unit: string;
+  };
 
   const params = await props.params;
+
+  // Fetch item or redirect to 404
 
   try {
     item = await prisma.item.findUniqueOrThrow({
@@ -50,8 +71,48 @@ const EditItem = async (props: { params: Props }) => {
       },
     });
   } catch {
-    redirect("/dashboard/404");
+    redirect("/errors/404");
   }
+
+  // Fetch location types and mandatory item counts
+
+  let locationTypes: { name: string; id: number; icon: string }[];
+  let locationMandatoryItems: {
+    locationTypeId: number;
+    itemId: number;
+    count: number;
+  }[];
+
+  try {
+    locationTypes = await prisma.locationType.findMany({
+      select: {
+        id: true,
+        name: true,
+        icon: true,
+      },
+    });
+  } catch (error) {
+    Sentry.captureException(error);
+    redirect("/errors/500");
+  }
+
+  try {
+    locationMandatoryItems = await prisma.locationMandatoryItem.findMany({
+      select: {
+        locationTypeId: true,
+        itemId: true,
+        count: true,
+      },
+      where: {
+        itemId: item.id,
+      },
+    });
+  } catch (error) {
+    Sentry.captureException(error);
+    redirect("/errors/500");
+  }
+
+  // Page data
 
   const pageData = {
     ariane: [
@@ -69,24 +130,7 @@ const EditItem = async (props: { params: Props }) => {
     buttonLink: "",
   };
 
-  const locationTypes = await prisma.locationType.findMany({
-    select: {
-      id: true,
-      name: true,
-      icon: true,
-    },
-  });
-
-  const locationMandatoryItems = await prisma.locationMandatoryItem.findMany({
-    select: {
-      locationTypeId: true,
-      itemId: true,
-      count: true,
-    },
-    where: {
-      itemId: item.id,
-    },
-  });
+  // DOM rendering
 
   return (
     <ContentLayout subHeaderProps={pageData}>

@@ -4,34 +4,56 @@ import { IconMoodEmpty, IconPlus } from "@tabler/icons-react";
 import { prisma } from "@/prisma";
 import DeleteModal from "@/components/ui/DeleteModal";
 import EditItemCategoryForm from "@/components/itemCategory/EditItemCategoryModal";
+import * as Sentry from "@sentry/nextjs";
+import { redirect } from "next/navigation";
+
+// Metadata
 
 export const metadata: Metadata = {
   title: "Catégories de consommables",
 };
 
-const pageData = {
-  ariane: [
-    { label: "stock.crf", href: "/dashboard" },
-    { label: "Consommables", href: "/dashboard/items" },
-    { label: "Catégories", href: "/dashboard/items/categories" },
-  ],
-  title: "Liste des catégories de consommables",
-  button: "Ajouter une catégorie",
-  buttonIcon: <IconPlus className="icon" />,
-  buttonLink: "/dashboard/items/categories/add",
-};
+// ----------------------------
 
 const LocationsType = async () => {
-  const itemCategories = await prisma.itemCategory.findMany({
-    select: {
-      id: true,
-      name: true,
-      description: true,
-      icon: true,
-    },
-  });
+  let itemCategories: {
+    id: number;
+    name: string;
+    description: string;
+    icon: string;
+  }[];
+
+  try {
+    itemCategories = await prisma.itemCategory.findMany({
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        icon: true,
+      },
+    });
+  } catch (error) {
+    Sentry.captureException(error);
+    redirect("/errors/500");
+  }
+
+  // Page data
+
+  const pageData = {
+    ariane: [
+      { label: "stock.crf", href: "/dashboard" },
+      { label: "Consommables", href: "/dashboard/items" },
+      { label: "Catégories", href: "/dashboard/items/categories" },
+    ],
+    title: "Liste des catégories de consommables",
+    button: "Ajouter une catégorie",
+    buttonIcon: <IconPlus className="icon" />,
+    buttonLink: "/dashboard/items/categories/add",
+  };
 
   if (itemCategories.length === 0) {
+    // DOM rendering if there are no item categories
+
     return (
       <ContentLayout subHeaderProps={pageData}>
         <div className="col-12">
@@ -51,6 +73,8 @@ const LocationsType = async () => {
       </ContentLayout>
     );
   } else {
+    // DOM rendering if there are item categories
+
     return (
       <ContentLayout subHeaderProps={pageData}>
         <div className="col-12">
@@ -133,4 +157,5 @@ const LocationsType = async () => {
     );
   }
 };
+
 export default LocationsType;

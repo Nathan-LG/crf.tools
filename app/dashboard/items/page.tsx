@@ -5,52 +5,89 @@ import { prisma } from "@/prisma";
 import DeleteModal from "@/components/ui/DeleteModal";
 import EditItemModal from "@/components/item/EditItemModal";
 import Link from "next/link";
+import * as Sentry from "@sentry/nextjs";
+import { redirect } from "next/navigation";
+import { ItemCategory } from "@prisma/client";
+
+// Metadata
 
 export const metadata: Metadata = {
   title: "Consommables",
 };
 
-const pageData = {
-  ariane: [
-    { label: "stock.crf", href: "/dashboard" },
-    { label: "Consommables", href: "/dashboard/items" },
-  ],
-  title: "Liste des consommables",
-  button: "Ajouter un consommable",
-  buttonIcon: <IconPlus className="icon" />,
-  buttonLink: "/dashboard/items/add",
-};
+// ----------------------------
 
 const Items = async () => {
-  const items = await prisma.item.findMany({
-    select: {
-      id: true,
-      name: true,
-      description: true,
-      unit: true,
-      ItemCategory: {
-        select: {
-          id: true,
-          name: true,
-          icon: true,
+  let items: {
+    ItemCategory: {
+      id: number;
+      name: string;
+      icon: string;
+    };
+    id: number;
+    name: string;
+    description: string;
+    unit: string;
+  }[];
+
+  // Fetch all items ordered by category and name
+
+  try {
+    items = await prisma.item.findMany({
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        unit: true,
+        ItemCategory: {
+          select: {
+            id: true,
+            name: true,
+            icon: true,
+          },
         },
       },
-    },
-    orderBy: [
-      {
-        itemCategoryId: "asc",
-      },
-      {
-        name: "asc",
-      },
-    ],
-  });
+      orderBy: [
+        {
+          itemCategoryId: "asc",
+        },
+        {
+          name: "asc",
+        },
+      ],
+    });
+  } catch (error) {
+    Sentry.captureException(error);
+    redirect("/errors/500");
+  }
 
-  const categories = await prisma.itemCategory.findMany();
+  let categories: ItemCategory[];
+
+  try {
+    categories = await prisma.itemCategory.findMany();
+  } catch (error) {
+    Sentry.captureException(error);
+    redirect("/errors/500");
+  }
 
   let lastCategory = -1;
 
+  // Page data
+
+  const pageData = {
+    ariane: [
+      { label: "stock.crf", href: "/dashboard" },
+      { label: "Consommables", href: "/dashboard/items" },
+    ],
+    title: "Liste des consommables",
+    button: "Ajouter un consommable",
+    buttonIcon: <IconPlus className="icon" />,
+    buttonLink: "/dashboard/items/add",
+  };
+
   if (items.length === 0) {
+    // DOM rendering if there are no items
+
     return (
       <ContentLayout subHeaderProps={pageData}>
         <div className="col-12">
@@ -70,6 +107,8 @@ const Items = async () => {
       </ContentLayout>
     );
   } else {
+    // DOM rendering if there are items
+
     return (
       <ContentLayout subHeaderProps={pageData}>
         <div className="col-12">
@@ -165,4 +204,5 @@ const Items = async () => {
     );
   }
 };
+
 export default Items;
