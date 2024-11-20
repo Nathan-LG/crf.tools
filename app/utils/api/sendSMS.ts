@@ -1,9 +1,11 @@
 "use server";
 
+import Twilio from "twilio";
+
 export default async function sendSMS(startAt, endAt, code, phoneNumber) {
   const accountSid = process.env.TWILIO_ACCOUNT_SID;
   const authToken = process.env.TWILIO_AUTH_TOKEN;
-  const client = require("twilio")(accountSid, authToken);
+  const client = Twilio(accountSid, authToken);
 
   const messagingServiceSid = process.env.TWILIO_MESSAGING_SERVICE_SID;
   const firstMessage = await client.messages.create({

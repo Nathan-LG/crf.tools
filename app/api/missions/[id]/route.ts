@@ -3,6 +3,7 @@ import { prisma } from "@/prisma";
 import moment from "moment";
 import { NextRequest, NextResponse } from "next/server";
 import { z, ZodError } from "zod";
+import Twilio from "twilio";
 
 const schema = z.object({
   name: z.string().trim(),
@@ -65,7 +66,7 @@ export async function PUT(
 
     const accountSid = process.env.TWILIO_ACCOUNT_SID;
     const authToken = process.env.TWILIO_AUTH_TOKEN;
-    const client = require("twilio")(accountSid, authToken);
+    const client = Twilio(accountSid, authToken);
 
     try {
       await client.messages(mission.firstSMS).remove();
@@ -134,7 +135,7 @@ export async function DELETE(
   try {
     const accountSid = process.env.TWILIO_ACCOUNT_SID;
     const authToken = process.env.TWILIO_AUTH_TOKEN;
-    const client = require("twilio")(accountSid, authToken);
+    const client = Twilio(accountSid, authToken);
 
     const mission = await prisma.mission.update({
       where: {
