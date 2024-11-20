@@ -32,8 +32,7 @@ export async function generateMetadata(props: {
         id: Number(params.id),
       },
     });
-  } catch (error) {
-    Sentry.captureException(error);
+  } catch {
     redirect("/errors/404");
   }
 

@@ -2,31 +2,54 @@ import type { Metadata } from "next";
 import ContentLayout from "@/components/ui/ContentLayout";
 import { prisma } from "@/prisma";
 import AddLocationForm from "@/components/location/AddLocationForm";
+import * as Sentry from "@sentry/nextjs";
+import { redirect } from "next/navigation";
+
+// Metadata
 
 export const metadata: Metadata = {
   title: "Ajouter un emplacement",
 };
 
-const pageData = {
-  ariane: [
-    { label: "stock.crf", href: "/dashboard" },
-    { label: "Emplacements", href: "/dashboard/locations" },
-    { label: "Ajouter un emplacement", href: "/dashboard/locations/add" },
-  ],
-  title: "Ajouter un emplacement",
-  button: "",
-  buttonIcon: undefined,
-  buttonLink: "",
-};
+// ----------------------------
 
 const AddLocation = async () => {
-  const categories = await prisma.locationType.findMany({
-    select: {
-      id: true,
-      name: true,
-      icon: true,
-    },
-  });
+  // Fetch location types
+
+  let categories: {
+    id: number;
+    name: string;
+    icon: string;
+  }[];
+
+  try {
+    categories = await prisma.locationType.findMany({
+      select: {
+        id: true,
+        name: true,
+        icon: true,
+      },
+    });
+  } catch (error) {
+    Sentry.captureException(error);
+    redirect("/errors/500");
+  }
+
+  // Page data
+
+  const pageData = {
+    ariane: [
+      { label: "stock.crf", href: "/dashboard" },
+      { label: "Emplacements", href: "/dashboard/locations" },
+      { label: "Ajouter un emplacement", href: "/dashboard/locations/add" },
+    ],
+    title: "Ajouter un emplacement",
+    button: "",
+    buttonIcon: undefined,
+    buttonLink: "",
+  };
+
+  // DOM rendering
 
   return (
     <ContentLayout subHeaderProps={pageData}>
@@ -34,4 +57,5 @@ const AddLocation = async () => {
     </ContentLayout>
   );
 };
+
 export default AddLocation;

@@ -4,37 +4,61 @@ import { IconMoodEmpty, IconPlus } from "@tabler/icons-react";
 import { prisma } from "@/prisma";
 import DeleteModal from "@/components/ui/DeleteModal";
 import EditLocationTypeModal from "@/components/locationType/EditLocationTypeModal";
+import * as Sentry from "@sentry/nextjs";
+import { redirect } from "next/navigation";
+
+// Metadata
 
 export const metadata: Metadata = {
   title: "Catégories d'emplacements",
 };
 
-const pageData = {
-  ariane: [
-    { label: "stock.crf", href: "/dashboard" },
-    { label: "Emplacements", href: "/dashboard/locations" },
-    { label: "Catégories", href: "/dashboard/locations/types" },
-  ],
-  title: "Liste des catégories d'emplacement",
-  button: "Ajouter une catégorie",
-  buttonIcon: <IconPlus className="icon" />,
-  buttonLink: "/dashboard/locations/types/add",
-};
+// ----------------------------
 
 const LocationsType = async () => {
-  const locationsType = await prisma.locationType.findMany({
-    select: {
-      id: true,
-      name: true,
-      description: true,
-      icon: true,
-    },
-    orderBy: {
-      name: "asc",
-    },
-  });
+  // Fetch location types
+
+  let locationsType: {
+    id: number;
+    name: string;
+    description: string;
+    icon: string;
+  }[];
+
+  try {
+    locationsType = await prisma.locationType.findMany({
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        icon: true,
+      },
+      orderBy: {
+        name: "asc",
+      },
+    });
+  } catch (error) {
+    Sentry.captureException(error);
+    redirect("/errors/500");
+  }
+
+  // Page data
+
+  const pageData = {
+    ariane: [
+      { label: "stock.crf", href: "/dashboard" },
+      { label: "Emplacements", href: "/dashboard/locations" },
+      { label: "Catégories", href: "/dashboard/locations/types" },
+    ],
+    title: "Liste des catégories d'emplacement",
+    button: "Ajouter une catégorie",
+    buttonIcon: <IconPlus className="icon" />,
+    buttonLink: "/dashboard/locations/types/add",
+  };
 
   if (locationsType.length === 0) {
+    // DOM rendering if no location type found
+
     return (
       <ContentLayout subHeaderProps={pageData}>
         <div className="col-12">
@@ -54,6 +78,8 @@ const LocationsType = async () => {
       </ContentLayout>
     );
   } else {
+    // DOM rendering if location types found
+
     return (
       <ContentLayout subHeaderProps={pageData}>
         <div className="col-12">
@@ -136,4 +162,5 @@ const LocationsType = async () => {
     );
   }
 };
+
 export default LocationsType;

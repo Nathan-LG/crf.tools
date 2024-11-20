@@ -6,34 +6,49 @@ import {
   IconSquareArrowUpFilled,
 } from "@tabler/icons-react";
 import { prisma } from "@/prisma";
-import { redirect } from "next/navigation";
 import Link from "next/link";
+import * as Sentry from "@sentry/nextjs";
+import { redirect } from "next/navigation";
 
 type Params = Promise<{ id: string }>;
+
+// Metadata generation that redirects to 404 if the location is not found
 
 export async function generateMetadata(props: {
   params: Params;
 }): Promise<Metadata> {
   const params = await props.params;
 
-  const location = await prisma.location.findFirst({
-    select: {
-      name: true,
-    },
-    where: {
-      id: Number(params.id),
-    },
-  });
+  let location: {
+    name: string;
+  };
+
+  try {
+    location = await prisma.location.findFirstOrThrow({
+      select: {
+        name: true,
+      },
+      where: {
+        id: Number(params.id),
+      },
+    });
+  } catch {
+    redirect("/errors/404");
+  }
 
   return {
     title: location.name,
   };
 }
 
-const Location = async (props: { params: Params }) => {
-  let location;
+// ----------------------------
 
+const Location = async (props: { params: Params }) => {
   const params = await props.params;
+
+  // Fetch location or redirect to 404 if not found
+
+  let location: any;
 
   try {
     location = await prisma.location.findUniqueOrThrow({
@@ -42,8 +57,84 @@ const Location = async (props: { params: Params }) => {
       },
     });
   } catch {
-    redirect("/dashboard/404");
+    redirect("/errors/404");
   }
+
+  // Fetch location mandatory items
+
+  let locationMandatoryItems: {
+    itemId: number;
+    count: number;
+  }[];
+
+  try {
+    locationMandatoryItems = await prisma.locationMandatoryItem.findMany({
+      where: {
+        locationTypeId: location.typeId,
+      },
+      select: {
+        itemId: true,
+        count: true,
+      },
+    });
+  } catch (error) {
+    Sentry.captureException(error);
+    redirect("/errors/500");
+  }
+
+  // Fetch real location items
+
+  let locationsItem: {
+    itemId: number;
+    count: number;
+  }[];
+
+  try {
+    locationsItem = await prisma.locationItem.findMany({
+      where: {
+        locationId: location.id,
+      },
+      select: {
+        itemId: true,
+        count: true,
+      },
+    });
+  } catch (error) {
+    Sentry.captureException(error);
+    redirect("/errors/500");
+  }
+
+  // Fetch items
+
+  let items: any;
+
+  try {
+    items = await prisma.item.findMany({
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        unit: true,
+        ItemCategory: {
+          select: {
+            id: true,
+            name: true,
+            icon: true,
+          },
+        },
+      },
+      orderBy: {
+        itemCategoryId: "asc",
+      },
+    });
+  } catch (error) {
+    Sentry.captureException(error);
+    redirect("/errors/500");
+  }
+
+  let lastCategory = -1;
+
+  // Page data
 
   const pageData = {
     ariane: [
@@ -57,46 +148,7 @@ const Location = async (props: { params: Params }) => {
     buttonLink: "",
   };
 
-  const locationMandatoryItems = await prisma.locationMandatoryItem.findMany({
-    where: {
-      locationTypeId: location.typeId,
-    },
-    select: {
-      itemId: true,
-      count: true,
-    },
-  });
-
-  const items = await prisma.item.findMany({
-    select: {
-      id: true,
-      name: true,
-      description: true,
-      unit: true,
-      ItemCategory: {
-        select: {
-          id: true,
-          name: true,
-          icon: true,
-        },
-      },
-    },
-    orderBy: {
-      itemCategoryId: "asc",
-    },
-  });
-
-  const locationsItem = await prisma.locationItem.findMany({
-    where: {
-      locationId: location.id,
-    },
-    select: {
-      itemId: true,
-      count: true,
-    },
-  });
-
-  let lastCategory = -1;
+  // DOM rendering
 
   return (
     <ContentLayout subHeaderProps={pageData}>
@@ -187,4 +239,5 @@ const Location = async (props: { params: Params }) => {
     </ContentLayout>
   );
 };
+
 export default Location;

@@ -5,43 +5,80 @@ import { prisma } from "@/prisma";
 import EditLocationModal from "@/components/location/EditLocationModal";
 import DeleteModal from "@/components/ui/DeleteModal";
 import Link from "next/link";
+import * as Sentry from "@sentry/nextjs";
+import { redirect } from "next/navigation";
+import { LocationType } from "@prisma/client";
+
+// Metadata
 
 export const metadata: Metadata = {
   title: "Emplacements",
 };
 
-const pageData = {
-  ariane: [
-    { label: "stock.crf", href: "/dashboard" },
-    { label: "Emplacements", href: "/dashboard/locations" },
-  ],
-  title: "Liste des emplacements",
-  button: "Ajouter un emplacement",
-  buttonIcon: <IconPlus className="icon" />,
-  buttonLink: "/dashboard/locations/add",
-};
+// ----------------------------
 
 const Locations = async () => {
-  const locations = await prisma.location.findMany({
-    select: {
-      id: true,
-      name: true,
-      description: true,
-      type: {
-        select: {
-          id: true,
-          icon: true,
+  // Fetch locations
+
+  let locations: {
+    name: string;
+    id: number;
+    description: string;
+    type: {
+      id: number;
+      icon: string;
+    };
+  }[];
+
+  try {
+    locations = await prisma.location.findMany({
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        type: {
+          select: {
+            id: true,
+            icon: true,
+          },
         },
       },
-    },
-    orderBy: {
-      name: "asc",
-    },
-  });
+      orderBy: {
+        name: "asc",
+      },
+    });
+  } catch (error) {
+    Sentry.captureException(error);
+    redirect("/errors/500");
+  }
 
-  const locationTypes = await prisma.locationType.findMany();
+  // Fetch location types
+
+  let locationTypes: LocationType[];
+
+  try {
+    locationTypes = await prisma.locationType.findMany();
+  } catch (error) {
+    Sentry.captureException(error);
+    redirect("/errors/500");
+  }
+
+  // Page data
+
+  const pageData = {
+    ariane: [
+      { label: "stock.crf", href: "/dashboard" },
+      { label: "Emplacements", href: "/dashboard/locations" },
+    ],
+    title: "Liste des emplacements",
+    button: "Ajouter un emplacement",
+    buttonIcon: <IconPlus className="icon" />,
+    buttonLink: "/dashboard/locations/add",
+  };
 
   if (locations.length === 0) {
+    // DOM rendering if no location found
+
     return (
       <ContentLayout subHeaderProps={pageData}>
         <div className="col-12">
@@ -61,6 +98,8 @@ const Locations = async () => {
       </ContentLayout>
     );
   } else {
+    // DOM rendering if locations found
+
     return (
       <ContentLayout subHeaderProps={pageData}>
         <div className="col-12">
