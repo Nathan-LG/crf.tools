@@ -25,8 +25,6 @@ const EditItemModal = ({ formProps }: ItemFormProps) => {
 
   const router = useRouter();
 
-  console.log(formProps);
-
   async function onSubmit(data) {
     setIsLoading(true);
 

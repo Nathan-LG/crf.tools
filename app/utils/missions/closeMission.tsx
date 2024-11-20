@@ -3,6 +3,7 @@
 import { auth } from "@/auth";
 import { prisma } from "@/prisma";
 import { redirect } from "next/navigation";
+import * as Sentry from "@sentry/nextjs";
 
 export async function redirectMission() {
   redirect("/thanks");
@@ -13,6 +14,8 @@ export default async function closeMission(comment, data, missionId) {
   if (!session) redirect("/auth/signin");
 
   try {
+    // Fetch user id
+
     const user = await prisma.user.findUnique({
       where: {
         id: session.user.id,
@@ -104,7 +107,7 @@ export default async function closeMission(comment, data, missionId) {
 
     return true;
   } catch (e) {
-    console.log(e);
+    Sentry.captureException(e);
     return false;
   }
 }
