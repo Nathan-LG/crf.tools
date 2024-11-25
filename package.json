@@ -15,7 +15,7 @@
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.4",
     "@prisma/client": "^5.22.0",
-    "@sentry/nextjs": "^8.39.0",
+    "@sentry/nextjs": "^8.40.0",
     "@sentry/node": "^8.39.0",
     "@tabler/core": "1.0.0-beta21",
     "@tabler/icons": "^3.21.0",
