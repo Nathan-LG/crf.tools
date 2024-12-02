@@ -67,8 +67,8 @@ importers:
         specifier: 19.0.0-rc-69d4b800-20241021
         version: 19.0.0-rc-69d4b800-20241021
       react-apexcharts:
-        specifier: ^1.4.1
-        version: 1.4.1(apexcharts@3.54.1)(react@19.0.0-rc-69d4b800-20241021)
+        specifier: ^1.5.0
+        version: 1.5.0(apexcharts@3.54.1)(react@19.0.0-rc-69d4b800-20241021)
       react-dom:
         specifier: 19.0.0-rc-69d4b800-20241021
         version: 19.0.0-rc-69d4b800-20241021(react@19.0.0-rc-69d4b800-20241021)
@@ -2503,8 +2503,8 @@ packages:
   randombytes@2.1.0:
     resolution: {integrity: sha512-vYl3iOX+4CKUWuxGi9Ukhie6fsqXqS9FE2Zaic4tNFD2N2QQaXOMFbuKK4QmDHC0JO6B1Zp41J0LpT0oR68amQ==}
 
-  react-apexcharts@1.4.1:
-    resolution: {integrity: sha512-G14nVaD64Bnbgy8tYxkjuXEUp/7h30Q0U33xc3AwtGFijJB9nHqOt1a6eG0WBn055RgRg+NwqbKGtqPxy15d0Q==}
+  react-apexcharts@1.5.0:
+    resolution: {integrity: sha512-RwIqhYee8tT6WsDR9I15bhDuPitM+z/P092QPttFR5D57M21/WtYKHE9JQMbcz9bmF35rfDSym1SZuZ7AhidhQ==}
     peerDependencies:
       apexcharts: ^3.41.0
       react: '>=0.13'
@@ -5686,7 +5686,7 @@ snapshots:
     dependencies:
       safe-buffer: 5.2.1
 
-  react-apexcharts@1.4.1(apexcharts@3.54.1)(react@19.0.0-rc-69d4b800-20241021):
+  react-apexcharts@1.5.0(apexcharts@3.54.1)(react@19.0.0-rc-69d4b800-20241021):
     dependencies:
       apexcharts: 3.54.1
       prop-types: 15.8.1
