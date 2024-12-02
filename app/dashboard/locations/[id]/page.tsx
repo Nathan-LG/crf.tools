@@ -70,7 +70,7 @@ const Location = async (props: { params: Params }) => {
   try {
     locationMandatoryItems = await prisma.locationMandatoryItem.findMany({
       where: {
-        locationTypeId: location.typeId,
+        locationTypeId: location.locationTypeId,
       },
       select: {
         itemId: true,
@@ -123,9 +123,14 @@ const Location = async (props: { params: Params }) => {
           },
         },
       },
-      orderBy: {
-        itemCategoryId: "asc",
-      },
+      orderBy: [
+        {
+          itemCategoryId: "asc",
+        },
+        {
+          name: "asc",
+        },
+      ],
     });
   } catch (error) {
     Sentry.captureException(error);
@@ -181,11 +186,11 @@ const Location = async (props: { params: Params }) => {
                   lastCategory = item.ItemCategory.id;
 
                   const mandatoryItem = locationMandatoryItems.find(
-                    (mandatoryItem) => mandatoryItem.itemId === item.id,
+                    (thisMandatoryItem) => thisMandatoryItem.itemId === item.id,
                   );
 
                   const locationItem = locationsItem.find(
-                    (locationItem) => locationItem.itemId === item.id,
+                    (thisLocationItem) => thisLocationItem.itemId === item.id,
                   );
 
                   let status = (

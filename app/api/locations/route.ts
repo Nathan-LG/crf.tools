@@ -25,6 +25,23 @@ export async function POST(req: NextRequest) {
       },
     });
 
+    const items = await prisma.item.findMany({
+      select: {
+        id: true,
+      },
+    });
+
+    const locationItemsData = items.map((item) => {
+      return {
+        itemId: item.id,
+        locationId: location.id,
+      };
+    });
+
+    await prisma.locationItem.createMany({
+      data: locationItemsData,
+    });
+
     return new NextResponse(
       JSON.stringify({
         success: true,
