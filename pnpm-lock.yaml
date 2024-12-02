@@ -34,8 +34,8 @@ importers:
         specifier: ^3.22.0
         version: 3.22.0(react@19.0.0-rc-69d4b800-20241021)
       '@tabler/icons-webfont':
-        specifier: ^3.21.0
-        version: 3.21.0
+        specifier: ^3.23.0
+        version: 3.23.0
       '@typescript-eslint/eslint-plugin':
         specifier: 8.15.0
         version: 8.15.0(@typescript-eslint/parser@8.15.0(eslint@9.15.0)(typescript@5.6.3))(eslint@9.15.0)(typescript@5.6.3)
@@ -1070,8 +1070,8 @@ packages:
     peerDependencies:
       react: '>= 16'
 
-  '@tabler/icons-webfont@3.21.0':
-    resolution: {integrity: sha512-2Kw6VZeX+GW3LHBItWvwnQEKF4ZVvDtdDXjZYA5ISKwJPR4z/RLhNRXBK6QN4fG4dZQpqmTbl+9v0QF3IfmsDQ==}
+  '@tabler/icons-webfont@3.23.0':
+    resolution: {integrity: sha512-ygAED9YoiP+/REav3sYbjxq5sO5Kyrg7ec6n+pB+Bir80W9H0yIiSV5B3+WKjk8bP6cHMyKPT2zhtb445BNC9g==}
 
   '@tabler/icons@3.21.0':
     resolution: {integrity: sha512-5+GkkmWCr1wgMor5cOF1/YYflTQdc15y10FUikJ3HW8hDiFjfbuoAHJi17FT1vwsr1sA78rkJMn+fDoOOjnnPA==}
@@ -4090,9 +4090,9 @@ snapshots:
       '@tabler/icons': 3.22.0
       react: 19.0.0-rc-69d4b800-20241021
 
-  '@tabler/icons-webfont@3.21.0':
+  '@tabler/icons-webfont@3.23.0':
     dependencies:
-      '@tabler/icons': 3.21.0
+      '@tabler/icons': 3.23.0
 
   '@tabler/icons@3.21.0': {}
 
