@@ -34,8 +34,8 @@ importers:
         specifier: ^3.22.0
         version: 3.22.0(react@19.0.0)
       '@tabler/icons-webfont':
-        specifier: ^3.23.0
-        version: 3.23.0
+        specifier: ^3.30.0
+        version: 3.30.0
       '@typescript-eslint/eslint-plugin':
         specifier: 8.25.0
         version: 8.25.0(@typescript-eslint/parser@8.18.0(eslint@9.15.0)(typescript@5.6.3))(eslint@9.15.0)(typescript@5.6.3)
@@ -1236,17 +1236,17 @@ packages:
     peerDependencies:
       react: '>= 16'
 
-  '@tabler/icons-webfont@3.23.0':
-    resolution: {integrity: sha512-ygAED9YoiP+/REav3sYbjxq5sO5Kyrg7ec6n+pB+Bir80W9H0yIiSV5B3+WKjk8bP6cHMyKPT2zhtb445BNC9g==}
+  '@tabler/icons-webfont@3.30.0':
+    resolution: {integrity: sha512-0JpX/0vV0VcnTbadS+qmHc8T9X37HoOgS4Wr8dmiBF3NLv83Q2Ll3KZM3gRIM1Um1cfZDCiR5Gqf28KZW6tJsA==}
 
   '@tabler/icons@3.22.0':
     resolution: {integrity: sha512-IfgGzhFph5OBr2wTieWL/hyAs0FThnq9O155a6kfGYxqx7h5LQw91wnRswhEaGhXCcfmR7ZVDUr9H+x4b9Pb8g==}
 
-  '@tabler/icons@3.23.0':
-    resolution: {integrity: sha512-Cz+X58jfRm0g/KcupXXuPw5knj671lNR054AnmLXvCjudiQBWI0wZulDDSsqDoGezvBzMTNPQtNcjLkZs82ZxQ==}
-
   '@tabler/icons@3.24.0':
     resolution: {integrity: sha512-qNis9e90QcdxAGV3wNIeX0Ba2R7ktm0cnqOToKHJfC2kj3fvJwEVLsw63K0/fm7NW8rSZjDSTQRmMnSg8g/wrg==}
+
+  '@tabler/icons@3.30.0':
+    resolution: {integrity: sha512-c8OKLM48l00u9TFbh2qhSODMONIzML8ajtCyq95rW8vzkWcBrKRPM61tdkThz2j4kd5u17srPGIjqdeRUZdfdw==}
 
   '@tsconfig/node10@1.0.11':
     resolution: {integrity: sha512-DcRjDCujK/kCk/cUe8Xz8ZSpm8mS3mNNpta+jGCA6USEDfktlNvm1+IuZ9eTcDbNk41BHwpHHeW+N1lKCz4zOw==}
@@ -4574,15 +4574,15 @@ snapshots:
       '@tabler/icons': 3.22.0
       react: 19.0.0
 
-  '@tabler/icons-webfont@3.23.0':
+  '@tabler/icons-webfont@3.30.0':
     dependencies:
-      '@tabler/icons': 3.23.0
+      '@tabler/icons': 3.30.0
 
   '@tabler/icons@3.22.0': {}
 
-  '@tabler/icons@3.23.0': {}
-
   '@tabler/icons@3.24.0': {}
+
+  '@tabler/icons@3.30.0': {}
 
   '@tsconfig/node10@1.0.11': {}
 
@@ -5708,7 +5708,7 @@ snapshots:
   https-proxy-agent@5.0.1:
     dependencies:
       agent-base: 6.0.2
-      debug: 4.3.7
+      debug: 4.4.0
     transitivePeerDependencies:
       - supports-color
 
