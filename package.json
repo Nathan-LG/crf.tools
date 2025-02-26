@@ -42,7 +42,7 @@
     "zod": "^3.23.8"
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=23"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "15.1.7",
