@@ -16,7 +16,7 @@
     "@auth/prisma-adapter": "^2.7.4",
     "@prisma/client": "^5.22.0",
     "@sentry/nextjs": "^8.42.0",
-    "@sentry/node": "^8.39.0",
+    "@sentry/node": "^8.49.0",
     "@tabler/core": "1.0.0-beta21",
     "@tabler/icons": "^3.24.0",
     "@tabler/icons-react": "^3.22.0",
