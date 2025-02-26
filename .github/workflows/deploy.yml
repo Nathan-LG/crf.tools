@@ -23,7 +23,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: ${{ vars.SSH_PORT }}
           script: |
-            cd /var/docker/${{ inputs.site }}/stock
+            cd /var/docker/${{ inputs.site }}
             docker compose down
             docker compose pull
             docker compose up -d
