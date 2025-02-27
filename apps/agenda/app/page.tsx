@@ -21,13 +21,21 @@ const Dashboard = async () => {
   const session = await auth();
   if (!session) redirect("/auth/signin");
 
+  const oneYearBefore = new Date();
+  oneYearBefore.setFullYear(oneYearBefore.getFullYear() - 1);
+
+  const oneYearLater = new Date();
+  oneYearLater.setFullYear(oneYearLater.getFullYear() + 1);
+
+  const events = await getEvents(oneYearBefore, oneYearLater);
+
   return (
     <ContentLayout subHeaderProps={pageData}>
       <div className="row">
         <div className="col-lg-6">
           <div className="card">
             <div className="card-body">
-              <Agenda />
+              <Agenda events={events} />
             </div>
           </div>
         </div>

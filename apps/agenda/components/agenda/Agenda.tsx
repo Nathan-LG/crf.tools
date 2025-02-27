@@ -9,9 +9,8 @@ import frLocale from "@fullcalendar/core/locales/fr";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import { getEvents } from "@/app/utils/agenda/actions";
 
-const Agenda = () => {
+const Agenda = (events) => {
   const calendarRef = useRef(null);
-  let events;
 
   return (
     <FullCalendar
@@ -22,10 +21,6 @@ const Agenda = () => {
       navLinks={false}
       showNonCurrentDates={false}
       ref={calendarRef}
-      datesSet={async (dateInfo) => {
-        events = await getEvents(dateInfo.start, dateInfo.end);
-        console.log(events);
-      }}
       events={events}
     />
   );
