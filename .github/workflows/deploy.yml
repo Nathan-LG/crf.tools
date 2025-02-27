@@ -1,0 +1,29 @@
+name: Deploy last image on crf.tools
+
+on:
+  workflow_dispatch:
+    inputs:
+      site:
+        description: "Which env to deploy to"
+        type: choice
+        options:
+          - "paris15"
+        required: true
+
+jobs:
+  deploy-image:
+    runs-on: self-hosted
+
+    steps:
+      - name: docker-compose down and up
+        uses: appleboy/ssh-action@v1.1.0
+        with:
+          host: ${{ vars.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ vars.SSH_PORT }}
+          script: |
+            cd /var/docker/${{ inputs.site }}
+            docker compose down
+            docker compose pull
+            docker compose up -d

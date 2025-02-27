@@ -1,0 +1,223 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "generated/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ------------------------------------------------------
+// Users and Groups
+// ------------------------------------------------------
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified Boolean?
+  image         String?
+  phoneNumber   String?
+  groupId       Int       @default(0)
+  group         Group     @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  accounts      Account[]
+  sessions      Session[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Move      Move[]
+  Mission   Mission[]
+}
+
+model TempUser {
+  id          String  @id @default(cuid())
+  email       String  @unique
+  phoneNumber String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model GlobalUser {
+  email String @id @unique
+  type  String
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Mission   Mission[]
+}
+
+model Group {
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String?
+  users       User[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Account {
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([provider, providerAccountId])
+}
+
+model Session {
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@id([identifier, token])
+}
+
+// ------------------------------------------------------
+// Locations and Items
+// ------------------------------------------------------
+
+model LocationType {
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String?
+  icon        String?
+
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  Location              Location[]
+  LocationMandatoryItem LocationMandatoryItem[]
+}
+
+model Location {
+  id          Int          @id @default(autoincrement())
+  name        String
+  description String?
+  type        LocationType @relation(fields: [locationTypeId], references: [id])
+
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  LocationItem   LocationItem[]
+  locationTypeId Int
+  Move           Move[]
+}
+
+model Item {
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String?
+  unit        String?
+
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  LocationItem          LocationItem[]
+  ItemCategory          ItemCategory?           @relation(fields: [itemCategoryId], references: [id])
+  itemCategoryId        Int?
+  LocationMandatoryItem LocationMandatoryItem[]
+  Move                  Move[]
+}
+
+model ItemCategory {
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String?
+  icon        String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Item      Item[]
+}
+
+model LocationMandatoryItem {
+  locationTypeId Int
+  itemId         Int
+  count          Int @default(0)
+
+  location LocationType @relation(fields: [locationTypeId], references: [id], onDelete: Cascade)
+  item     Item         @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@id([locationTypeId, itemId])
+}
+
+model LocationItem {
+  locationId Int
+  itemId     Int
+  count      Int @default(0)
+
+  location Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  item     Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@id([locationId, itemId])
+}
+
+// ------------------------------------------------------
+// Missions and Moves
+// ------------------------------------------------------
+
+model Move {
+  id       Int       @id @default(autoincrement())
+  user     User      @relation(fields: [userId], references: [id])
+  external Boolean
+  location Location? @relation(fields: [locationId], references: [id])
+  item     Item      @relation(fields: [itemId], references: [id])
+  number   Int
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  locationId Int
+  userId     String
+  itemId     Int
+  Mission    Mission? @relation(fields: [missionId], references: [id])
+  missionId  Int?
+}
+
+model Mission {
+  id        Int        @id @default(autoincrement())
+  name      String
+  moves     Move[]
+  comment   String?
+  code      String?
+  user      GlobalUser @relation(fields: [userEmail], references: [email])
+  userEmail String
+  startAt   DateTime
+  endAt     DateTime
+  type      String
+  state     Int        @default(0)
+  firstSMS  String?
+  secondSMS String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  User      User?    @relation(fields: [userId], references: [id])
+  userId    String?
+}
