@@ -42,20 +42,20 @@ jobs:
       # --- STOCK ---
 
       - name: Extract metadata (tags, labels) for Docker
-        id: meta
+        id: metastock
         uses: docker/metadata-action@v5.5.1
         with:
           images: ${{ env.REGISTRY }}/Nathan-LG/stock.crf
 
       - name: Build and push Docker image for stock.crf
-        id: push
+        id: pushstock
         uses: docker/build-push-action@v6.9.0
         with:
           context: .
           file: apps/stock/Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.metastock.outputs.tags }}
+          labels: ${{ steps.metastock.outputs.labels }}
           build-args: |
             GIT_TAG=${{ github.ref_name }}
             "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}"
@@ -64,5 +64,33 @@ jobs:
         uses: actions/attest-build-provenance@v1
         with:
           subject-name: ${{ env.REGISTRY }}/Nathan-LG/stock.crf
-          subject-digest: ${{ steps.push.outputs.digest }}
+          subject-digest: ${{ steps.pushstock.outputs.digest }}
+          push-to-registry: true
+
+      # --- AGENDA ---
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: metaagenda
+        uses: docker/metadata-action@v5.5.1
+        with:
+          images: ${{ env.REGISTRY }}/Nathan-LG/agenda.crf
+
+      - name: Build and push Docker image for agenda.crf
+        id: pushagenda
+        uses: docker/build-push-action@v6.9.0
+        with:
+          context: .
+          file: apps/agenda/Dockerfile
+          push: true
+          tags: ${{ steps.metaagenda.outputs.tags }}
+          labels: ${{ steps.metaagenda.outputs.labels }}
+          build-args: |
+            GIT_TAG=${{ github.ref_name }}
+            "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}"
+
+      - name: Generate artifact attestation
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-name: ${{ env.REGISTRY }}/Nathan-LG/agenda.crf
+          subject-digest: ${{ steps.pushagenda.outputs.digest }}
           push-to-registry: true

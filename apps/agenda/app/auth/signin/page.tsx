@@ -14,7 +14,7 @@ async function Login() {
   return (
     <div>
       <Head>
-        <title>Connexion - stock.crf</title>
+        <title>Connexion - agenda.crf</title>
         <meta charSet="utf-8" />
       </Head>
       <FullPageLayout>
@@ -22,7 +22,7 @@ async function Login() {
           <div className="container container-tight py-4">
             <div className="text-center mb-4 h1">
               <a href="." className="navbar-brand navbar-brand-autodark">
-                stock.crf
+                agenda.crf
               </a>
             </div>
             <div className="card card-md">

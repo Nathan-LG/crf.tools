@@ -1,0 +1,60 @@
+{
+  "name": "agenda",
+  "private": true,
+  "scripts": {
+    "build": "next build",
+    "dev": "next dev -p 3001",
+    "start": "next start",
+    "lint": "next lint",
+    "preinstall": "npx only-allow pnpm",
+    "prettier:format": "prettier --write \"**/*.{ts,tsx,js,md,mdx,css,yaml}\"",
+    "prettier:check": "prettier --check \"**/*.{ts,tsx,js,md,mdx,css,yaml}\""
+  },
+  "dependencies": {
+    "@auth/prisma-adapter": "^2.7.4",
+    "@repo/db": "workspace:*",
+    "@sentry/nextjs": "^9.2.0",
+    "@sentry/node": "^9.2.0",
+    "@tabler/core": "1.0.0-beta21",
+    "@tabler/icons": "^3.30.0",
+    "@tabler/icons-react": "^3.30.0",
+    "@tabler/icons-webfont": "^3.30.0",
+    "@typescript-eslint/eslint-plugin": "8.25.0",
+    "@typescript-eslint/parser": "8.18.0",
+    "apexcharts": "^3.54.1",
+    "clsx": "^2.1.1",
+    "eslint-config-next": "^15.1.7",
+    "imask": "^6.6.3",
+    "moment": "^2.30.1",
+    "next": "15.2.0",
+    "next-auth": "5.0.0-beta.25",
+    "react": "19.0.0",
+    "react-apexcharts": "^1.7.0",
+    "react-dom": "19.0.0",
+    "react-hook-form": "^7.54.2",
+    "react-imask": "^7.6.1",
+    "react-select": "^5.10.0",
+    "toastify-js": "^1.12.0",
+    "tom-select": "^2.4.3",
+    "twilio": "^5.4.5",
+    "use-debounce": "^10.0.4",
+    "zod": "^3.24.2"
+  },
+  "engines": {
+    "node": ">=23"
+  },
+  "devDependencies": {
+    "@next/eslint-plugin-next": "15.1.7",
+    "@types/node": "^22.13.5",
+    "@types/react": "npm:types-react@19.0.0-rc.1",
+    "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1",
+    "eslint": "^9.21.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-react": "^7.37.4",
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "prettier": "3.3.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3"
+  },
+  "packageManager": "pnpm@10.5.2"
+}
