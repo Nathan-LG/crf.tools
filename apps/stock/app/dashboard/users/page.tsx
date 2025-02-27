@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import ContentLayout from "@/components/ui/ContentLayout";
 import { IconMoodEmpty, IconPlus } from "@tabler/icons-react";
-import { prisma } from "prisma";
+import { prisma } from "@repo/db";
 import config from "@/config.json";
 import AddUserModal from "@/components/users/AddUserModal";
 import EditUserModal from "@/components/users/EditUserModal";
