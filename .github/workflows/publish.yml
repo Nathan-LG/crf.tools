@@ -45,7 +45,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5.5.1
         with:
-          images: ${{ env.REGISTRY }}/stock.crf
+          images: ${{ env.REGISTRY }}/Nathan-LG/stock.crf
 
       - name: Build and push Docker image for stock.crf
         id: push
@@ -63,6 +63,6 @@ jobs:
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v1
         with:
-          subject-name: ${{ env.REGISTRY }}/stock.crf
+          subject-name: ${{ env.REGISTRY }}/Nathan-LG/stock.crf
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
