@@ -1,10 +1,10 @@
 /** @type {import('next').NextConfig} */
 
-const path = require('path');
+const path = require("path");
 
 module.exports = {
   output: "standalone",
-  outputFileTracingRoot: path.join(__dirname, '../../'),
+  outputFileTracingRoot: path.join(__dirname, "../../"),
 };
 
 // Injected content via Sentry wizard below
