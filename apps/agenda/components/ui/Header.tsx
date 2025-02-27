@@ -5,6 +5,7 @@ import {
   IconBandage,
   IconBriefcase2,
   IconBuildingWarehouse,
+  IconCalendarFilled,
   IconHeartbeat,
   IconUsers,
 } from "@tabler/icons-react";
@@ -51,7 +52,7 @@ async function Header() {
             <span className="navbar-toggler-icon"></span>
           </button>
           <h1 className="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3">
-            <Link href="/dashboard">agenda.crf</Link>
+            <Link href="/">agenda.crf</Link>
           </h1>
 
           <div className="navbar-nav flex-row order-md-last">
@@ -85,61 +86,12 @@ async function Header() {
                 <div className="col">
                   <ul className="navbar-nav">
                     <li className="nav-item">
-                      <Link className="nav-link" href="/dashboard">
+                      <Link className="nav-link" href="/">
                         <span className="nav-link-icon d-md-none d-lg-inline-block">
-                          <IconHeartbeat className="Icon" />
+                          <IconCalendarFilled className="Icon" />
                         </span>
-                        <span className="nav-link-title">Dashboard</span>
+                        <span className="nav-link-title">Agenda</span>
                       </Link>
-                    </li>
-                    <li className="nav-item dropdown">
-                      <a
-                        className="nav-link"
-                        data-bs-toggle="dropdown"
-                        role="button"
-                      >
-                        <span className="nav-link-icon d-md-none d-lg-inline-block">
-                          <IconBuildingWarehouse className="Icon" />
-                        </span>
-                        <span className="nav-link-title">Emplacements</span>
-                      </a>
-                      <div className="dropdown-menu dropdown-menu-start">
-                        <Link
-                          className="dropdown-item"
-                          href="/dashboard/locations"
-                        >
-                          Liste
-                        </Link>
-                        <Link
-                          className="dropdown-item"
-                          href="/dashboard/locations/types"
-                        >
-                          Catégories
-                        </Link>
-                      </div>
-                    </li>
-                    <li className="nav-item dropdown">
-                      <a
-                        className="nav-link"
-                        data-bs-toggle="dropdown"
-                        role="button"
-                      >
-                        <span className="nav-link-icon d-md-none d-lg-inline-block">
-                          <IconBandage className="Icon" />
-                        </span>
-                        <span className="nav-link-title">Consommables</span>
-                      </a>
-                      <div className="dropdown-menu dropdown-menu-start">
-                        <Link className="dropdown-item" href="/dashboard/items">
-                          Liste
-                        </Link>
-                        <Link
-                          className="dropdown-item"
-                          href="/dashboard/items/categories"
-                        >
-                          Catégories
-                        </Link>
-                      </div>
                     </li>
                     <li className="nav-item dropdown">
                       <a
@@ -153,22 +105,19 @@ async function Header() {
                         <span className="nav-link-title">Missions</span>
                       </a>
                       <div className="dropdown-menu dropdown-menu-start">
-                        <Link
-                          className="dropdown-item"
-                          href="/dashboard/missions"
-                        >
+                        <Link className="dropdown-item" href="/missions">
                           Liste
                         </Link>
                         <Link
                           className="dropdown-item disabled"
-                          href="/dashboard/missions/search"
+                          href="/missions/search"
                         >
                           Recherche<span className="badge ms-2">WIP</span>
                         </Link>
                       </div>
                     </li>
                     <li className="nav-item">
-                      <Link className="nav-link" href="/dashboard/users">
+                      <Link className="nav-link" href="/users">
                         <span className="nav-link-icon d-md-none d-lg-inline-block">
                           <IconUsers className="Icon" />
                         </span>

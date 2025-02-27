@@ -1,53 +1,48 @@
-import Head from "next/head";
-import FullPageLayout from "@/components/ui/FullPageLayout";
-import Link from "next/link";
+import type { Metadata } from "next";
 import { auth } from "auth";
 import { redirect } from "next/navigation";
-import { prisma } from "@repo/db";
-import config from "@/config.json";
+import ContentLayout from "@/components/ui/ContentLayout";
+import Agenda from "@/components/agenda/Agenda";
+import { getEvents } from "./utils/agenda/actions";
 
-const MissionChoice = async () => {
+export const metadata: Metadata = {
+  title: "Agenda",
+};
+
+const pageData = {
+  ariane: [{ label: "agenda.crf", href: "/dashboard" }],
+  title: "Agenda",
+  button: "",
+  buttonIcon: undefined,
+  buttonLink: "",
+};
+
+const Dashboard = async () => {
   const session = await auth();
   if (!session) redirect("/auth/signin");
 
-  const user = await prisma.user.findUnique({
-    where: {
-      id: session.user.id,
-    },
-    select: {
-      group: {
-        select: {
-          id: true,
-        },
-      },
-    },
-  });
-
   return (
-    <div>
-      <Head>
-        <title>Choix de mission - agenda.crf</title>
-        <meta charSet="utf-8" />
-      </Head>
-      <FullPageLayout>
-        <div className="page page-center">
-          <div className="container container-tight py-4">
-            <div className="text-center mb-4 h1">
-              <a href="." className="navbar-brand navbar-brand-autodark">
-                agenda.crf
-              </a>
+    <ContentLayout subHeaderProps={pageData}>
+      <div className="row">
+        <div className="col-lg-6">
+          <div className="card">
+            <div className="card-body">
+              <Agenda />
             </div>
-
-            {user.group.id !== config.groups.user && (
-              <div className="text-center text-secondary mt-3">
-                <Link href="/dashboard">Admin</Link>
-              </div>
-            )}
           </div>
         </div>
-      </FullPageLayout>
-    </div>
+        <div className="col-lg-6">
+          <div className="card">
+            <div className="card-header">
+              <h3 className="card-title">Missions</h3>
+            </div>
+            <div className="card-body">
+              <p>Commencez par sélectionner une date.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ContentLayout>
   );
 };
-
-export default MissionChoice;
+export default Dashboard;

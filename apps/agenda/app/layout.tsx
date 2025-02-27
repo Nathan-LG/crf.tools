@@ -12,6 +12,7 @@ import Script from "next/script";
 import type { Metadata } from "next";
 
 import { SessionProvider } from "next-auth/react";
+import PageLayout from "@/components/ui/PageLayout";
 
 export const metadata: Metadata = {
   title: {
@@ -24,7 +25,9 @@ const RootLayout = ({ children }: PageProps) => (
   <html lang="fr">
     <SessionProvider>
       <body>
-        <main>{children}</main>
+        <div className="page-wrapper">
+          <PageLayout>{children}</PageLayout>
+        </div>
       </body>
       <Script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/js/tabler.min.js" />
       <Script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js" />

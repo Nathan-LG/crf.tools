@@ -30,10 +30,11 @@ model User {
   accounts      Account[]
   sessions      Session[]
 
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  Move      Move[]
-  Mission   Mission[]
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  Move         Move[]
+  Mission      Mission[]
+  Registration Registration[]
 }
 
 model TempUser {
@@ -202,22 +203,37 @@ model Move {
 }
 
 model Mission {
-  id        Int        @id @default(autoincrement())
+  id        Int         @id @default(autoincrement())
   name      String
   moves     Move[]
   comment   String?
   code      String?
-  user      GlobalUser @relation(fields: [userEmail], references: [email])
-  userEmail String
+  user      GlobalUser? @relation(fields: [userEmail], references: [email])
+  userEmail String?
   startAt   DateTime
   endAt     DateTime
   type      String
-  state     Int        @default(0)
+  state     Int         @default(0)
+  sendSMS   Boolean     @default(false)
   firstSMS  String?
   secondSMS String?
 
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  Registration Registration[]
+  User         User?          @relation(fields: [userId], references: [id])
+  userId       String?
+}
+
+model Registration {
+  id        Int     @id @default(autoincrement())
+  User      User    @relation(fields: [userId], references: [id])
+  userId    String
+  comment   String?
+  Mission   Mission @relation(fields: [missionId], references: [id])
+  missionId Int
+  state     Int     @default(0)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  User      User?    @relation(fields: [userId], references: [id])
-  userId    String?
 }
