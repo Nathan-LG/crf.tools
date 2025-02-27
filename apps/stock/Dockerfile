@@ -58,8 +58,8 @@ RUN chown nextjs:nodejs .turbo
 USER nextjs
 
 COPY --from=installer --chown=nextjs:nodejs /app/apps/stock/.next/standalone/ .
-COPY --from=installer --chown=nextjs:nodejs /app/apps/stock/.next/static ./static
-COPY --from=installer --chown=nextjs:nodejs /app/apps/stock/public ./public
+COPY --from=installer --chown=nextjs:nodejs /app/apps/stock/.next/static /app/apps/stock/.next/static
+COPY --from=installer --chown=nextjs:nodejs /app/apps/stock/public /app/apps/stock/public
 
 EXPOSE 3000
 ENV PORT=3000
