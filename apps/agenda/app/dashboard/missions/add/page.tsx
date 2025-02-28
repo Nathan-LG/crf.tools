@@ -51,7 +51,7 @@ const AddMission = async () => {
 
   return (
     <ContentLayout subHeaderProps={pageData}>
-      <AddMissionForm users={users} me={session.user.email} />
+      <AddMissionForm users={users} />
     </ContentLayout>
   );
 };

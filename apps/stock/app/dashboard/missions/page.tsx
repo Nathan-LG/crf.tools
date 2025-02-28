@@ -76,23 +76,6 @@ const Missions = async ({
     redirect("/errors/500");
   }
 
-  // Fetch global users to display their names
-
-  let globalUsers: {
-    email: string;
-  }[];
-
-  try {
-    globalUsers = await prisma.globalUser.findMany({
-      select: {
-        email: true,
-      },
-    });
-  } catch (error) {
-    Sentry.captureException(error);
-    redirect("/errors/500");
-  }
-
   // Page data
 
   const pageData = {

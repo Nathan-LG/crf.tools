@@ -13,7 +13,7 @@ import { forwardRef } from "react";
 import IMask from "imask";
 import { IMaskInput } from "react-imask";
 
-const AddMissionForm = ({ me, users }) => {
+const AddMissionForm = ({ users }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
