@@ -3,13 +3,8 @@ import ContentLayout from "@/components/ui/ContentLayout";
 import { IconMoodEmpty, IconPlus } from "@tabler/icons-react";
 import { prisma } from "@repo/db";
 import config from "@/config.json";
-import AddUserModal from "@/components/users/AddUserModal";
-import EditUserModal from "@/components/users/EditUserModal";
-import EditTempUserModal from "@/components/users/EditTempUserModal";
-import DeleteModal from "@/components/ui/DeleteModal";
 import * as Sentry from "@sentry/nextjs";
 import { redirect } from "next/navigation";
-import { Group } from "@repo/db";
 
 // Metadata
 
@@ -53,17 +48,6 @@ const Users = async () => {
         email: "asc",
       },
     });
-  } catch (error) {
-    Sentry.captureException(error);
-    redirect("/errors/500");
-  }
-
-  // Fetch all groups
-
-  let groups: Group[];
-
-  try {
-    groups = await prisma.group.findMany();
   } catch (error) {
     Sentry.captureException(error);
     redirect("/errors/500");
