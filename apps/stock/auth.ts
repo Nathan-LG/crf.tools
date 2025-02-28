@@ -1,11 +1,11 @@
 import NextAuth from "next-auth";
-import Google from "next-auth/providers/google";
+import google from "next-auth/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@repo/db";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PrismaAdapter(prisma),
-  providers: [Google],
+  providers: [google],
   session: {
     strategy: "jwt",
   },
@@ -24,51 +24,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
 
       if (user) {
-        const globalUser = await prisma.globalUser.findFirst({
-          select: {
-            type: true,
-          },
-          where: {
-            email: user.email,
-          },
-        });
-
-        if (globalUser?.type === "temp") {
-          const tempUser = await prisma.tempUser.delete({
-            select: {
-              phoneNumber: true,
-            },
-            where: {
-              email: user.email,
-            },
-          });
-
-          await prisma.user.update({
-            where: {
-              id: user.id,
-            },
-            data: {
-              phoneNumber: tempUser.phoneNumber,
-            },
-          });
-
-          await prisma.globalUser.update({
-            where: {
-              email: user.email,
-            },
-            data: {
-              type: "complete",
-            },
-          });
-        } else if (globalUser === null) {
-          await prisma.globalUser.create({
-            data: {
-              email: user.email,
-              type: "complete",
-            },
-          });
-        }
-
         return {
           ...token,
           id: user.id,

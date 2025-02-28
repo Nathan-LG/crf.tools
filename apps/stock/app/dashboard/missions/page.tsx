@@ -173,7 +173,8 @@ const Missions = async ({
                       </td>
                       <td data-label="Responsable">
                         <div>
-                          {mission.userEmail.replace("@croix-rouge.fr", "")}
+                          {mission.userEmail != null &&
+                            mission.userEmail.replace("@croix-rouge.fr", "")}
                         </div>
                       </td>
                       <td data-label="Date">

@@ -19,22 +19,21 @@ datasource db {
 // ------------------------------------------------------
 
 model User {
-  id            String    @id @default(cuid())
+  id            String    @unique @default(cuid())
   name          String?
-  email         String    @unique
+  email         String    @id @unique
   emailVerified Boolean?
   image         String?
   phoneNumber   String?
-  groupId       Int       @default(0)
+  groupId       Int       @default(1)
   group         Group     @relation(fields: [groupId], references: [id], onDelete: Cascade)
   accounts      Account[]
-  sessions      Session[]
   tags          Role[]
 
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
   Move         Move[]
-  Mission      Mission[]
+  Mission      Mission[]      @relation(name: "createdBy")
   Registration Registration[]
   UserRoles    UserRoles[]
 }
@@ -45,16 +44,16 @@ model Role {
 
   createdAt          DateTime             @default(now())
   updatedAt          DateTime             @updatedAt
-  User               User?                @relation(fields: [userId], references: [id])
-  userId             String?
+  User               User?                @relation(fields: [userEmail], references: [email])
+  userEmail          String?
   MissionRequirement MissionRequirement[]
   Registration       Registration[]
   UserRoles          UserRoles[]
 }
 
 model UserRoles {
-  User   User   @relation(fields: [userId], references: [id])
-  userId String
+  User      User   @relation(fields: [userEmail], references: [email])
+  userEmail String
 
   Role   Role @relation(fields: [roleId], references: [id])
   roleId Int
@@ -62,25 +61,7 @@ model UserRoles {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@id([userId, roleId])
-}
-
-model TempUser {
-  id          String  @id @default(cuid())
-  email       String  @unique
-  phoneNumber String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model GlobalUser {
-  email String @id @unique
-  type  String
-
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  Mission   Mission[]
+  @@id([userEmail, roleId])
 }
 
 model Group {
@@ -112,16 +93,6 @@ model Account {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([provider, providerAccountId])
-}
-
-model Session {
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
 
 model VerificationToken {
@@ -215,7 +186,7 @@ model LocationItem {
 
 model Move {
   id       Int       @id @default(autoincrement())
-  user     User      @relation(fields: [userId], references: [id])
+  user     User      @relation(fields: [userEmail], references: [email])
   external Boolean
   location Location? @relation(fields: [locationId], references: [id])
   item     Item      @relation(fields: [itemId], references: [id])
@@ -224,33 +195,32 @@ model Move {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   locationId Int
-  userId     String
+  userEmail  String
   itemId     Int
   Mission    Mission? @relation(fields: [missionId], references: [id])
   missionId  Int?
 }
 
 model Mission {
-  id          Int         @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   name        String
   moves       Move[]
   description String?
   comment     String?
   code        String?
-  user        GlobalUser? @relation(fields: [userEmail], references: [email])
   userEmail   String?
   startAt     DateTime
   endAt       DateTime
   type        String
-  state       Int         @default(0)
-  sendSMS     Boolean     @default(false)
+  state       Int      @default(0)
+  sendSMS     Boolean  @default(false)
   firstSMS    String?
   secondSMS   String?
   location    String?
   structure   String
 
   createdAt   DateTime @default(now())
-  createdBy   User     @relation(fields: [createdById], references: [id])
+  createdBy   User     @relation(fields: [createdById], references: [id], name: "createdBy")
   createdById String
 
   updatedAt          DateTime             @updatedAt
@@ -273,8 +243,8 @@ model MissionRequirement {
 
 model Registration {
   id        Int     @id @default(autoincrement())
-  User      User    @relation(fields: [userId], references: [id])
-  userId    String
+  User      User    @relation(fields: [userEmail], references: [email])
+  userEmail String
   comment   String?
   Mission   Mission @relation(fields: [missionId], references: [id])
   missionId Int

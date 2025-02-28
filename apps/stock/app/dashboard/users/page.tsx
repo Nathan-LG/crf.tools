@@ -58,30 +58,6 @@ const Users = async () => {
     redirect("/errors/500");
   }
 
-  // Fetch all temp users
-
-  let tempUsers: {
-    id: string;
-    email: string;
-    phoneNumber: string;
-  }[];
-
-  try {
-    tempUsers = await prisma.tempUser.findMany({
-      select: {
-        id: true,
-        email: true,
-        phoneNumber: true,
-      },
-      orderBy: {
-        email: "asc",
-      },
-    });
-  } catch (error) {
-    Sentry.captureException(error);
-    redirect("/errors/500");
-  }
-
   // Fetch all groups
 
   let groups: Group[];
@@ -91,67 +67,6 @@ const Users = async () => {
   } catch (error) {
     Sentry.captureException(error);
     redirect("/errors/500");
-  }
-
-  // DOM generation
-
-  let tempUsersJSX = <></>;
-
-  if (tempUsers.length !== 0) {
-    // Display temp users
-
-    tempUsersJSX = (
-      <>
-        <div className="col-12 mb-3">
-          <div className="card">
-            <div className="card-status-start bg-cyan"></div>
-            <div className="card-body">
-              <h3 className="card-title">Bénévoles en attente de connexion</h3>
-              <div className="table-responsive">
-                <table className="table table-vcenter card-table">
-                  <thead>
-                    <tr>
-                      <th>Email</th>
-                      <th>Téléphone</th>
-                      <th className="w-1"></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {tempUsers.map((tempUser) => {
-                      return (
-                        <tr key={tempUser.id}>
-                          <td>{tempUser.email}</td>
-                          <td>{tempUser.phoneNumber}</td>
-                          <td>
-                            <div className="btn-list flex-nowrap">
-                              <button
-                                className="btn"
-                                data-bs-toggle="modal"
-                                data-bs-target={"#modal-edit-" + tempUser.id}
-                              >
-                                &Eacute;diter
-                              </button>
-                              <button
-                                type="button"
-                                className="btn"
-                                data-bs-toggle="modal"
-                                data-bs-target={"#modal-delete-" + tempUser.id}
-                              >
-                                Supprimer
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-      </>
-    );
   }
 
   // If no users are found
@@ -186,7 +101,6 @@ const Users = async () => {
                   <th>Nom</th>
                   <th>Téléphone</th>
                   <th>Groupe</th>
-                  <th className="w-1"></th>
                 </tr>
               </thead>
               <tbody>
@@ -229,15 +143,6 @@ const Users = async () => {
                           </span>
                         </div>
                       </td>
-                      <td>
-                        <button
-                          className="btn"
-                          data-bs-toggle="modal"
-                          data-bs-target={"#modal-edit-" + user.id}
-                        >
-                          &Eacute;diter
-                        </button>
-                      </td>
                     </tr>
                   );
                 })}
@@ -259,48 +164,14 @@ const Users = async () => {
     title: "Liste des bénévoles",
     button: "Ajouter un bénévole",
     buttonIcon: <IconPlus className="icon" />,
-    buttonLink: "",
-    buttonModal: "modal-add-user",
+    buttonLink: "https://agenda.paris15.crf.tools/dashboard/users/add",
   };
 
   // DOM rendering
 
   return (
     <ContentLayout subHeaderProps={pageData}>
-      <div className="row">
-        {tempUsersJSX}
-        {usersJSX}
-      </div>
-      <AddUserModal />
-
-      {tempUsers.map((tempUser) => (
-        <>
-          <EditTempUserModal tempUser={tempUser} key={tempUser.id} />
-          <DeleteModal
-            key={tempUser.id}
-            id={tempUser.id}
-            alert="Vous pourrez rajouter le bénévole plus tard."
-            message="Bénévole supprimé avec succès"
-            url="/api/users/"
-          />
-        </>
-      ))}
-
-      {users.map((user) => (
-        <EditUserModal
-          formProps={{
-            user: {
-              ...user,
-              createdAt: undefined,
-              updatedAt: undefined,
-              emailVerified: false,
-            },
-
-            groups,
-          }}
-          key={user.id}
-        />
-      ))}
+      <div className="row">{usersJSX}</div>
     </ContentLayout>
   );
 };
