@@ -3,7 +3,8 @@ import { auth } from "auth";
 import { redirect } from "next/navigation";
 import ContentLayout from "@/components/ui/ContentLayout";
 import Agenda from "@/components/agenda/Agenda";
-import { getEvents } from "./utils/agenda/actions";
+import { getEvents } from "../utils/agenda/actions";
+import React from "react";
 
 export const metadata: Metadata = {
   title: "Agenda",
@@ -32,23 +33,7 @@ const Dashboard = async () => {
   return (
     <ContentLayout subHeaderProps={pageData}>
       <div className="row">
-        <div className="col-lg-6">
-          <div className="card">
-            <div className="card-body">
-              <Agenda events={events} />
-            </div>
-          </div>
-        </div>
-        <div className="col-lg-6">
-          <div className="card">
-            <div className="card-header">
-              <h3 className="card-title">Missions</h3>
-            </div>
-            <div className="card-body">
-              <p>Commencez par sélectionner une date.</p>
-            </div>
-          </div>
-        </div>
+        <Agenda events={events} />
       </div>
     </ContentLayout>
   );

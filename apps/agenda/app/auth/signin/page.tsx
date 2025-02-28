@@ -9,7 +9,7 @@ import { redirect } from "next/navigation";
 
 async function Login() {
   const session = await auth();
-  if (session) redirect("/");
+  if (session) redirect("/dashboard");
 
   return (
     <div>

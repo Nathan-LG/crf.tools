@@ -36,3 +36,40 @@ body {
   --fc-today-bg-color: rgba(255, 220, 40, 0.15);
   --fc-now-indicator-color: red;
 }
+
+.dotEvent {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 5px;
+  border: none;
+}
+
+.secours {
+  background-color: #d63939;
+}
+
+.logistique {
+  background-color: #f59f00;
+}
+
+.formation {
+  background-color: #74b816;
+}
+
+.reunion {
+  background-color: #4299e1;
+}
+
+.animation {
+  background-color: #ae3ec9;
+}
+
+.fc-daygrid-event-harness {
+  display: inline-block;
+}
+
+.fc-daygrid-day-frame {
+  cursor: pointer;
+}

@@ -2,16 +2,12 @@ import { auth } from "auth";
 import { prisma } from "@repo/db";
 import { SignOutButton } from "@/components/auth/SignOutButton";
 import {
-  IconBandage,
   IconBriefcase2,
-  IconBuildingWarehouse,
   IconCalendarFilled,
-  IconHeartbeat,
   IconUsers,
 } from "@tabler/icons-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import config from "@/config.json";
 
 async function Header() {
   const session = await auth();
@@ -32,10 +28,6 @@ async function Header() {
     },
   });
 
-  if (user.group.id === config.groups.user) {
-    redirect("/");
-  }
-
   return (
     <div className="page">
       <header className="navbar navbar-expand-md navbar-light d-print-none">
@@ -52,7 +44,7 @@ async function Header() {
             <span className="navbar-toggler-icon"></span>
           </button>
           <h1 className="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3">
-            <Link href="/">agenda.crf</Link>
+            <Link href="/dashboard">agenda.crf</Link>
           </h1>
 
           <div className="navbar-nav flex-row order-md-last">
@@ -86,7 +78,7 @@ async function Header() {
                 <div className="col">
                   <ul className="navbar-nav">
                     <li className="nav-item">
-                      <Link className="nav-link" href="/">
+                      <Link className="nav-link" href="/dashboard">
                         <span className="nav-link-icon d-md-none d-lg-inline-block">
                           <IconCalendarFilled className="Icon" />
                         </span>
@@ -105,7 +97,10 @@ async function Header() {
                         <span className="nav-link-title">Missions</span>
                       </a>
                       <div className="dropdown-menu dropdown-menu-start">
-                        <Link className="dropdown-item" href="/missions">
+                        <Link
+                          className="dropdown-item"
+                          href="/dashboard/missions"
+                        >
                           Liste
                         </Link>
                         <Link
@@ -117,7 +112,7 @@ async function Header() {
                       </div>
                     </li>
                     <li className="nav-item">
-                      <Link className="nav-link" href="/users">
+                      <Link className="nav-link" href="/dashboard/users">
                         <span className="nav-link-icon d-md-none d-lg-inline-block">
                           <IconUsers className="Icon" />
                         </span>
