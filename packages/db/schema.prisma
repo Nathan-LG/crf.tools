@@ -34,7 +34,7 @@ model User {
   Move         Move[]
   Mission      Mission[]      @relation(name: "createdBy")
   Registration Registration[]
-  UserRoles    UserRoles[]
+  UserRoles    UserRole[]
 }
 
 model Role {
@@ -46,10 +46,10 @@ model Role {
   updatedAt          DateTime             @updatedAt
   MissionRequirement MissionRequirement[]
   Registration       Registration[]
-  UserRoles          UserRoles[]
+  UserRoles          UserRole[]
 }
 
-model UserRoles {
+model UserRole {
   User      User   @relation(fields: [userEmail], references: [email])
   userEmail String
 

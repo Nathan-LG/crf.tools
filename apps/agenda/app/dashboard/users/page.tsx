@@ -6,6 +6,7 @@ import config from "@/config.json";
 import * as Sentry from "@sentry/nextjs";
 import { redirect } from "next/navigation";
 import EditUserModal from "@/components/users/EditUserModal";
+import DeleteModal from "@/components/ui/DeleteModal";
 
 // Metadata
 
@@ -79,6 +80,9 @@ const Users = async () => {
         id: true,
         title: true,
         color: true,
+      },
+      orderBy: {
+        title: "asc",
       },
     });
   } catch (error) {
@@ -164,21 +168,24 @@ const Users = async () => {
                           {user.UserRoles.length === 0 && "Aucun"}
                           {user.UserRoles.map((role) => {
                             return (
-                              <span className="tag" key={role.roleId}>
-                                <span
-                                  className={
-                                    "legend bg-" +
+                              <>
+                                <span className="tag" key={role.roleId}>
+                                  <span
+                                    className={
+                                      "legend bg-" +
+                                      roles.filter(
+                                        (fullRole) =>
+                                          fullRole.id === role.roleId,
+                                      )[0].color
+                                    }
+                                  ></span>
+                                  {
                                     roles.filter(
                                       (fullRole) => fullRole.id === role.roleId,
-                                    )[0].color
+                                    )[0].title
                                   }
-                                ></span>
-                                {
-                                  roles.filter(
-                                    (fullRole) => fullRole.id === role.roleId,
-                                  )[0].title
-                                }
-                              </span>
+                                </span>{" "}
+                              </>
                             );
                           })}
                         </div>
@@ -195,7 +202,10 @@ const Users = async () => {
                         </div>
                       </td>
                       <td>
-                        <div className="btn-list flex-nowrap">
+                        <div
+                          className="btn-list flex-nowrap"
+                          style={{ flexDirection: "row-reverse" }}
+                        >
                           <button
                             className="btn"
                             data-bs-toggle="modal"
@@ -208,6 +218,20 @@ const Users = async () => {
                           >
                             &Eacute;diter
                           </button>
+                          {user.name === null && (
+                            <button
+                              className="btn"
+                              data-bs-toggle="modal"
+                              data-bs-target={
+                                "#modal-delete-" +
+                                user.email
+                                  .replace("@croix-rouge.fr", "")
+                                  .replace(".", "")
+                              }
+                            >
+                              Supprimer
+                            </button>
+                          )}
                         </div>
                       </td>
                     </tr>
@@ -251,20 +275,29 @@ const Users = async () => {
         });
 
         return (
-          <EditUserModal
-            formProps={{
-              user: {
-                ...user,
-                createdAt: undefined,
-                updatedAt: undefined,
-                emailVerified: false,
-              },
-              groups,
-              roles,
-              userRoles,
-            }}
-            key={user.email.replace("@croix-rouge.fr", "").replace(".", "")}
-          />
+          <>
+            <EditUserModal
+              formProps={{
+                user: {
+                  ...user,
+                  createdAt: undefined,
+                  updatedAt: undefined,
+                  emailVerified: false,
+                },
+                groups,
+                roles,
+                userRoles,
+              }}
+              key={user.email.replace("@croix-rouge.fr", "").replace(".", "")}
+            />
+
+            <DeleteModal
+              id={user.email.replace("@croix-rouge.fr", "").replace(".", "")}
+              alert="Cela supprimera définitivement le bénévole."
+              message="Bénévole supprimé avec succès"
+              url="/api/users/"
+            />
+          </>
         );
       })}
     </ContentLayout>

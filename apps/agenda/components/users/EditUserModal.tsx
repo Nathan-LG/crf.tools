@@ -30,8 +30,20 @@ const EditUserModal = ({ formProps }: UserFormProps) => {
 
     const formData = data;
 
+    let stringRoles = "";
+
+    if (data.roles !== undefined) {
+      data.roles.map((role) => {
+        stringRoles += role.value + ",";
+      });
+
+      data.stringRoles = stringRoles.substring(0, stringRoles.length - 1);
+    } else {
+      data.stringRoles = "";
+    }
+
     try {
-      const response = await fetch(`/api/users/${formProps.user.id}`, {
+      const response = await fetch(`/api/users/${formProps.user.email}`, {
         method: "PUT",
         body: new URLSearchParams(formData),
         headers: {
@@ -115,7 +127,7 @@ const EditUserModal = ({ formProps }: UserFormProps) => {
               </div>
 
               <div className="mb-3">
-                <label className="form-label required" htmlFor="phone">
+                <label className="form-label" htmlFor="phone">
                   Numéro de téléphone
                 </label>
                 <input
@@ -125,7 +137,7 @@ const EditUserModal = ({ formProps }: UserFormProps) => {
                     "form-control",
                     errors.phoneNumber && "is-invalid",
                   )}
-                  placeholder="33601020304"
+                  placeholder="+33601020304"
                   {...register("phoneNumber", {
                     pattern: /^(\+)[0-9]{11}$/,
                   })}
@@ -182,7 +194,12 @@ const EditUserModal = ({ formProps }: UserFormProps) => {
               <a
                 href="#"
                 className="btn btn-link link-secondary"
-                id={"close-modal-edit-" + formProps.user.id}
+                id={
+                  "close-modal-edit-" +
+                  formProps.user.email
+                    .replace("@croix-rouge.fr", "")
+                    .replace(".", "")
+                }
                 data-bs-dismiss="modal"
               >
                 Annuler

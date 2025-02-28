@@ -3,10 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { z, ZodError } from "zod";
 
 const schema = z.object({
-  email: z.string().trim().min(1),
-  groupId: z.string().trim().min(1),
-  stringRoles: z.string().trim(),
-  phoneNumber: z.string().optional(),
+  title: z.string().trim().min(1),
+  color: z.string().trim().min(1),
 });
 
 export async function POST(req: NextRequest) {
@@ -16,27 +14,17 @@ export async function POST(req: NextRequest) {
   const parsed = schema.safeParse(data);
 
   if (parsed.success) {
-    const user = await prisma.user.create({
+    const user = await prisma.role.create({
       data: {
-        email: parsed.data.email + "@croix-rouge.fr",
-        groupId: Number(parsed.data.groupId),
-        phoneNumber: parsed.data.phoneNumber,
+        title: parsed.data.title,
+        color: parsed.data.color,
       },
-    });
-
-    const roles = parsed.data.stringRoles.split(",");
-
-    await prisma.userRole.createMany({
-      data: roles.map((role) => ({
-        userEmail: parsed.data.email + "@croix-rouge.fr",
-        roleId: Number(role),
-      })),
     });
 
     return new NextResponse(
       JSON.stringify({
         success: true,
-        message: "User added successfully",
+        message: "Role added successfully",
         user,
       }),
       {
