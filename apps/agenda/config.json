@@ -1,8 +1,8 @@
 {
   "instance": "Paris 15",
   "groups": {
-    "superadmin": 2,
-    "admin": 1,
-    "user": 0
+    "superadmin": 3,
+    "admin": 2,
+    "user": 1
   }
 }

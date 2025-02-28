@@ -3,7 +3,7 @@
 import { prisma } from "@repo/db";
 import * as Sentry from "@sentry/nextjs";
 
-export async function getEvents(userId, start, end) {
+export async function getEvents(userEmail, start, end) {
   try {
     const eventsToRename = await prisma.mission.findMany({
       where: {
@@ -25,7 +25,7 @@ export async function getEvents(userId, start, end) {
             state: true,
           },
           where: {
-            userId: userId,
+            userEmail: userEmail,
           },
         },
       },

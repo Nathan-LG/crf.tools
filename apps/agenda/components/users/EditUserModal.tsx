@@ -6,7 +6,7 @@ import { useForm, Controller } from "react-hook-form";
 import revalidate from "@/app/utils/api/actions";
 import toast from "@/app/utils/ui/actions";
 import clsx from "clsx";
-import type { Group, User } from "@repo/db";
+import type { Group, User, Role } from "@repo/db";
 import { IconEdit } from "@tabler/icons-react";
 import Select from "react-select";
 import { selectStyle } from "@/app/utils/ui/actions";
@@ -15,6 +15,8 @@ type UserFormProps = {
   formProps: {
     user: User;
     groups: Array<Group>;
+    roles: Array<Role>;
+    userRoles: Array<{ roleId: number }>;
   };
 };
 
@@ -44,7 +46,9 @@ const EditUserModal = ({ formProps }: UserFormProps) => {
       } else {
         toast(false, "Bénévole modifié avec succès");
         document
-          .getElementById(`close-modal-edit-${formProps.user.id}`)
+          .getElementById(
+            `close-modal-edit-${formProps.user.email.replace("@croix-rouge.fr", "").replace(".", "")}`,
+          )
           .click();
         revalidate("/dashboard/users");
         router.push("/dashboard/users");
@@ -61,6 +65,11 @@ const EditUserModal = ({ formProps }: UserFormProps) => {
     label: group.name,
   }));
 
+  const optionsRoles = formProps.roles.map((role) => ({
+    value: role.id,
+    label: role.title,
+  }));
+
   const {
     control,
     register,
@@ -68,6 +77,7 @@ const EditUserModal = ({ formProps }: UserFormProps) => {
     formState: { errors },
   } = useForm({
     defaultValues: {
+      roles: formProps.userRoles,
       phoneNumber: formProps.user.phoneNumber,
       groupId: formProps.user.groupId,
     },
@@ -75,7 +85,13 @@ const EditUserModal = ({ formProps }: UserFormProps) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <div className="modal" id={"modal-edit-" + formProps.user.id}>
+      <div
+        className="modal"
+        id={
+          "modal-edit-" +
+          formProps.user.email.replace("@croix-rouge.fr", "").replace(".", "")
+        }
+      >
         <div className="modal-dialog modal-lg" role="document">
           <div className="modal-content">
             <div className="modal-header">
@@ -109,20 +125,14 @@ const EditUserModal = ({ formProps }: UserFormProps) => {
                     "form-control",
                     errors.phoneNumber && "is-invalid",
                   )}
-                  placeholder="0612345678"
+                  placeholder="33601020304"
                   {...register("phoneNumber", {
-                    required: true,
-                    minLength: 10,
+                    pattern: /^(\+)[0-9]{11}$/,
                   })}
                 />
                 <div className="invalid-feedback">
-                  {errors.phoneNumber?.type === "required" && (
-                    <>Le numéro de téléphone est obligatoire.</>
-                  )}
-                  {errors.phoneNumber?.type === "minLength" && (
-                    <>
-                      Le numéro de téléphone doit faire au moins 10 caractères.
-                    </>
+                  {errors.phoneNumber?.type === "pattern" && (
+                    <>Le format doit être au format international.</>
                   )}
                 </div>
               </div>
@@ -140,6 +150,29 @@ const EditUserModal = ({ formProps }: UserFormProps) => {
                       placeholder="Sélectionner"
                       styles={selectStyle}
                       value={options.find((c) => c.value === field.value)}
+                    />
+                  )}
+                />
+              </div>
+
+              <div className="mb-3">
+                <div className="form-label">Rôles</div>
+                <Controller
+                  control={control}
+                  name="roles"
+                  render={({
+                    field: { onChange, onBlur, value, name, ref },
+                  }) => (
+                    <Select
+                      onChange={onChange}
+                      onBlur={onBlur}
+                      options={optionsRoles}
+                      isMulti
+                      placeholder="Sélectionner"
+                      styles={selectStyle}
+                      name={name}
+                      value={value}
+                      ref={ref}
                     />
                   )}
                 />

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import ContentLayout from "@/components/ui/ContentLayout";
 import { prisma } from "@repo/db";
-import AddMissionForm from "@/components/mission/AddMissionForm";
+import AddMissionForm from "@/components/missions/AddMissionForm";
 import * as Sentry from "@sentry/nextjs";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
@@ -23,7 +23,7 @@ const AddMission = async () => {
   }[];
 
   try {
-    users = await prisma.globalUser.findMany({
+    users = await prisma.user.findMany({
       select: {
         email: true,
       },

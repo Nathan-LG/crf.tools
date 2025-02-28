@@ -19,8 +19,6 @@ const schema = z.object({
 export async function POST(req: NextRequest) {
   const formData = await req.formData();
 
-  console.log(formData);
-
   const data = Object.fromEntries(formData);
   const parsed = schema.safeParse(data);
 
@@ -70,7 +68,7 @@ export async function POST(req: NextRequest) {
         code: code,
         structure: parsed.data.structure,
         location: parsed.data.location,
-        createdById: user.id,
+        createdByEmail: user.email,
         description: parsed.data.description,
       },
     });

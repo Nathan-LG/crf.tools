@@ -6,9 +6,11 @@ import {
   IconCalendarFilled,
   IconPlus,
   IconUsers,
+  IconTag,
 } from "@tabler/icons-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import config from "@/config.json";
 
 async function Header() {
   const session = await auth();
@@ -110,24 +112,40 @@ async function Header() {
                         >
                           Recherche<span className="badge ms-2">WIP</span>
                         </Link>
-                        <div className="dropdown-divider"></div>
-                        <Link
-                          className="dropdown-item"
-                          href="/dashboard/missions/add"
-                        >
-                          <IconPlus className="icon dropdown-item-icon" />
-                          Ajouter
-                        </Link>
+                        {user.group.id >= config.groups.admin && (
+                          <>
+                            <div className="dropdown-divider"></div>
+                            <Link
+                              className="dropdown-item"
+                              href="/dashboard/missions/add"
+                            >
+                              <IconPlus className="icon dropdown-item-icon" />
+                              Ajouter
+                            </Link>
+                          </>
+                        )}
                       </div>
                     </li>
-                    <li className="nav-item">
-                      <Link className="nav-link" href="/dashboard/users">
-                        <span className="nav-link-icon d-md-none d-lg-inline-block">
-                          <IconUsers className="Icon" />
-                        </span>
-                        <span className="nav-link-title">Bénévoles</span>
-                      </Link>
-                    </li>
+                    {user.group.id >= config.groups.admin && (
+                      <>
+                        <li className="nav-item">
+                          <Link className="nav-link" href="/dashboard/users">
+                            <span className="nav-link-icon d-md-none d-lg-inline-block">
+                              <IconUsers className="Icon" />
+                            </span>
+                            <span className="nav-link-title">Bénévoles</span>
+                          </Link>
+                        </li>
+                        <li className="nav-item">
+                          <Link className="nav-link" href="/dashboard/roles">
+                            <span className="nav-link-icon d-md-none d-lg-inline-block">
+                              <IconTag className="Icon" />
+                            </span>
+                            <span className="nav-link-title">Rôles</span>
+                          </Link>
+                        </li>
+                      </>
+                    )}
                   </ul>
                 </div>
               </div>
