@@ -29,12 +29,40 @@ model User {
   group         Group     @relation(fields: [groupId], references: [id], onDelete: Cascade)
   accounts      Account[]
   sessions      Session[]
+  tags          Role[]
 
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
   Move         Move[]
   Mission      Mission[]
   Registration Registration[]
+  UserRoles    UserRoles[]
+}
+
+model Role {
+  id    Int    @id @default(autoincrement())
+  title String
+
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  User               User?                @relation(fields: [userId], references: [id])
+  userId             String?
+  MissionRequirement MissionRequirement[]
+  Registration       Registration[]
+  UserRoles          UserRoles[]
+}
+
+model UserRoles {
+  User   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  Role   Role @relation(fields: [roleId], references: [id])
+  roleId Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@id([userId, roleId])
 }
 
 model TempUser {
@@ -203,26 +231,44 @@ model Move {
 }
 
 model Mission {
-  id        Int         @id @default(autoincrement())
-  name      String
-  moves     Move[]
-  comment   String?
-  code      String?
-  user      GlobalUser? @relation(fields: [userEmail], references: [email])
-  userEmail String?
-  startAt   DateTime
-  endAt     DateTime
-  type      String
-  state     Int         @default(0)
-  sendSMS   Boolean     @default(false)
-  firstSMS  String?
-  secondSMS String?
+  id          Int         @id @default(autoincrement())
+  name        String
+  moves       Move[]
+  description String?
+  comment     String?
+  code        String?
+  user        GlobalUser? @relation(fields: [userEmail], references: [email])
+  userEmail   String?
+  startAt     DateTime
+  endAt       DateTime
+  type        String
+  state       Int         @default(0)
+  sendSMS     Boolean     @default(false)
+  firstSMS    String?
+  secondSMS   String?
+  location    String?
+  structure   String
 
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  Registration Registration[]
-  User         User?          @relation(fields: [userId], references: [id])
-  userId       String?
+  createdAt   DateTime @default(now())
+  createdBy   User     @relation(fields: [createdById], references: [id])
+  createdById String
+
+  updatedAt          DateTime             @updatedAt
+  Registration       Registration[]
+  MissionRequirement MissionRequirement[]
+}
+
+model MissionRequirement {
+  Mission   Mission @relation(fields: [missionId], references: [id])
+  missionId Int
+
+  Role   Role @relation(fields: [roleId], references: [id])
+  roleId Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@id([missionId, roleId])
 }
 
 model Registration {
@@ -233,6 +279,8 @@ model Registration {
   Mission   Mission @relation(fields: [missionId], references: [id])
   missionId Int
   state     Int     @default(0)
+  Role      Role    @relation(fields: [roleId], references: [id])
+  roleId    Int
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

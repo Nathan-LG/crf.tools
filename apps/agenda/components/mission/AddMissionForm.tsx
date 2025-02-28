@@ -8,12 +8,12 @@ import { IconExclamationCircle } from "@tabler/icons-react";
 import clsx from "clsx";
 import Select from "react-select";
 import { selectStyle } from "@/app/utils/ui/actions";
-import IconOption from "../ui/IconOptions";
+import IconOption from "../../../stock/components/ui/IconOptions";
 import { forwardRef } from "react";
 import IMask from "imask";
 import { IMaskInput } from "react-imask";
 
-const AddMissionForm = ({ users }) => {
+const AddMissionForm = ({ me, users }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -61,6 +61,93 @@ const AddMissionForm = ({ users }) => {
     label: user.email,
   }));
 
+  const optionsStructure = [
+    {
+      value: "UL 1/2",
+      label: "UL 1/2",
+    },
+    {
+      value: "UL 3/10",
+      label: "UL 3/10",
+    },
+    {
+      value: "UL 4",
+      label: "UL 4",
+    },
+    {
+      value: "UL 5",
+      label: "UL 5",
+    },
+    {
+      value: "UL 6",
+      label: "UL 6",
+    },
+    {
+      value: "UL 7",
+      label: "UL 7",
+    },
+    {
+      value: "UL 8",
+      label: "UL 8",
+    },
+    {
+      value: "UL 9",
+      label: "UL 9",
+    },
+    {
+      value: "UL 10",
+      label: "UL 10",
+    },
+    {
+      value: "UL 11",
+      label: "UL 11",
+    },
+    {
+      value: "UL 12",
+      label: "UL 12",
+    },
+    {
+      value: "UL 13",
+      label: "UL 13",
+    },
+    {
+      value: "UL 14",
+      label: "UL 14",
+    },
+    {
+      value: "UL 15",
+      label: "UL 15",
+    },
+    {
+      value: "UL 16",
+      label: "UL 16",
+    },
+    {
+      value: "UL 17",
+      label: "UL 17",
+    },
+    {
+      value: "UL 18",
+      label: "UL 18",
+    },
+    {
+      value: "UL 19",
+      label: "UL 19",
+    },
+    {
+      value: "UL 20",
+      label: "UL 20",
+    },
+    {
+      value: "DT 75",
+      label: "DT 75",
+    },
+    {
+      value: "Extra-DT",
+      label: "Extra-DT",
+    },
+  ];
+
   const optionsType = [
     {
       value: "PAPS / DPS",
@@ -76,6 +163,21 @@ const AddMissionForm = ({ users }) => {
       value: "Logistique",
       label: "Logistique",
       icon: "ti ti-forklift",
+    },
+    {
+      value: "Formation",
+      label: "Formation",
+      icon: "ti ti-school",
+    },
+    {
+      value: "Réunion",
+      label: "Réunion",
+      icon: "ti ti-armchair",
+    },
+    {
+      value: "Animation",
+      label: "Animation",
+      icon: "ti ti-balloon",
     },
   ];
 
@@ -114,13 +216,11 @@ const AddMissionForm = ({ users }) => {
       <div className="row row-cards">
         <div className="col-12">
           <div className="card">
+            <div className="card-header">
+              <h3 className="card-title">Nouvelle mission</h3>
+            </div>
             <div className="card-body">
               <div className="row">
-                <h3 className="card-title">Nouvelle mission</h3>
-                <p className="card-subtitle">
-                  Chaque mission doit avoir un responsable matériel.
-                </p>
-
                 {error && (
                   <div
                     className="alert alert-danger alert-dismissible"
@@ -140,7 +240,7 @@ const AddMissionForm = ({ users }) => {
                   </div>
                 )}
 
-                <div className="col-xl-6 col-sm-12">
+                <div className="col-xl-8">
                   <div className="mb-3">
                     <label className="form-label required">Nom</label>
                     <input
@@ -161,29 +261,6 @@ const AddMissionForm = ({ users }) => {
                         <>Le nom doit faire au moins 3 caractères.</>
                       )}
                     </div>
-                  </div>
-                </div>
-
-                <div className="col-xl-6 col-sm-12">
-                  <div className="mb-3">
-                    <label className="form-label required">
-                      Adresse mail du responsbale matériel
-                    </label>
-
-                    <Controller
-                      control={control}
-                      name="userEmail"
-                      render={({ field }) => (
-                        <Select
-                          onChange={(val) => field.onChange(val.value)}
-                          options={options}
-                          placeholder="Sélectionner"
-                          styles={selectStyle}
-                          required
-                          value={options.find((c) => c.value === field.value)}
-                        />
-                      )}
-                    />
                   </div>
                 </div>
 
@@ -243,6 +320,94 @@ const AddMissionForm = ({ users }) => {
                         <>La fin est obligatoire.</>
                       )}
                     </div>
+                  </div>
+                </div>
+
+                <div className="col-xl-4 col-sm-12">
+                  <div className="mb-3">
+                    <label className="form-label required">
+                      Lieu de la mission
+                    </label>
+                    <input
+                      id="location"
+                      type="text"
+                      className={clsx(
+                        "form-control",
+                        errors.location && "is-invalid",
+                      )}
+                      placeholder="Le T7"
+                      {...register("location", {
+                        required: true,
+                        minLength: 3,
+                      })}
+                    />
+                    <div className="invalid-feedback">
+                      {errors.location?.type === "required" && (
+                        <>La localisation est obligatoire.</>
+                      )}
+                      {errors.location?.type === "minLength" && (
+                        <>La localisation doit faire au moins 3 caractères.</>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="col-12">
+                  <div className="mb-3">
+                    <label className="form-label">Description</label>
+                    <textarea
+                      className="form-control"
+                      name="description"
+                      rows={3}
+                      placeholder="Une place de PSE pour le 7"
+                    ></textarea>
+                  </div>
+                </div>
+
+                <div className="col-xl-6 col-sm-12">
+                  <div className="mb-3">
+                    <label className="form-label required">
+                      Structure organisatrice
+                    </label>
+                    <Controller
+                      control={control}
+                      name="structure"
+                      render={({ field }) => (
+                        <Select
+                          onChange={(val) => field.onChange(val.value)}
+                          options={optionsStructure}
+                          placeholder="Sélectionner"
+                          styles={selectStyle}
+                          required
+                          value={optionsStructure.find(
+                            (c) => c.value === field.value,
+                          )}
+                        />
+                      )}
+                    />
+                  </div>
+                </div>
+
+                <div className="col-xl-6 col-sm-12">
+                  <div className="mb-3">
+                    <label className="form-label required">
+                      Adresse mail du responsable de la mission
+                    </label>
+
+                    <Controller
+                      control={control}
+                      name="createdBy"
+                      render={({ field }) => (
+                        <Select
+                          onChange={(val) => field.onChange(val.value)}
+                          options={options}
+                          placeholder="Sélectionner"
+                          styles={selectStyle}
+                          required
+                          value={options.find((c) => c.value === field.value)}
+                        />
+                      )}
+                    />
                   </div>
                 </div>
               </div>

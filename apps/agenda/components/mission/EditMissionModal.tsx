@@ -9,7 +9,7 @@ import clsx from "clsx";
 import { IconEdit } from "@tabler/icons-react";
 import Select from "react-select";
 import { selectStyle } from "@/app/utils/ui/actions";
-import IconOption from "../ui/IconOptions";
+import IconOption from "../../../stock/components/ui/IconOptions";
 import { IMaskInput } from "react-imask";
 import moment from "moment";
 

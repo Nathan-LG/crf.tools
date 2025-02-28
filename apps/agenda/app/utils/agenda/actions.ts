@@ -3,7 +3,7 @@
 import { prisma } from "@repo/db";
 import * as Sentry from "@sentry/nextjs";
 
-export async function getEvents(start, end) {
+export async function getEvents(userId, start, end) {
   try {
     const eventsToRename = await prisma.mission.findMany({
       where: {
@@ -18,6 +18,16 @@ export async function getEvents(start, end) {
         endAt: true,
         name: true,
         type: true,
+        state: true,
+        location: true,
+        Registration: {
+          select: {
+            state: true,
+          },
+          where: {
+            userId: userId,
+          },
+        },
       },
     });
 
@@ -56,8 +66,12 @@ export async function getEvents(start, end) {
         end: event.endAt,
         display: "block",
         allDay: true,
-        type: className,
+        typeRaw: className,
+        type: event.type,
         classNames: ["dotEvent", className],
+        location: event.location,
+        state: event.state,
+        registration: event.Registration[0]?.state,
       };
     });
   } catch (e) {

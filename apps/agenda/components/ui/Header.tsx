@@ -4,6 +4,7 @@ import { SignOutButton } from "@/components/auth/SignOutButton";
 import {
   IconBriefcase2,
   IconCalendarFilled,
+  IconPlus,
   IconUsers,
 } from "@tabler/icons-react";
 import Link from "next/link";
@@ -108,6 +109,14 @@ async function Header() {
                           href="/missions/search"
                         >
                           Recherche<span className="badge ms-2">WIP</span>
+                        </Link>
+                        <div className="dropdown-divider"></div>
+                        <Link
+                          className="dropdown-item"
+                          href="/dashboard/missions/add"
+                        >
+                          <IconPlus className="icon dropdown-item-icon" />
+                          Ajouter
                         </Link>
                       </div>
                     </li>

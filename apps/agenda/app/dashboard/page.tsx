@@ -28,7 +28,7 @@ const Dashboard = async () => {
   const oneYearLater = new Date();
   oneYearLater.setFullYear(oneYearLater.getFullYear() + 1);
 
-  const events = await getEvents(oneYearBefore, oneYearLater);
+  const events = await getEvents(session.user.id, oneYearBefore, oneYearLater);
 
   return (
     <ContentLayout subHeaderProps={pageData}>

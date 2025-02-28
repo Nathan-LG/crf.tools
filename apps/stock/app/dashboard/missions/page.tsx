@@ -8,12 +8,10 @@ import {
   IconPlus,
 } from "@tabler/icons-react";
 import { prisma } from "@repo/db";
-import DeleteModal from "@/components/ui/DeleteModal";
 import Link from "next/link";
 import moment from "moment";
 import SearchMissions from "@/components/mission/SearchMission";
 import PaginationMissions from "@/components/mission/PaginationMissions";
-import EditMissionModal from "@/components/mission/EditMissionModal";
 import * as Sentry from "@sentry/nextjs";
 import { redirect } from "next/navigation";
 
@@ -105,7 +103,7 @@ const Missions = async ({
     title: "Liste des missions",
     button: "Ajouter une mission",
     buttonIcon: <IconPlus className="icon" />,
-    buttonLink: "/dashboard/missions/add",
+    buttonLink: "https://agenda.paris15.crf.tools/dashboard/missions/add",
   };
 
   // DOM rendering
@@ -153,14 +151,14 @@ const Missions = async ({
                   }
 
                   switch (mission.state) {
-                    case 0:
+                    case 1:
                       state = (
                         <span className="badge bg-yellow text-yellow-fg">
                           Remontée en attente
                         </span>
                       );
                       break;
-                    case 1:
+                    case 2:
                       state = (
                         <span className="badge bg-lime text-azure-fg">
                           Remontée faite
@@ -229,20 +227,6 @@ const Missions = async ({
           <PaginationMissions totalPages={missions.length / 20} />
         </div>
       </div>
-
-      {missions.map((mission) => (
-        <div key={mission.id}>
-          <EditMissionModal mission={mission} globalUsers={globalUsers} />
-
-          <DeleteModal
-            id={mission.id}
-            alert="Cela annulera définitivement la mission."
-            message="Mission annulée avec succès"
-            url="/api/missions/"
-            button="Annuler la mission"
-          />
-        </div>
-      ))}
     </ContentLayout>
   );
 };

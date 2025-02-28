@@ -15,8 +15,8 @@ import { SessionProvider } from "next-auth/react";
 
 export const metadata: Metadata = {
   title: {
-    template: "%s - stock.crf",
-    default: "stock.crf",
+    template: "%s - agenda.crf",
+    default: "agenda.crf",
   },
 };
 

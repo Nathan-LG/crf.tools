@@ -9,7 +9,7 @@ const Footer = () => (
           <ul className="list-inline list-inline-dots mb-0">
             <li className="list-inline-item">
               <a
-                href="https://github.com/Nathan-LG/stock.crf"
+                href="https://github.com/Nathan-LG/crf.tools"
                 target="_blank"
                 className="link-secondary"
                 rel="noopener"

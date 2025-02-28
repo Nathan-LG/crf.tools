@@ -4,6 +4,7 @@ import { prisma } from "@repo/db";
 import AddMissionForm from "@/components/mission/AddMissionForm";
 import * as Sentry from "@sentry/nextjs";
 import { redirect } from "next/navigation";
+import { auth } from "@/auth";
 
 // Metadata
 
@@ -14,6 +15,9 @@ export const metadata: Metadata = {
 // ----------------------------
 
 const AddMission = async () => {
+  const session = await auth();
+  if (!session) redirect("/auth/signin");
+
   let users: {
     email: string;
   }[];
@@ -33,7 +37,7 @@ const AddMission = async () => {
 
   const pageData = {
     ariane: [
-      { label: "stock.crf", href: "/dashboard" },
+      { label: "agenda.crf", href: "/dashboard" },
       { label: "Missions", href: "/dashboard/missions" },
       { label: "Ajouter une mission", href: "/dashboard/missions/add" },
     ],
@@ -47,7 +51,7 @@ const AddMission = async () => {
 
   return (
     <ContentLayout subHeaderProps={pageData}>
-      <AddMissionForm users={users} />
+      <AddMissionForm users={users} me={session.user.email} />
     </ContentLayout>
   );
 };
