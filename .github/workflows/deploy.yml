@@ -7,7 +7,7 @@ on:
         description: "Which env to deploy to"
         type: choice
         options:
-          - "paris15"
+          - "tools"
         required: true
 
 jobs:
@@ -16,7 +16,7 @@ jobs:
 
     steps:
       - name: docker-compose down and up
-        uses: appleboy/ssh-action@v1.1.0
+        uses: appleboy/ssh-action@v1.2.2
         with:
           host: ${{ vars.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}

@@ -19,78 +19,50 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 10.5.2
+          version: 10.18.3
 
       - name: Use Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           cache: "pnpm"
           node-version: 23
 
       - name: Log in to the Container registry
-        uses: docker/login-action@v3.3.0
+        uses: docker/login-action@v3.6.0
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # --- STOCK ---
+      # --- LOCK ---
 
       - name: Extract metadata (tags, labels) for Docker
-        id: metastock
-        uses: docker/metadata-action@v5.5.1
+        id: metalock
+        uses: docker/metadata-action@v5.8.0
         with:
-          images: ${{ env.REGISTRY }}/Nathan-LG/stock.crf
+          images: ${{ env.REGISTRY }}/Nathan-LG/lock.crf
 
-      - name: Build and push Docker image for stock.crf
-        id: pushstock
-        uses: docker/build-push-action@v6.9.0
+      - name: Build and push Docker image for lock.crf
+        id: pushlock
+        uses: docker/build-push-action@v6.18.0
         with:
           context: .
-          file: apps/stock/Dockerfile
+          file: apps/lock/Dockerfile
           push: true
-          tags: ${{ steps.metastock.outputs.tags }}
-          labels: ${{ steps.metastock.outputs.labels }}
+          tags: ${{ steps.metalock.outputs.tags }}
+          labels: ${{ steps.metalock.outputs.labels }}
           build-args: |
             GIT_TAG=${{ github.ref_name }}
             "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}"
 
       - name: Generate artifact attestation
-        uses: actions/attest-build-provenance@v1
+        uses: actions/attest-build-provenance@v3
         with:
-          subject-name: ${{ env.REGISTRY }}/Nathan-LG/stock.crf
-          subject-digest: ${{ steps.pushstock.outputs.digest }}
-          push-to-registry: true
-
-      # --- AGENDA ---
-
-      - name: Extract metadata (tags, labels) for Docker
-        id: metaagenda
-        uses: docker/metadata-action@v5.5.1
-        with:
-          images: ${{ env.REGISTRY }}/Nathan-LG/agenda.crf
-
-      - name: Build and push Docker image for agenda.crf
-        id: pushagenda
-        uses: docker/build-push-action@v6.9.0
-        with:
-          context: .
-          file: apps/agenda/Dockerfile
-          push: true
-          tags: ${{ steps.metaagenda.outputs.tags }}
-          labels: ${{ steps.metaagenda.outputs.labels }}
-          build-args: |
-            GIT_TAG=${{ github.ref_name }}
-            "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}"
-
-      - name: Generate artifact attestation
-        uses: actions/attest-build-provenance@v1
-        with:
-          subject-name: ${{ env.REGISTRY }}/Nathan-LG/agenda.crf
-          subject-digest: ${{ steps.pushagenda.outputs.digest }}
+          subject-name: ${{ env.REGISTRY }}/Nathan-LG/lock.crf
+          subject-digest: ${{ steps.pushlock.outputs.digest }}
           push-to-registry: true

@@ -1,10 +1,10 @@
 packages:
-  - apps/*
+  - apps/lock
   - packages/*
 onlyBuiltDependencies:
-  - '@prisma/client'
-  - '@prisma/engines'
-  - '@sentry/cli'
+  - "@prisma/client"
+  - "@prisma/engines"
+  - "@sentry/cli"
   - core-js-pure
   - esbuild
   - prisma
