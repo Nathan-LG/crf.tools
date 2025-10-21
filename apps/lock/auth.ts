@@ -24,22 +24,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
 
       if (user) {
-        try {
-          const defaultRole = await prisma.userRole.findFirstOrThrow({
-            where: {
-              roleId: 1,
-              userEmail: user.email,
-            },
-          });
-        } catch (error) {
-          await prisma.userRole.create({
-            data: {
-              roleId: 1,
-              userEmail: user.email,
-            },
-          });
-        }
-
         return {
           ...token,
           id: user.id,

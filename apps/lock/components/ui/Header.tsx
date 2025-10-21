@@ -4,7 +4,6 @@ import { SignOutButton } from "@/components/auth/SignOutButton";
 import { IconCircleKey, IconLogs, IconUsers } from "@tabler/icons-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import config from "@/config.json";
 
 async function Header() {
   const session = await auth();

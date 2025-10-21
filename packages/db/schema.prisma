@@ -19,11 +19,11 @@ datasource db {
 // ------------------------------------------------------
 
 model User {
-  id          String    @unique @default(cuid())
+  id          String    @id @default(cuid())
   name        String
-  email       String
+  email       String    @unique
   image       String?
-  phoneNumber String    @id @unique
+  phoneNumber String    @unique
   groupId     Int       @default(1)
   group       Group     @relation(fields: [groupId], references: [id], onDelete: Cascade)
   accounts    Account[]
