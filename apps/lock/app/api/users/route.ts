@@ -30,8 +30,6 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    const roles = parsed.data.stringRoles.split(",");
-
     return new NextResponse(
       JSON.stringify({
         success: true,
