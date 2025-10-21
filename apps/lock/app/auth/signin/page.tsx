@@ -39,8 +39,7 @@ async function Login() {
               </div>
             </div>
             <div className="text-center text-secondary mt-3">
-              Vous n&apos;avez pas encore vos accès ? Rendez-vous sur Google
-              Chat.
+              Vous n&apos;avez pas encore vos accès ? Contactez le bureau !
             </div>
           </div>
         </div>

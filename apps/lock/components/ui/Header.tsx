@@ -1,7 +1,7 @@
 import { auth } from "auth";
 import { prisma } from "@repo/db";
 import { SignOutButton } from "@/components/auth/SignOutButton";
-import { IconCircleKey, IconUsers } from "@tabler/icons-react";
+import { IconCircleKey, IconLogs, IconUsers } from "@tabler/icons-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import config from "@/config.json";
@@ -74,22 +74,46 @@ async function Header() {
               <div className="row flex-fill align-items-center">
                 <div className="col">
                   <ul className="navbar-nav">
-                    {user.group.id >= config.groups.admin && (
-                      <li className="nav-item">
-                        <Link className="nav-link" href="/dashboard">
-                          <span className="nav-link-icon d-md-none d-lg-inline-block">
-                            <IconCircleKey className="Icon" />
-                          </span>
-                          <span className="nav-link-title">Serrures</span>
-                        </Link>
-                      </li>
-                    )}
                     <li className="nav-item">
-                      <Link className="nav-link" href="/dashboard/users">
+                      <Link className="nav-link" href="/locks">
+                        <span className="nav-link-icon d-md-none d-lg-inline-block">
+                          <IconCircleKey className="Icon" />
+                        </span>
+                        <span className="nav-link-title">Serrures</span>
+                      </Link>
+                    </li>
+                    <li className="nav-item dropdown">
+                      <a
+                        className="nav-link"
+                        data-bs-toggle="dropdown"
+                        role="button"
+                      >
                         <span className="nav-link-icon d-md-none d-lg-inline-block">
                           <IconUsers className="Icon" />
                         </span>
-                        <span className="nav-link-title">Bénévoles</span>
+                        <span className="nav-link-title">Utilisateurs</span>
+                      </a>
+                      <div className="dropdown-menu dropdown-menu-start">
+                        <Link
+                          className="dropdown-item"
+                          href="/users?filter=volonteers"
+                        >
+                          Bénévoles
+                        </Link>
+                        <Link
+                          className="dropdown-item"
+                          href="/users?filter=guests"
+                        >
+                          Invités
+                        </Link>
+                      </div>
+                    </li>
+                    <li className="nav-item">
+                      <Link className="nav-link" href="/logs">
+                        <span className="nav-link-icon d-md-none d-lg-inline-block">
+                          <IconLogs className="Icon" />
+                        </span>
+                        <span className="nav-link-title">Journaux</span>
                       </Link>
                     </li>
                   </ul>
