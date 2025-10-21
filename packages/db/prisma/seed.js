@@ -14,7 +14,7 @@ async function main() {
       },
       {
         id: 2,
-        name: "Logisticien",
+        name: "Élu",
       },
     ],
   });

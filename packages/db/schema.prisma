@@ -19,47 +19,17 @@ datasource db {
 // ------------------------------------------------------
 
 model User {
-  id            String    @unique @default(cuid())
-  name          String?
-  email         String    @id @unique
-  emailVerified Boolean?
-  image         String?
-  phoneNumber   String?
-  groupId       Int       @default(1)
-  group         Group     @relation(fields: [groupId], references: [id], onDelete: Cascade)
-  accounts      Account[]
-
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  Move         Move[]
-  Mission      Mission[]      @relation(name: "createdBy")
-  Registration Registration[]
-  UserRoles    UserRole[]
-}
-
-model Role {
-  id    Int    @id @default(autoincrement())
-  title String
-  color String
-
-  createdAt          DateTime             @default(now())
-  updatedAt          DateTime             @updatedAt
-  MissionRequirement MissionRequirement[]
-  Registration       Registration[]
-  UserRoles          UserRole[]
-}
-
-model UserRole {
-  User      User   @relation(fields: [userEmail], references: [email])
-  userEmail String
-
-  Role   Role @relation(fields: [roleId], references: [id])
-  roleId Int
+  id          String    @unique @default(cuid())
+  name        String
+  email       String
+  image       String?
+  phoneNumber String    @id @unique
+  groupId     Int       @default(1)
+  group       Group     @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  accounts    Account[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  @@id([userEmail, roleId])
 }
 
 model Group {
@@ -91,165 +61,4 @@ model Account {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([provider, providerAccountId])
-}
-
-model VerificationToken {
-  identifier String
-  token      String
-  expires    DateTime
-
-  @@id([identifier, token])
-}
-
-// ------------------------------------------------------
-// Locations and Items
-// ------------------------------------------------------
-
-model LocationType {
-  id          Int     @id @default(autoincrement())
-  name        String
-  description String?
-  icon        String?
-
-  createdAt             DateTime                @default(now())
-  updatedAt             DateTime                @updatedAt
-  Location              Location[]
-  LocationMandatoryItem LocationMandatoryItem[]
-}
-
-model Location {
-  id          Int          @id @default(autoincrement())
-  name        String
-  description String?
-  type        LocationType @relation(fields: [locationTypeId], references: [id])
-
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
-  LocationItem   LocationItem[]
-  locationTypeId Int
-  Move           Move[]
-}
-
-model Item {
-  id          Int     @id @default(autoincrement())
-  name        String
-  description String?
-  unit        String?
-
-  createdAt             DateTime                @default(now())
-  updatedAt             DateTime                @updatedAt
-  LocationItem          LocationItem[]
-  ItemCategory          ItemCategory?           @relation(fields: [itemCategoryId], references: [id])
-  itemCategoryId        Int?
-  LocationMandatoryItem LocationMandatoryItem[]
-  Move                  Move[]
-}
-
-model ItemCategory {
-  id          Int     @id @default(autoincrement())
-  name        String
-  description String?
-  icon        String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  Item      Item[]
-}
-
-model LocationMandatoryItem {
-  locationTypeId Int
-  itemId         Int
-  count          Int @default(0)
-
-  location LocationType @relation(fields: [locationTypeId], references: [id], onDelete: Cascade)
-  item     Item         @relation(fields: [itemId], references: [id], onDelete: Cascade)
-
-  @@id([locationTypeId, itemId])
-}
-
-model LocationItem {
-  locationId Int
-  itemId     Int
-  count      Int @default(0)
-
-  location Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
-  item     Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
-
-  @@id([locationId, itemId])
-}
-
-// ------------------------------------------------------
-// Missions and Moves
-// ------------------------------------------------------
-
-model Move {
-  id       Int       @id @default(autoincrement())
-  user     User      @relation(fields: [userEmail], references: [email])
-  external Boolean
-  location Location? @relation(fields: [locationId], references: [id])
-  item     Item      @relation(fields: [itemId], references: [id])
-  number   Int
-
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  locationId Int
-  userEmail  String
-  itemId     Int
-  Mission    Mission? @relation(fields: [missionId], references: [id])
-  missionId  Int?
-}
-
-model Mission {
-  id          Int      @id @default(autoincrement())
-  name        String
-  moves       Move[]
-  description String?
-  comment     String?
-  code        String?
-  userEmail   String?
-  startAt     DateTime
-  endAt       DateTime
-  type        String
-  state       Int      @default(0)
-  sendSMS     Boolean  @default(false)
-  firstSMS    String?
-  secondSMS   String?
-  location    String?
-  structure   String
-
-  createdAt      DateTime @default(now())
-  createdBy      User     @relation(fields: [createdByEmail], references: [email], name: "createdBy")
-  createdByEmail String
-
-  updatedAt          DateTime             @updatedAt
-  Registration       Registration[]
-  MissionRequirement MissionRequirement[]
-}
-
-model MissionRequirement {
-  Mission   Mission @relation(fields: [missionId], references: [id])
-  missionId Int
-
-  Role   Role @relation(fields: [roleId], references: [id])
-  roleId Int
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@id([missionId, roleId])
-}
-
-model Registration {
-  id        Int     @id @default(autoincrement())
-  User      User    @relation(fields: [userEmail], references: [email])
-  userEmail String
-  comment   String?
-  Mission   Mission @relation(fields: [missionId], references: [id])
-  missionId Int
-  state     Int     @default(0)
-  Role      Role    @relation(fields: [roleId], references: [id])
-  roleId    Int
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
