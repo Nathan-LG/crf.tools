@@ -23,7 +23,7 @@ model User {
   name        String
   email       String    @unique
   image       String?
-  phoneNumber String    @unique
+  phoneNumber String?
   groupId     Int       @default(1)
   group       Group     @relation(fields: [groupId], references: [id], onDelete: Cascade)
   accounts    Account[]
