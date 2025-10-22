@@ -34,15 +34,6 @@ async function Login() {
                       <ConnectionError />
                     </Suspense>
                     <SignInButton />
-                    <button
-                      type="button"
-                      onClick={() => {
-                        throw new Error("Sentry Test Error");
-                      }}
-                    >
-                      Break the world
-                    </button>
-                    ;
                   </div>
                 </div>
               </div>
