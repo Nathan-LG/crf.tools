@@ -9,16 +9,10 @@ process.env.NODE_ENV === "production" &&
     dsn: process.env.SENTRY_DSN,
 
     // Add optional integrations for additional features
-    integrations: [
-      Sentry.replayIntegration(),
-      Sentry.feedbackIntegration({
-        colorScheme: "system",
-        isNameRequired: true,
-      }),
-    ],
+    integrations: [Sentry.replayIntegration()],
 
     // Define how likely traces are sampled. Adjust this value in production, or use tracesSampler for greater control.
-    tracesSampleRate: 1,
+    tracesSampleRate: 1.0,
 
     // Define how likely Replay events are sampled.
     // This sets the sample rate to be 10%. You may want this to be 100% while
@@ -27,6 +21,13 @@ process.env.NODE_ENV === "production" &&
 
     // Define how likely Replay events are sampled when an error occurs.
     replaysOnErrorSampleRate: 1.0,
+
+    // Adds request headers and IP for users, for more info visit:
+    // https://docs.sentry.io/platforms/javascript/guides/nextjs/configuration/options/#sendDefaultPii
+    sendDefaultPii: true,
+
+    // Enable logs to be sent to Sentry
+    enableLogs: true,
 
     // Setting this option to true will print useful information to the console while you're setting up Sentry.
     debug: false,
