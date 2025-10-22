@@ -65,4 +65,4 @@ EXPOSE 3001
 ENV PORT=3001
 ENV HOSTNAME="0.0.0.0"
 
-CMD turbo db:deploy; turbo db:seed; node /app/apps/lock/server.js
+CMD node /app/apps/lock/server.js

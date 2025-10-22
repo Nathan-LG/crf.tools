@@ -15,6 +15,23 @@ jobs:
     runs-on: self-hosted
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.19.0
+
+      - name: Use Node.js
+        uses: actions/setup-node@v6
+        with:
+          cache: "pnpm"
+          node-version: 23
+
+      - name: Install dependencies
+        run: pnpm install
+
       - name: docker-compose down and up
         uses: appleboy/ssh-action@v1.2.2
         with:
@@ -24,6 +41,21 @@ jobs:
           port: ${{ vars.SSH_PORT }}
           script: |
             cd /var/docker/${{ inputs.site }}
-            docker compose down
             docker compose pull
+            docker compose down lock
+
+      - name: Apply all pending migrations to the database
+        run: turbo db:deploy
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+      - name: docker-compose down and up
+        uses: appleboy/ssh-action@v1.2.2
+        with:
+          host: ${{ vars.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ vars.SSH_PORT }}
+          script: |
+            cd /var/docker/${{ inputs.site }}
             docker compose up -d
