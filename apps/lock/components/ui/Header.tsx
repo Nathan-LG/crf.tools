@@ -1,7 +1,12 @@
 import { auth } from "auth";
 import { prisma } from "@repo/db";
 import { SignOutButton } from "@/components/auth/SignOutButton";
-import { IconCircleKey, IconLogs, IconUsers } from "@tabler/icons-react";
+import {
+  IconCircleKey,
+  IconLogs,
+  IconSearch,
+  IconUsers,
+} from "@tabler/icons-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
@@ -74,7 +79,7 @@ async function Header() {
                 <div className="col">
                   <ul className="navbar-nav">
                     <li className="nav-item">
-                      <Link className="nav-link" href="/locks">
+                      <Link className="nav-link" href="/dashboard/locks">
                         <span className="nav-link-icon d-md-none d-lg-inline-block">
                           <IconCircleKey className="Icon" />
                         </span>
@@ -95,20 +100,24 @@ async function Header() {
                       <div className="dropdown-menu dropdown-menu-start">
                         <Link
                           className="dropdown-item"
-                          href="/users?filter=volonteers"
+                          href="/dashboard/users?guests=0"
                         >
                           Bénévoles
                         </Link>
                         <Link
                           className="dropdown-item"
-                          href="/users?filter=guests"
+                          href="/dashboard/users?guests=1"
                         >
                           Invités
+                        </Link>
+                        <div className="dropdown-divider"></div>
+                        <Link className="dropdown-item" href="/dashboard/users">
+                          Tous
                         </Link>
                       </div>
                     </li>
                     <li className="nav-item">
-                      <Link className="nav-link" href="/logs">
+                      <Link className="nav-link" href="/dashboard/logs">
                         <span className="nav-link-icon d-md-none d-lg-inline-block">
                           <IconLogs className="Icon" />
                         </span>
@@ -116,6 +125,28 @@ async function Header() {
                       </Link>
                     </li>
                   </ul>
+                </div>
+                <div className="col-3 d-none d-xxl-block">
+                  <div className="my-3 my-md-0 flex-grow-1 flex-md-grow-0 order-first order-md-last">
+                    <form
+                      action="/dashboard/search"
+                      method="get"
+                      autoComplete="off"
+                      noValidate={true}
+                    >
+                      <div className="input-icon">
+                        <span className="input-icon-addon">
+                          <IconSearch className="Icon" />
+                        </span>
+                        <input
+                          type="text"
+                          className="form-control"
+                          placeholder="Rechercher..."
+                          aria-label="Search in website"
+                        />
+                      </div>
+                    </form>
+                  </div>
                 </div>
               </div>
             </div>

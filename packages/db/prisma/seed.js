@@ -6,14 +6,18 @@ async function main() {
     data: [
       {
         id: 0,
-        name: "Bénévole",
+        name: "Invité",
       },
       {
         id: 1,
-        name: "Cadre",
+        name: "Bénévole",
       },
       {
         id: 2,
+        name: "Cadre",
+      },
+      {
+        id: 3,
         name: "Élu",
       },
     ],

@@ -19,15 +19,21 @@ datasource db {
 // ------------------------------------------------------
 
 model User {
-  id            String    @id @default(cuid())
+  id            String    @id @unique @default(cuid())
   name          String
   email         String    @unique
   emailVerified DateTime?
   image         String?
   phoneNumber   String?
-  groupId       Int       @default(1)
-  group         Group     @relation(fields: [groupId], references: [id], onDelete: Cascade)
-  accounts      Account[]
+
+  groupId Int   @default(1)
+  group   Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  accounts Account[]
+  logs     Log[]
+
+  authorizations Authorization[]
+  authCreated    Authorization[] @relation("createdBy")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -62,4 +68,63 @@ model Account {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([provider, providerAccountId])
+}
+
+// ------------------------------------------------------
+// Locks
+// ------------------------------------------------------
+
+model Lock {
+  id          Int     @id @default(autoincrement())
+  name        String
+  nukiId      String  @unique
+  phoneNumber String?
+
+  logs           Log[]
+  authorizations Authorization[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ------------------------------------------------------
+// Authorizations
+// ------------------------------------------------------
+
+model Authorization {
+  id     Int    @id @default(autoincrement())
+  userId String
+  lockId Int
+
+  startAt DateTime?
+  endAt   DateTime?
+
+  createdById String
+  createdBy   User   @relation(fields: [createdById], references: [id], name: "createdBy")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User  @relation(fields: [userId], references: [id])
+  lock Lock  @relation(fields: [lockId], references: [id])
+  Log  Log[]
+}
+
+// ------------------------------------------------------
+// Logs
+// ------------------------------------------------------
+
+model Log {
+  id              Int      @id @default(autoincrement())
+  userId          String
+  lockId          Int
+  authorizationId Int
+  action          Int
+  details         String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user          User          @relation(fields: [userId], references: [id])
+  lock          Lock          @relation(fields: [lockId], references: [id])
+  authorization Authorization @relation(fields: [authorizationId], references: [id])
 }

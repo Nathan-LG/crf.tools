@@ -14,7 +14,28 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     async signIn({ account, profile }) {
       if (account.provider === "google") {
-        return profile.email.endsWith("@croix-rouge.fr");
+        // If user is in superadmins env variable, let them sign in
+
+        if (process.env.SUPERADMINS?.split(",").includes(profile.email)) {
+          return true;
+        } else if (profile.email.endsWith("@croix-rouge.fr")) {
+          // If user is in croix-rouge.fr domain, check if they exist in the database and are part of the correct group, if they do, let them sign in
+
+          const userCount = await prisma.user.count({
+            where: {
+              email: profile.email,
+              groupId: {
+                in: [2, 3],
+              },
+            },
+          });
+
+          return userCount === 1;
+        } else {
+          // Otherwise, deny access
+
+          return false;
+        }
       }
     },
 

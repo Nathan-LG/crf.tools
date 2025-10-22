@@ -1,6 +1,6 @@
 "use client";
 
-import toast from "@/app/utils/ui/actions";
+import { toast } from "@/app/utils/ui/actions";
 import { IconAlertTriangle } from "@tabler/icons-react";
 import clsx from "clsx";
 import { useRouter } from "next/navigation";

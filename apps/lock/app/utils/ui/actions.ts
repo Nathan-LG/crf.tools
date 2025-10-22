@@ -1,8 +1,9 @@
 "use client";
 
+import { usePathname, useSearchParams } from "next/navigation";
 import Toastify from "toastify-js";
 
-export default async function toast(error, message) {
+export const toast = async (error, message) => {
   let color = "linear-gradient(to right, #74b816, #75ad26)";
   if (error) {
     color = "linear-gradient(to right, #d63939, #c94f4f)";
@@ -14,8 +15,10 @@ export default async function toast(error, message) {
     style: {
       background: color,
     },
+    gravity: "bottom",
+    position: "right",
   }).showToast();
-}
+};
 
 export const selectStyle = {
   control: (baseStyles, state) => ({
@@ -38,4 +41,46 @@ export const selectStyleWithInput = {
     padding: "1px",
     borderRadius: "0 4px 4px 0",
   }),
+};
+
+export const generatePagination = (currentPage, totalPages) => {
+  // If the total number of pages is 7 or less,
+  // display all pages without any ellipsis.
+  if (totalPages <= 7) {
+    return Array.from({ length: totalPages }, (_, i) => i + 1);
+  }
+
+  // If the current page is among the first 3 pages,
+  // show the first 3, an ellipsis, and the last 2 pages.
+  if (currentPage <= 3) {
+    return [1, 2, 3, "...", totalPages - 1, totalPages];
+  }
+
+  // If the current page is among the last 3 pages,
+  // show the first 2, an ellipsis, and the last 3 pages.
+  if (currentPage >= totalPages - 2) {
+    return [1, 2, "...", totalPages - 2, totalPages - 1, totalPages];
+  }
+
+  // If the current page is somewhere in the middle,
+  // show the first page, an ellipsis, the current page and its neighbors,
+  // another ellipsis, and the last page.
+  return [
+    1,
+    "...",
+    currentPage - 1,
+    currentPage,
+    currentPage + 1,
+    "...",
+    totalPages,
+  ];
+};
+
+export const createPageURL = (pageNumber: number | string) => {
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+
+  const params = new URLSearchParams(searchParams);
+  params.set("page", pageNumber.toString());
+  return `${pathname}?${params.toString()}`;
 };

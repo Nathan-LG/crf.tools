@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 };
 
 const RootLayout = ({ children }: PageProps) => (
-  <html lang="fr">
+  <html lang="fr" data-scroll-behavior="smooth">
     <SessionProvider>
       <body>
         <main>{children}</main>
