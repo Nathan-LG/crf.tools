@@ -86,7 +86,7 @@ const EditUserModal = ({ formProps }: UserFormProps) => {
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title">
-                &Eacute;diter l'utilisateur {formProps.user.name}
+                &Eacute;diter l&apos;utilisateur {formProps.user.name}
               </h5>
               <button
                 type="button"

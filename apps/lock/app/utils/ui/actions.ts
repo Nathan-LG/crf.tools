@@ -1,6 +1,5 @@
 "use client";
 
-import { usePathname, useSearchParams } from "next/navigation";
 import Toastify from "toastify-js";
 
 export const toast = async (error, message) => {
@@ -76,11 +75,8 @@ export const generatePagination = (currentPage, totalPages) => {
   ];
 };
 
-export const createPageURL = (pageNumber: number | string) => {
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
-
+export const createPageURL = (searchParams, pathName, pageNumber) => {
   const params = new URLSearchParams(searchParams);
   params.set("page", pageNumber.toString());
-  return `${pathname}?${params.toString()}`;
+  return `${pathName}?${params.toString()}`;
 };

@@ -85,17 +85,6 @@ const Users = async ({ searchParams }) => {
     take: USERS_PER_PAGE,
   });
 
-  const logPerUser = await Promise.all(
-    users.map(async (user) => {
-      const count = await prisma.log.count({
-        where: {
-          userId: user.id,
-        },
-      });
-      return { userId: user.id, count };
-    }),
-  );
-
   const groups = await prisma.group.findMany({
     select: {
       id: true,
@@ -238,7 +227,7 @@ const Users = async ({ searchParams }) => {
   // Page data
 
   let userType = "utilisateurs";
-  let ariane = [
+  const ariane = [
     { label: "lock.crf", href: "/dashboard" },
     { label: "Utilisateurs", href: "/dashboard/users" },
   ];

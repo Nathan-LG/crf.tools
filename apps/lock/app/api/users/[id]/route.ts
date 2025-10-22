@@ -87,7 +87,7 @@ export async function DELETE(
         status: 200,
       },
     );
-  } catch (error) {
+  } catch {
     return new NextResponse(
       JSON.stringify({
         success: false,

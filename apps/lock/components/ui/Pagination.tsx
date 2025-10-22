@@ -4,9 +4,13 @@ import clsx from "clsx";
 import Link from "next/link";
 import { createPageURL, generatePagination } from "@/app/utils/ui/actions";
 import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
+import { usePathname, useSearchParams } from "next/navigation";
 
 const Pagination = ({ currentPage, totalPages }) => {
   const allPages = generatePagination(currentPage, totalPages);
+
+  const searchParams = useSearchParams();
+  const pathName = usePathname();
 
   return (
     <ul className="pagination mt-4 justify-content-center">
@@ -14,7 +18,7 @@ const Pagination = ({ currentPage, totalPages }) => {
         <>
           <PaginationArrow
             direction="left"
-            href={createPageURL(currentPage - 1)}
+            href={createPageURL(searchParams, pathName, currentPage - 1)}
             isDisabled={currentPage <= 1}
           />
 
@@ -22,7 +26,7 @@ const Pagination = ({ currentPage, totalPages }) => {
             return (
               <PaginationNumber
                 key={`${page}-${index}`}
-                href={createPageURL(page)}
+                href={createPageURL(searchParams, pathName, page)}
                 page={page}
                 isActive={currentPage === page}
               />
@@ -31,7 +35,7 @@ const Pagination = ({ currentPage, totalPages }) => {
 
           <PaginationArrow
             direction="right"
-            href={createPageURL(currentPage + 1)}
+            href={createPageURL(searchParams, pathName, currentPage + 1)}
             isDisabled={currentPage >= totalPages}
           />
         </>
