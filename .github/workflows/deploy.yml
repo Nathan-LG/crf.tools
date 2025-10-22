@@ -33,9 +33,11 @@ jobs:
           node-version: 23
 
       - name: Install dependencies
-        run: pnpm install
+        run: |
+          pnpm install
+          pnpm install turbo --global
 
-      - name: docker-compose down and up
+      - name: docker-compose pull and down
         uses: appleboy/ssh-action@v1.2.2
         with:
           host: ${{ vars.SSH_HOST }}
@@ -52,7 +54,7 @@ jobs:
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
-      - name: docker-compose down and up
+      - name: docker-compose up
         uses: appleboy/ssh-action@v1.2.2
         with:
           host: ${{ vars.SSH_HOST }}
