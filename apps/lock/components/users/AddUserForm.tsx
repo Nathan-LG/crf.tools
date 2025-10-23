@@ -139,7 +139,7 @@ const AddUserForm = ({ groups }) => {
                       )}
                       placeholder="john.doe@croix-rouge.fr"
                       {...register("email", {
-                        pattern: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
+                        pattern: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
                       })}
                     />
                     <div className="invalid-feedback">

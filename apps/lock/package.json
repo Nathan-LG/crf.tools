@@ -5,7 +5,7 @@
     "build": "next build",
     "dev": "next dev -p 3001",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "preinstall": "npx only-allow pnpm",
     "prettier:format": "prettier --write \"**/*.{ts,tsx,js,md,mdx,css,yaml}\"",
     "prettier:check": "prettier --check \"**/*.{ts,tsx,js,md,mdx,css,yaml}\""
@@ -56,7 +56,8 @@
     "@types/react": "19.2.2",
     "@types/react-dom": "19.2.2",
     "eslint": "^9.38.0",
-    "eslint-config-prettier": "^9.1.2",
+    "eslint-config-next": "16.0.0",
+    "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.0.0",
     "prettier": "3.6.2",

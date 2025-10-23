@@ -4,7 +4,7 @@
 
 import * as Sentry from "@sentry/nextjs";
 
-process.env.NODE_ENV === "production" &&
+if (process.env.NODE_ENV === "production") {
   Sentry.init({
     dsn: process.env.SENTRY_DSN,
 
@@ -21,3 +21,4 @@ process.env.NODE_ENV === "production" &&
     // Setting this option to true will print useful information to the console while you're setting up Sentry.
     debug: false,
   });
+}

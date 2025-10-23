@@ -6,7 +6,6 @@ import { useForm, Controller } from "react-hook-form";
 import revalidate from "@/app/utils/api/actions";
 import { toast } from "@/app/utils/ui/actions";
 import clsx from "clsx";
-import type { Group, User } from "@repo/db";
 import { IconEdit } from "@tabler/icons-react";
 import Select from "react-select";
 import { selectStyle } from "@/app/utils/ui/actions";
@@ -117,7 +116,7 @@ const EditUserModal = ({ formProps }) => {
                   className={clsx("form-control", errors.email && "is-invalid")}
                   placeholder="john.doe@croix-rouge.fr"
                   {...register("email", {
-                    pattern: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
+                    pattern: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
                   })}
                 />
                 <div className="invalid-feedback">
