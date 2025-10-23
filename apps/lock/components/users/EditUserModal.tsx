@@ -11,14 +11,7 @@ import { IconEdit } from "@tabler/icons-react";
 import Select from "react-select";
 import { selectStyle } from "@/app/utils/ui/actions";
 
-type UserFormProps = {
-  formProps: {
-    user: User;
-    groups: Array<Group>;
-  };
-};
-
-const EditUserModal = ({ formProps }: UserFormProps) => {
+const EditUserModal = ({ formProps }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const router = useRouter();
@@ -26,9 +19,15 @@ const EditUserModal = ({ formProps }: UserFormProps) => {
   async function onSubmit(data) {
     setIsLoading(true);
 
+    console.log(data);
+
     const formData = Object.fromEntries(
-      Object.entries(data).filter(([_, v]) => v !== null),
+      Object.entries(data)
+        .filter(([_, v]) => v !== "")
+        .map(([k, v]) => [k, String(v)]),
     );
+
+    console.log(formData);
 
     try {
       const response = await fetch(`/api/users/${formProps.user.id}`, {
@@ -116,6 +115,7 @@ const EditUserModal = ({ formProps }: UserFormProps) => {
                   id="email"
                   type="email"
                   className={clsx("form-control", errors.email && "is-invalid")}
+                  placeholder="john.doe@croix-rouge.fr"
                   {...register("email", {
                     pattern: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
                   })}

@@ -20,7 +20,9 @@ const AddUserForm = ({ groups }) => {
     setError(null);
 
     const formData = Object.fromEntries(
-      Object.entries(data).filter(([_, v]) => v !== ""),
+      Object.entries(data)
+        .filter(([_, v]) => v !== "")
+        .map(([k, v]) => [k, String(v)]),
     );
 
     try {
