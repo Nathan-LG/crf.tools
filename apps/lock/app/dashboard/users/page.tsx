@@ -219,7 +219,11 @@ const Users = async ({ searchParams }) => {
             </table>
           </div>
         </div>
-        <Pagination currentPage={currentPage} totalPages={totalPages} />
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          classNames="mt-4 justify-content-center"
+        />
       </div>
     );
   }

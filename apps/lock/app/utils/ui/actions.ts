@@ -14,6 +14,7 @@ export const toast = async (error, message) => {
     style: {
       background: color,
     },
+    className: "toastify-custom",
     gravity: "bottom",
     position: "right",
   }).showToast();

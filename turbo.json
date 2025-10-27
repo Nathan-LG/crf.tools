@@ -19,6 +19,18 @@
       "cache": false,
       "persistent": true
     },
+    "db:seed": {
+      "cache": false,
+      "env": ["DATABASE_URL"]
+    },
+    "db:format": {
+      "cache": false,
+      "env": ["DATABASE_URL"]
+    },
+    "db:validate": {
+      "cache": false,
+      "env": ["DATABASE_URL"]
+    },
     "db:generate": {
       "cache": false,
       "env": ["DATABASE_URL"]

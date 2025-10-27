@@ -2,42 +2,34 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import clsx from "clsx";
-import Select from "react-select";
-import { selectStyle } from "@/app/utils/ui/actions";
 import { onSubmit } from "@/app/utils/data/actions";
 import ErrorDismissable from "@/components/ui/ErrorDismissable";
 
-const AddUserForm = ({ groups }) => {
+const AddLockForm = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   const router = useRouter();
 
   const {
-    control,
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  const optionsGroups = groups.map((group) => ({
-    value: group.id,
-    label: group.name,
-  }));
-
   return (
     <form
       onSubmit={handleSubmit((data) =>
-        onSubmit(data, setIsLoading, setError, "users", router, "POST", null),
+        onSubmit(data, setIsLoading, setError, "locks", router, "POST", null),
       )}
     >
       <div className="row row-cards">
         <div className="col-12">
           <div className="card">
             <div className="card-header">
-              <h3 className="card-title">Nouvel utilisateur</h3>
+              <h3 className="card-title">Nouvelle serrure</h3>
             </div>
             <div className="card-body">
               <div className="row">
@@ -46,13 +38,13 @@ const AddUserForm = ({ groups }) => {
                 <div className="col-xl-6 col-sm-12">
                   <div className="mb-3">
                     <label className="form-label required" htmlFor="name">
-                      Nom complet
+                      Localisation
                     </label>
                     <input
                       id="name"
                       type="text"
                       className="form-control"
-                      placeholder="John Doe"
+                      placeholder="Entrée UL Angers"
                       {...register("name", { required: true })}
                     />
                   </div>
@@ -60,53 +52,52 @@ const AddUserForm = ({ groups }) => {
 
                 <div className="col-xl-6 col-sm-12">
                   <div className="mb-3">
-                    <label className="form-label required">Groupe</label>
-                    <Controller
-                      control={control}
-                      name="groupId"
-                      render={({ field }) => (
-                        <Select
-                          onChange={(val) => field.onChange(val.value)}
-                          options={optionsGroups}
-                          placeholder="Sélectionner"
-                          styles={selectStyle}
-                          value={optionsGroups.find(
-                            (c) => c.value === field.value,
-                          )}
-                        />
-                      )}
+                    <label className="form-label required" htmlFor="nukiId">
+                      Identifiant Nuki
+                    </label>
+                    <input
+                      id="nukiId"
+                      type="text"
+                      className="form-control"
+                      placeholder="123456789"
+                      {...register("nukiId", { required: true })}
                     />
                   </div>
                 </div>
 
                 <div className="col-xl-6 col-sm-12">
                   <div className="mb-3">
-                    <label className="form-label" htmlFor="email">
-                      Adresse mail
+                    <label className="form-label" htmlFor="nukiId">
+                      Clé API Nuki
                     </label>
-                    <input
-                      id="email"
-                      type="email"
-                      className={clsx(
-                        "form-control",
-                        errors.email && "is-invalid",
-                      )}
-                      placeholder="john.doe@croix-rouge.fr"
-                      {...register("email", {
-                        pattern: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
-                      })}
-                    />
-                    <div className="invalid-feedback">
-                      {errors.email?.type === "pattern" && (
-                        <>Le format doit être une adresse email valide.</>
-                      )}
+                    <div className="row g-2">
+                      <div className="col">
+                        <input
+                          id="nukiId"
+                          type="text"
+                          className="form-control"
+                          placeholder="7511d719ac97189240c7ec46c3fd69ce72187d713e81a21b538df5bd038d051a"
+                          {...register("nukiApiKey")}
+                        />
+                      </div>
+                      <div className="col-auto align-self-center">
+                        <span
+                          className="form-help"
+                          data-bs-toggle="popover"
+                          data-bs-placement="left"
+                          data-bs-content="Par défaut la clé d'API utilisée est celle du compte Nuki president.paris15@croix-rouge.fr."
+                          data-bs-html="true"
+                        >
+                          ?
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
 
                 <div className="col-xl-6 col-sm-12">
                   <div className="mb-3">
-                    <label className="form-label">Téléphone</label>
+                    <label className="form-label">Téléphone lié</label>
                     <input
                       type="tel"
                       className={clsx(
@@ -146,4 +137,4 @@ const AddUserForm = ({ groups }) => {
   );
 };
 
-export default AddUserForm;
+export default AddLockForm;

@@ -36,3 +36,7 @@ body {
   --fc-today-bg-color: rgba(255, 220, 40, 0.15);
   --fc-now-indicator-color: red;
 }
+
+.toastify-custom {
+  border-radius: 5px;
+}

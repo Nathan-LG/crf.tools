@@ -3,58 +3,15 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
-import revalidate from "@/app/utils/api/actions";
-import { toast } from "@/app/utils/ui/actions";
 import clsx from "clsx";
 import { IconEdit } from "@tabler/icons-react";
 import Select from "react-select";
 import { selectStyle } from "@/app/utils/ui/actions";
+import { onSubmit } from "@/app/utils/data/actions";
 
 const EditUserModal = ({ formProps }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
   const router = useRouter();
-
-  async function onSubmit(data) {
-    setIsLoading(true);
-
-    console.log(data);
-
-    const formData = Object.fromEntries(
-      Object.entries(data)
-        .filter(([_, v]) => v !== "")
-        .map(([k, v]) => [k, String(v)]),
-    );
-
-    console.log(formData);
-
-    try {
-      const response = await fetch(`/api/users/${formProps.user.id}`, {
-        method: "PUT",
-        body: new URLSearchParams(formData),
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-      });
-
-      const data = await response.json();
-
-      if (!data.success) {
-        toast(true, data.error.message);
-      } else {
-        toast(false, "Utilisateur modifié avec succès");
-        document
-          .getElementById(`close-modal-edit-${formProps.user.id}`)
-          .click();
-        revalidate("/dashboard/users");
-        router.push("/dashboard/users");
-      }
-    } catch (error) {
-      toast(true, error.message);
-    } finally {
-      setIsLoading(false);
-    }
-  }
 
   const options = formProps.groups.map((group) => ({
     value: group.id,
@@ -68,6 +25,7 @@ const EditUserModal = ({ formProps }) => {
     formState: { errors },
   } = useForm({
     defaultValues: {
+      id: formProps.user.id,
       name: formProps.user.name,
       email: formProps.user.email.includes("@fake.mail")
         ? null
@@ -78,7 +36,19 @@ const EditUserModal = ({ formProps }) => {
   });
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form
+      onSubmit={handleSubmit((data) =>
+        onSubmit(
+          data,
+          setIsLoading,
+          null,
+          "users",
+          router,
+          "PUT",
+          `close-modal-edit-${formProps.user.id}`,
+        ),
+      )}
+    >
       <div className="modal" id={"modal-edit-" + formProps.user.id}>
         <div className="modal-dialog modal-lg" role="document">
           <div className="modal-content">
@@ -102,6 +72,7 @@ const EditUserModal = ({ formProps }) => {
                   id="name"
                   type="text"
                   className="form-control"
+                  placeholder="John Doe"
                   {...register("name", { required: true })}
                 />
               </div>

@@ -1,4 +1,4 @@
-import { IconHeart, IconCat } from "@tabler/icons-react";
+import { IconHeart, IconCat, IconScale } from "@tabler/icons-react";
 import { env } from "process";
 
 const Footer = () => (
@@ -34,7 +34,7 @@ const Footer = () => (
             </li>
             <li className="list-inline-item">
               Fait avec <IconHeart className="icon" /> (et{" "}
-              <IconCat className="icon" />) par{" "}
+              <IconCat className="icon" />, <IconScale className="icon" />) par{" "}
               <a
                 href="https://github.com/Nathan-LG"
                 target="_blank"

@@ -6,14 +6,14 @@ import { createPageURL, generatePagination } from "@/app/utils/ui/actions";
 import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 import { usePathname, useSearchParams } from "next/navigation";
 
-const Pagination = ({ currentPage, totalPages }) => {
+const Pagination = ({ currentPage, totalPages, classNames }) => {
   const allPages = generatePagination(currentPage, totalPages);
 
   const searchParams = useSearchParams();
   const pathName = usePathname();
 
   return (
-    <ul className="pagination mt-4 justify-content-center">
+    <ul className={clsx("pagination", classNames)}>
       {
         <>
           <PaginationArrow

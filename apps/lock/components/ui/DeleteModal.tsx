@@ -1,5 +1,6 @@
 "use client";
 
+import revalidate from "@/app/utils/api/actions";
 import { toast } from "@/app/utils/ui/actions";
 import { IconAlertTriangle } from "@tabler/icons-react";
 import clsx from "clsx";
@@ -12,6 +13,7 @@ type ModalForm = {
   alert: string;
   message: string;
   button?: string;
+  redirect?: string;
 };
 
 const DeleteModal = (modalParams: ModalForm) => {
@@ -38,7 +40,13 @@ const DeleteModal = (modalParams: ModalForm) => {
     }
     setIsLoading(false);
     document.getElementById(`close-modal-delete-${modalParams.id}`).click();
-    router.refresh();
+
+    if (modalParams.redirect) {
+      revalidate(modalParams.redirect);
+      router.push(modalParams.redirect);
+    } else {
+      router.refresh();
+    }
   };
 
   return (
