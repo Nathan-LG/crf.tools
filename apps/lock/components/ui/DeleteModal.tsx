@@ -1,6 +1,6 @@
 "use client";
 
-import revalidate from "@/app/utils/api/actions";
+import { revalidate } from "@/app/utils/api/actions";
 import { toast } from "@/app/utils/ui/actions";
 import { IconAlertTriangle } from "@tabler/icons-react";
 import clsx from "clsx";

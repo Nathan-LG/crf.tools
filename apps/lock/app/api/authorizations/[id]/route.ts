@@ -1,6 +1,7 @@
+import { APIResponse } from "@/app/utils/api/actions";
 import { withAuth } from "@/app/utils/api/auth";
 import { prisma } from "@repo/db";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 
 async function secureDELETE(
   req: NextRequest,
@@ -22,14 +23,9 @@ async function secureDELETE(
         },
       });
 
-      return new NextResponse(
-        JSON.stringify({
-          success: true,
-          message: "Authorization deleted successfully",
-        }),
-        {
-          status: 200,
-        },
+      return APIResponse(
+        { message: "Authorization deleted successfully" },
+        200,
       );
     } else {
       await prisma.authorization.update({
@@ -41,24 +37,18 @@ async function secureDELETE(
         },
       });
 
-      return new NextResponse(
-        JSON.stringify({
-          success: true,
+      return APIResponse(
+        {
           message:
             "Authorization has logs associated, it has been revoked instead of deleted",
-        }),
-        {
-          status: 200,
         },
+        200,
       );
     }
   } catch {
-    return new NextResponse(
-      JSON.stringify({
-        success: false,
-        error: { message: "Authorization cannot be found" },
-      }),
-      { status: 400 },
+    return APIResponse(
+      { error: { message: "Authorization cannot be found" } },
+      400,
     );
   }
 }

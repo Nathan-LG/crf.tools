@@ -1,6 +1,7 @@
+import { APIResponse } from "@/app/utils/api/actions";
 import { withAuth } from "@/app/utils/api/auth";
 import { prisma } from "@repo/db";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { z, ZodError } from "zod";
 
 const schema = z.object({
@@ -26,16 +27,7 @@ async function securePOST(req: NextRequest) {
       },
     });
 
-    return new NextResponse(
-      JSON.stringify({
-        success: true,
-        message: "Lock added successfully",
-        lock,
-      }),
-      {
-        status: 201,
-      },
-    );
+    return APIResponse({ message: "Lock created successfully", lock }, 201);
   } else {
     const error: ZodError = parsed.error;
     let errorMessage = "";
@@ -44,13 +36,7 @@ async function securePOST(req: NextRequest) {
       errorMessage += error.message + "\n";
     });
 
-    return new NextResponse(
-      JSON.stringify({
-        success: false,
-        error: { message: errorMessage },
-      }),
-      { status: 400 },
-    );
+    return APIResponse({ error: { message: errorMessage } }, 400);
   }
 }
 

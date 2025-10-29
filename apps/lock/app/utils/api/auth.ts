@@ -10,6 +10,7 @@ type Handler = (
 export function withAuth(handler: Handler): Handler {
   return async (req, context) => {
     const session = await auth();
+
     if (!session) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,

@@ -1,7 +1,8 @@
+import { APIResponse } from "@/app/utils/api/actions";
 import { withAuth } from "@/app/utils/api/auth";
 import { createRandomString } from "@/app/utils/ts/strings";
 import { prisma } from "@repo/db";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { z, ZodError } from "zod";
 
 const schema = z.object({
@@ -46,25 +47,15 @@ async function securePOST(req: NextRequest) {
         },
       });
 
-      return new NextResponse(
-        JSON.stringify({
-          success: true,
-          message: "User added successfully",
-          user,
-        }),
-        {
-          status: 201,
-        },
-      );
+      return APIResponse({ message: "User added successfully", user }, 201);
     } else {
-      return new NextResponse(
-        JSON.stringify({
-          success: false,
+      return APIResponse(
+        {
           error: {
             message: "Un utilisateur avec ce numéro de téléphone existe déjà.",
           },
-        }),
-        { status: 400 },
+        },
+        400,
       );
     }
   } else {
@@ -75,13 +66,7 @@ async function securePOST(req: NextRequest) {
       errorMessage += error.message + "\n";
     });
 
-    return new NextResponse(
-      JSON.stringify({
-        success: false,
-        error: { message: errorMessage },
-      }),
-      { status: 400 },
-    );
+    return APIResponse({ error: { message: errorMessage } }, 400);
   }
 }
 

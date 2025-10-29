@@ -1,4 +1,4 @@
-import revalidate from "../api/actions";
+import { revalidate } from "../api/actions";
 import { toast } from "@/app/utils/ui/actions";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
@@ -129,3 +129,6 @@ export async function generateMetadataCustom(
     title: `${prefix ? prefix : ""}${returnName.name}`,
   };
 }
+
+export const fetcher = (...args: Parameters<typeof fetch>) =>
+  fetch(...args).then((res) => res.json());

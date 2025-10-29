@@ -40,3 +40,7 @@ body {
 .toastify-custom {
   border-radius: 5px;
 }
+
+.list-inline-dots .list-inline-item + .list-inline-item:before {
+  margin-inline-end: 0.2rem !important;
+}

@@ -1,6 +1,7 @@
+import { APIResponse } from "@/app/utils/api/actions";
 import { withAuth } from "@/app/utils/api/auth";
 import { prisma } from "@repo/db";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { z, ZodError } from "zod";
 
 const schema = z.object({
@@ -33,15 +34,7 @@ async function securePUT(
       },
     });
 
-    return new NextResponse(
-      JSON.stringify({
-        success: true,
-        message: "Lock updated successfully",
-      }),
-      {
-        status: 201,
-      },
-    );
+    return APIResponse({ message: "Lock updated successfully" }, 201);
   } else {
     const error: ZodError = parsed.error;
 
@@ -51,13 +44,7 @@ async function securePUT(
       errorMessage += error.message + "\n";
     });
 
-    return new NextResponse(
-      JSON.stringify({
-        success: false,
-        error: { message: errorMessage },
-      }),
-      { status: 400 },
-    );
+    return APIResponse({ error: { message: errorMessage } }, 400);
   }
 }
 
@@ -86,23 +73,9 @@ async function secureDELETE(
       },
     });
 
-    return new NextResponse(
-      JSON.stringify({
-        success: true,
-        message: "Lock deleted successfully",
-      }),
-      {
-        status: 200,
-      },
-    );
+    return APIResponse({ message: "Lock deleted successfully" }, 200);
   } catch {
-    return new NextResponse(
-      JSON.stringify({
-        success: false,
-        error: { message: "Lock cannot be found" },
-      }),
-      { status: 400 },
-    );
+    return APIResponse({ error: { message: "Lock cannot be found" } }, 400);
   }
 }
 

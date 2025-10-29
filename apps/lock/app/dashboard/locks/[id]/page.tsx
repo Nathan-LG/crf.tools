@@ -1,11 +1,5 @@
 import type { Metadata } from "next";
-import {
-  IconBattery4,
-  IconKey,
-  IconLockOpen2,
-  IconMoodEmpty,
-  IconSettings,
-} from "@tabler/icons-react";
+import { IconMoodEmpty } from "@tabler/icons-react";
 import { prisma } from "@repo/db";
 import { redirect } from "next/navigation";
 import Link from "next/link";
@@ -18,6 +12,7 @@ import {
   logNumberToText,
 } from "@/app/utils/data/actions";
 import EditLockModal from "@/components/locks/EditLockModal";
+import LockHeader from "@/components/locks/LockHeader";
 
 type Props = Promise<{ id: string }>;
 
@@ -245,50 +240,7 @@ const Lock = async (props: { params: Props }) => {
               ))}
             </ol>
           </div>
-          <div className="row g-3 align-items-center">
-            <div className="col-auto">
-              <span className="status-indicator status-green status-indicator-animated">
-                <span className="status-indicator-circle"></span>
-                <span className="status-indicator-circle"></span>
-                <span className="status-indicator-circle"></span>
-              </span>
-            </div>
-            <div className="col">
-              <h2 className="page-title">{lock.name}</h2>
-              <div className="text-secondary">
-                <ul className="list-inline list-inline-dots mb-0">
-                  <li className="list-inline-item">
-                    <span className="text-green">
-                      <IconBattery4 className="icon" /> 80 %
-                    </span>
-                  </li>
-                  <li className="list-inline-item">
-                    <IconLockOpen2 className="icon" /> Déverrouillée
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div className="col-md-auto ms-auto d-print-none">
-              <div className="btn-list">
-                <a
-                  href="#"
-                  className="btn btn-2"
-                  data-bs-toggle="modal"
-                  data-bs-target={"#modal-edit"}
-                >
-                  <IconSettings className="icon me-2" />
-                  Paramètres
-                </a>
-                <Link
-                  href={`/dashboard/locks/${lock.id}/authorizations`}
-                  className="btn btn-primary btn-3"
-                >
-                  <IconKey className="icon me-2" />
-                  Gérer les accès
-                </Link>
-              </div>
-            </div>
-          </div>
+          <LockHeader lock={lock} />
         </div>
       </div>
       <div className="page-body">

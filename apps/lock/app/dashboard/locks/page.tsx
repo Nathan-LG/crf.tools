@@ -1,15 +1,8 @@
 import type { Metadata } from "next";
 import ContentLayout from "@/components/ui/ContentLayout";
-import {
-  IconLock,
-  IconLockOpen2,
-  IconMoodEmpty,
-  IconPlus,
-  IconInfoCircle,
-} from "@tabler/icons-react";
+import { IconMoodEmpty, IconPlus } from "@tabler/icons-react";
 import { prisma } from "@repo/db";
-import parsePhoneNumber from "libphonenumber-js";
-import Link from "next/link";
+import LockCard from "@/components/locks/LockCard";
 
 // Metadata
 
@@ -58,40 +51,7 @@ const Locks = async () => {
     locksJSX = (
       <>
         {locks.map((lock) => (
-          <div className="col-md-6 col-lg-4" key={lock.id}>
-            <div className="card">
-              <div className="card-body p-4 text-center">
-                <span className="avatar avatar-xl mb-3 bg-green-lt">
-                  <IconLock className="icon-lg text-green" size={40} />
-                </span>
-                <h3 className="m-0 mb-1">{lock.name}</h3>
-                <div className="text-secondary">
-                  {lock.phoneNumber
-                    ? parsePhoneNumber(lock.phoneNumber).formatInternational()
-                    : "Pas de téléphone"}
-                </div>
-                <div className="mt-3">
-                  <span className="badge bg-green-lt">80 %</span>
-                </div>
-              </div>
-              <div className="d-flex">
-                <a href="#" className="card-btn">
-                  <IconLock className="icon me-2 text-muted icon-3" />
-                  Verrouiller
-                </a>
-                <a href="#" className="card-btn">
-                  <IconLockOpen2 className="icon me-2 text-muted icon-3" />
-                  Déverrouiller
-                </a>
-              </div>
-              <div className="d-flex">
-                <Link href={`/dashboard/locks/${lock.id}`} className="card-btn">
-                  <IconInfoCircle className="icon me-2 text-muted icon-3" />
-                  Plus d&apos;informations
-                </Link>
-              </div>
-            </div>
-          </div>
+          <LockCard key={lock.id} lock={lock} />
         ))}
       </>
     );

@@ -5,6 +5,15 @@ import path from "path";
 module.exports = {
   output: "standalone",
   outputFileTracingRoot: path.join(__dirname, "../../"),
+  logging:
+    process.env.NODE_ENV === "production"
+      ? {}
+      : {
+          fetches: {
+            hmrRefreshes: true,
+            fullUrl: true,
+          },
+        },
 };
 
 // Injected content via Sentry wizard below
