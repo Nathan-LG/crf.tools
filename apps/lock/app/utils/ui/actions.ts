@@ -81,3 +81,13 @@ export const createPageURL = (searchParams, pathName, pageNumber) => {
   params.set("page", pageNumber.toString());
   return `${pathName}?${params.toString()}`;
 };
+
+export const handleSearch = (term, params, pathname, replace) => {
+  if (term) {
+    params.set("search", term);
+  } else {
+    params.delete("search");
+  }
+
+  replace(`${pathname}?${params.toString()}`);
+};

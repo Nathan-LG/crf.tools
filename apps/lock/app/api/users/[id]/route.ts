@@ -1,3 +1,4 @@
+import { withAuth } from "@/app/utils/api/auth";
 import { createRandomString } from "@/app/utils/ts/strings";
 import { prisma } from "@repo/db";
 import { NextRequest, NextResponse } from "next/server";
@@ -10,7 +11,7 @@ const schema = z.object({
   groupId: z.string().trim(),
 });
 
-export async function PUT(
+async function securePUT(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
@@ -65,7 +66,7 @@ export async function PUT(
   }
 }
 
-export async function DELETE(
+async function secureDELETE(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
@@ -97,3 +98,6 @@ export async function DELETE(
     );
   }
 }
+
+export const PUT = withAuth(securePUT);
+export const DELETE = withAuth(secureDELETE);

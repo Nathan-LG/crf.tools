@@ -1,3 +1,4 @@
+import { withAuth } from "@/app/utils/api/auth";
 import { createRandomString } from "@/app/utils/ts/strings";
 import { prisma } from "@repo/db";
 import { NextRequest, NextResponse } from "next/server";
@@ -10,7 +11,7 @@ const schema = z.object({
   phoneNumber: z.string().optional(),
 });
 
-export async function POST(req: NextRequest) {
+async function securePOST(req: NextRequest) {
   const formData = await req.formData();
 
   const data = Object.fromEntries(formData);
@@ -21,29 +22,51 @@ export async function POST(req: NextRequest) {
       parsed.data.email = createRandomString(12) + "@fake.mail";
     }
 
-    const user = await prisma.user.create({
-      data: {
-        name: parsed.data.name,
-        email: parsed.data.email,
-        group: {
-          connect: {
-            id: Number(parsed.data.groupId),
-          },
-        },
-        phoneNumber: parsed.data.phoneNumber ? parsed.data.phoneNumber : null,
-      },
-    });
+    let userNumberWithThisPhone = 0;
 
-    return new NextResponse(
-      JSON.stringify({
-        success: true,
-        message: "User added successfully",
-        user,
-      }),
-      {
-        status: 201,
-      },
-    );
+    if (parsed.data.phoneNumber !== undefined) {
+      userNumberWithThisPhone = await prisma.user.count({
+        where: {
+          phoneNumber: parsed.data.phoneNumber,
+        },
+      });
+    }
+
+    if (userNumberWithThisPhone === 0) {
+      const user = await prisma.user.create({
+        data: {
+          name: parsed.data.name,
+          email: parsed.data.email,
+          group: {
+            connect: {
+              id: Number(parsed.data.groupId),
+            },
+          },
+          phoneNumber: parsed.data.phoneNumber ? parsed.data.phoneNumber : null,
+        },
+      });
+
+      return new NextResponse(
+        JSON.stringify({
+          success: true,
+          message: "User added successfully",
+          user,
+        }),
+        {
+          status: 201,
+        },
+      );
+    } else {
+      return new NextResponse(
+        JSON.stringify({
+          success: false,
+          error: {
+            message: "Un utilisateur avec ce numéro de téléphone existe déjà.",
+          },
+        }),
+        { status: 400 },
+      );
+    }
   } else {
     const error: ZodError = parsed.error;
     let errorMessage = "";
@@ -61,3 +84,5 @@ export async function POST(req: NextRequest) {
     );
   }
 }
+
+export const POST = withAuth(securePOST);

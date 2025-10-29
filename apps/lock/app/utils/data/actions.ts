@@ -22,6 +22,7 @@ export async function onSubmit(
   router,
   action,
   modalId,
+  redirect = null,
 ) {
   setIsLoading(true);
 
@@ -71,8 +72,13 @@ export async function onSubmit(
       if (!data.success) {
         setError(data.error.message);
       } else {
-        revalidate(`/dashboard/${type}`);
-        router.push(`/dashboard/${type}`);
+        if (modalId) {
+          document.getElementById(modalId).click();
+        }
+        if (redirect) {
+          revalidate(redirect);
+          router.push(redirect);
+        }
       }
     } else if (action === "PUT") {
       if (!data.success) {
@@ -80,10 +86,11 @@ export async function onSubmit(
       } else {
         toast(false, `${typeMsg} modifié${feminine ? "e" : ""} avec succès`);
         document.getElementById(modalId).click();
-        revalidate(`/dashboard/${type}/${action === "PUT" ? formData.id : ""}`);
-        router.push(
-          `/dashboard/${type}/${action === "PUT" ? formData.id : ""}`,
-        );
+
+        if (redirect) {
+          revalidate(redirect);
+          router.push(redirect);
+        }
       }
     }
   } catch (error) {

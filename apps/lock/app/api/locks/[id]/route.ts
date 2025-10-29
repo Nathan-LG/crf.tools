@@ -1,3 +1,4 @@
+import { withAuth } from "@/app/utils/api/auth";
 import { prisma } from "@repo/db";
 import { NextRequest, NextResponse } from "next/server";
 import { z, ZodError } from "zod";
@@ -9,7 +10,7 @@ const schema = z.object({
   phoneNumber: z.string().trim().optional(),
 });
 
-export async function PUT(
+async function securePUT(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
@@ -60,7 +61,7 @@ export async function PUT(
   }
 }
 
-export async function DELETE(
+async function secureDELETE(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
@@ -104,3 +105,6 @@ export async function DELETE(
     );
   }
 }
+
+export const PUT = withAuth(securePUT);
+export const DELETE = withAuth(secureDELETE);

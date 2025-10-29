@@ -91,7 +91,7 @@ function PaginationArrow({
 
   return (
     <li className={clsx("page-item", isDisabled && "disabled")}>
-      {isDisabled ? (
+      {!isDisabled ? (
         <Link className="page-link" href={href}>
           {icon}
         </Link>

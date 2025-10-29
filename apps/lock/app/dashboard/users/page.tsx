@@ -29,10 +29,12 @@ export async function generateMetadata({ searchParams }): Promise<Metadata> {
 
 // ----------------------------
 
-const Users = async ({ searchParams }) => {
+const Users = async (props: {
+  searchParams: Promise<{ [page: string]: string | string[] | undefined }>;
+}) => {
   // Fetch users
 
-  const urlParams = await searchParams;
+  const urlParams = await props.searchParams;
   const guests = urlParams.guests;
   const currentPage = Number(urlParams?.page) || 1;
   const totalPages = await prisma.user
@@ -176,15 +178,23 @@ const Users = async ({ searchParams }) => {
                       <td>
                         <div className="badges-list">
                           {user.authorizations.length === 0 && "Aucun"}
-                          {user.authorizations.map((authorization) => {
-                            return (
-                              <span key={authorization.lock.id}>
-                                <span className="badge">
-                                  {authorization.lock.name}
-                                </span>{" "}
-                              </span>
-                            );
-                          })}
+                          {user.authorizations
+                            .filter(
+                              (authorization, index, self) =>
+                                index ===
+                                self.findIndex(
+                                  (a) => a.lock.id === authorization.lock.id,
+                                ),
+                            )
+                            .map((authorization) => {
+                              return (
+                                <span key={authorization.lock.id}>
+                                  <span className="badge">
+                                    {authorization.lock.name}
+                                  </span>{" "}
+                                </span>
+                              );
+                            })}
                         </div>
                       </td>
 

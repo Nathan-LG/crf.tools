@@ -9,6 +9,9 @@ import { onSubmit } from "@/app/utils/data/actions";
 import ErrorDismissable from "@/components/ui/ErrorDismissable";
 import { selectStyle } from "@/app/utils/ui/actions";
 import { IconUserPlus } from "@tabler/icons-react";
+import AddUserModal from "../users/AddUserModal";
+
+const now = Date.now();
 
 const AddLockAccessForm = ({ lock, users, groups }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -62,107 +65,154 @@ const AddLockAccessForm = ({ lock, users, groups }) => {
   );
 
   return (
-    <form
-      onSubmit={handleSubmit((data) =>
-        onSubmit(
-          data,
-          setIsLoading,
-          setError,
-          "authorizations",
-          router,
-          "POST",
-          null,
-        ),
-      )}
-    >
-      <div className="row row-cards">
-        <div className="col-12">
-          <div className="card">
-            <div className="card-header">
-              <h3 className="card-title">
-                Nouvel accès à la serrure {lock.name}
-              </h3>
-            </div>
-            <div className="card-body">
-              <div className="row">
-                {error && <ErrorDismissable error={error} />}
+    <>
+      <form
+        onSubmit={handleSubmit((data) =>
+          onSubmit(
+            data,
+            setIsLoading,
+            setError,
+            "authorizations",
+            router,
+            "POST",
+            null,
+            `/dashboard/locks/${lock.id}/authorizations`,
+          ),
+        )}
+      >
+        <input
+          type="hidden"
+          id="lockId"
+          value={lock.id}
+          {...register("lockId", { required: true })}
+        />
+        <div className="row row-cards">
+          <div className="col-12">
+            <div className="card">
+              <div className="card-header">
+                <h3 className="card-title">
+                  Nouvel accès à la serrure {lock.name}
+                </h3>
+              </div>
+              <div className="card-body">
+                <div className="row">
+                  {error && <ErrorDismissable error={error} />}
 
-                <div className="col-12">
-                  <div className="mb-3">
-                    <label className="form-label required" htmlFor="userId">
-                      Utilisateur
-                    </label>
-                    <div className="row g-2">
-                      <div className="col">
-                        <Controller
-                          control={control}
-                          name="userId"
-                          render={({ field }) => (
-                            <Select
-                              onChange={(val: any) => field.onChange(val.value)}
-                              options={optionsGroupUsers}
-                              formatGroupLabel={formatGroupLabel}
-                              placeholder="Sélectionner"
-                              styles={selectStyle}
-                            />
-                          )}
-                        />
+                  <div className="col-12">
+                    <div className="mb-3">
+                      <label className="form-label required" htmlFor="userId">
+                        Utilisateur
+                      </label>
+                      <div className="row g-2">
+                        <div className="col">
+                          <Controller
+                            control={control}
+                            name="userId"
+                            render={({ field }) => (
+                              <Select
+                                onChange={(val: any) =>
+                                  field.onChange(val.value)
+                                }
+                                options={optionsGroupUsers}
+                                formatGroupLabel={formatGroupLabel}
+                                placeholder="Sélectionner"
+                                styles={selectStyle}
+                                required
+                              />
+                            )}
+                          />
+                        </div>
+                        <div className="col-auto">
+                          <a
+                            href="#"
+                            className="btn btn-2 btn-icon"
+                            aria-label="Button"
+                            data-bs-toggle="modal"
+                            data-bs-target={"#modal-add-user"}
+                          >
+                            <IconUserPlus className="icon icon-2" />
+                          </a>
+                        </div>
                       </div>
-                      <div className="col-auto">
-                        <a
-                          href="#"
-                          className="btn btn-2 btn-icon"
-                          aria-label="Button"
-                        >
-                          <IconUserPlus className="icon icon-2" />
-                        </a>
+                    </div>
+                  </div>
+
+                  <div className="col-xl-6 col-sm-12">
+                    <div className="mb-3">
+                      <label className="form-label" htmlFor="startAt">
+                        Début de l&apos;accès
+                      </label>
+                      <input
+                        id="startAt"
+                        type="date"
+                        className={clsx(
+                          "form-control",
+                          errors.startAt && "is-invalid",
+                        )}
+                        {...register("startAt", {
+                          validate: (value) =>
+                            new Date(value).getTime() >= now || value === "",
+                        })}
+                      />
+                      <div className="invalid-feedback">
+                        {errors.startAt?.type === "validate" && (
+                          <>
+                            La date doit être supérieure ou égale à la date du
+                            jour.
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="col-xl-6 col-sm-12">
+                    <div className="mb-3">
+                      <label className="form-label" htmlFor="endAt">
+                        Fin de l&apos;accès
+                      </label>
+                      <input
+                        id="endAt"
+                        type="date"
+                        className={clsx(
+                          "form-control",
+                          errors.endAt && "is-invalid",
+                        )}
+                        {...register("endAt", {
+                          validate: (value) =>
+                            new Date(value).getTime() >= now || value === "",
+                        })}
+                      />
+                      <div className="invalid-feedback">
+                        {errors.endAt?.type === "validate" && (
+                          <>
+                            La date doit être supérieure ou égale à la date du
+                            jour.
+                          </>
+                        )}
                       </div>
                     </div>
                   </div>
                 </div>
-
-                <div className="col-xl-6 col-sm-12">
-                  <div className="mb-3">
-                    <label className="form-label" htmlFor="startAt">
-                      Début de l&apos;accès
-                    </label>
-                    <input
-                      id="startAt"
-                      type="date"
-                      className="form-control"
-                      {...register("startAt")}
-                    />
-                  </div>
-                </div>
-
-                <div className="col-xl-6 col-sm-12">
-                  <div className="mb-3">
-                    <label className="form-label" htmlFor="endAt">
-                      Fin de l&apos;accès
-                    </label>
-                    <input
-                      id="endAt"
-                      type="date"
-                      className="form-control"
-                      {...register("endAt")}
-                    />
-                  </div>
-                </div>
               </div>
-            </div>
-            <div className="card-footer text-end">
-              <button
-                type="submit"
-                className={clsx("btn btn-primary", isLoading && "btn-loading")}
-                disabled={isLoading}
-              >
-                Ajouter
-              </button>
+              <div className="card-footer text-end">
+                <button
+                  type="submit"
+                  className={clsx(
+                    "btn btn-primary",
+                    isLoading && "btn-loading",
+                  )}
+                  disabled={isLoading}
+                >
+                  Ajouter
+                </button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </form>
+      </form>
+
+      <AddUserModal lockId={lock.id} groups={groups} />
+    </>
   );
 };
 

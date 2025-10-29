@@ -30,7 +30,16 @@ const AddUserForm = ({ groups }) => {
   return (
     <form
       onSubmit={handleSubmit((data) =>
-        onSubmit(data, setIsLoading, setError, "users", router, "POST", null),
+        onSubmit(
+          data,
+          setIsLoading,
+          setError,
+          "users",
+          router,
+          "POST",
+          null,
+          "/dashboard/users",
+        ),
       )}
     >
       <div className="row row-cards">
@@ -73,6 +82,7 @@ const AddUserForm = ({ groups }) => {
                           value={optionsGroups.find(
                             (c) => c.value === field.value,
                           )}
+                          required
                         />
                       )}
                     />

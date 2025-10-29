@@ -38,6 +38,7 @@ const EditLockModal = ({ formProps }) => {
             router,
             "PUT",
             "close-modal-edit",
+            `/dashboard/locks/${formProps.lock.id}`,
           ),
         )}
       >

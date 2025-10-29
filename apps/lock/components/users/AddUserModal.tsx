@@ -4,36 +4,29 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import clsx from "clsx";
-import { IconEdit } from "@tabler/icons-react";
 import Select from "react-select";
 import { selectStyle } from "@/app/utils/ui/actions";
 import { onSubmit } from "@/app/utils/data/actions";
+import { IconUserPlus } from "@tabler/icons-react";
+import ErrorDismissable from "../ui/ErrorDismissable";
 
-const EditUserModal = ({ formProps }) => {
+const AddUserModal = ({ lockId, groups }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
 
-  const options = formProps.groups.map((group) => ({
-    value: group.id,
-    label: group.name,
-  }));
+  const router = useRouter();
 
   const {
     control,
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
-    defaultValues: {
-      id: formProps.user.id,
-      name: formProps.user.name,
-      email: formProps.user.email.includes("@fake.mail")
-        ? null
-        : formProps.user.email,
-      phoneNumber: formProps.user.phoneNumber,
-      groupId: formProps.user.groupId,
-    },
-  });
+  } = useForm();
+
+  const optionsGroups = groups.map((group) => ({
+    value: group.id,
+    label: group.name,
+  }));
 
   return (
     <form
@@ -41,22 +34,20 @@ const EditUserModal = ({ formProps }) => {
         onSubmit(
           data,
           setIsLoading,
-          null,
+          setError,
           "users",
           router,
-          "PUT",
-          `close-modal-edit-${formProps.user.id}`,
-          "/dashboard/users/",
+          "POST",
+          "close-modal-add-user",
+          `/dashboard/locks/${lockId}/authorizations/add`,
         ),
       )}
     >
-      <div className="modal" id={"modal-edit-" + formProps.user.id}>
+      <div className="modal" id="modal-add-user">
         <div className="modal-dialog modal-lg" role="document">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title">
-                &Eacute;diter l&apos;utilisateur {formProps.user.name}
-              </h5>
+              <h5 className="modal-title">Nouvel utilisateur</h5>
               <button
                 type="button"
                 className="btn-close"
@@ -65,6 +56,8 @@ const EditUserModal = ({ formProps }) => {
               ></button>
             </div>
             <div className="modal-body">
+              {error && <ErrorDismissable error={error} />}
+
               <div className="mb-3">
                 <label className="form-label required" htmlFor="name">
                   Nom complet
@@ -75,6 +68,25 @@ const EditUserModal = ({ formProps }) => {
                   className="form-control"
                   placeholder="John Doe"
                   {...register("name", { required: true })}
+                />
+              </div>
+
+              <div className="mb-3">
+                <label className="form-label required">Groupe</label>
+                <Controller
+                  control={control}
+                  defaultValue={groups.id}
+                  name="groupId"
+                  render={({ field }) => (
+                    <Select
+                      onChange={(val) => field.onChange(val.value)}
+                      options={optionsGroups}
+                      placeholder="Sélectionner"
+                      styles={selectStyle}
+                      value={optionsGroups.find((c) => c.value === field.value)}
+                      required
+                    />
+                  )}
                 />
               </div>
 
@@ -123,30 +135,12 @@ const EditUserModal = ({ formProps }) => {
                   )}
                 </div>
               </div>
-
-              <div className="mb-3">
-                <label className="form-label required">Groupe</label>
-                <Controller
-                  control={control}
-                  defaultValue={formProps.user.groupId}
-                  name="groupId"
-                  render={({ field }) => (
-                    <Select
-                      onChange={(val) => field.onChange(val.value)}
-                      options={options}
-                      placeholder="Sélectionner"
-                      styles={selectStyle}
-                      value={options.find((c) => c.value === field.value)}
-                    />
-                  )}
-                />
-              </div>
             </div>
             <div className="modal-footer">
               <a
                 href="#"
                 className="btn btn-link link-secondary"
-                id={"close-modal-edit-" + formProps.user.id}
+                id="close-modal-add-user"
                 data-bs-dismiss="modal"
               >
                 Annuler
@@ -159,8 +153,8 @@ const EditUserModal = ({ formProps }) => {
                 )}
                 disabled={isLoading}
               >
-                <IconEdit className="icon" />
-                Sauvegarder
+                <IconUserPlus className="icon" />
+                Ajouter
               </button>
             </div>
           </div>
@@ -170,4 +164,4 @@ const EditUserModal = ({ formProps }) => {
   );
 };
 
-export default EditUserModal;
+export default AddUserModal;

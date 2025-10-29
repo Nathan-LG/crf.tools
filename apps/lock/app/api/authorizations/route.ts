@@ -4,33 +4,46 @@ import { NextRequest, NextResponse } from "next/server";
 import { z, ZodError } from "zod";
 
 const schema = z.object({
-  name: z.string().trim().min(1, "Le nom est requis"),
-  nukiId: z.string().trim().min(1, "Le Nuki ID est requis"),
-  nukiApiKey: z.string().trim().optional(),
-  phoneNumber: z.string().optional(),
+  lockId: z.string().trim().min(1, "L'ID de la serrure est requis"),
+  userId: z.string().trim().min(1, "L'ID de l'utilisateur est requis"),
+  startAt: z.string().trim().optional(),
+  endAt: z.string().trim().optional(),
 });
 
-async function securePOST(req: NextRequest) {
+async function securePOST(req: NextRequest, params: any, session: any) {
   const formData = await req.formData();
 
   const data = Object.fromEntries(formData);
   const parsed = schema.safeParse(data);
 
   if (parsed.success) {
-    const lock = await prisma.lock.create({
+    const authorization = await prisma.authorization.create({
       data: {
-        name: parsed.data.name,
-        nukiId: parsed.data.nukiId,
-        nukiApiKey: parsed.data.nukiApiKey ? parsed.data.nukiApiKey : null,
-        phoneNumber: parsed.data.phoneNumber ? parsed.data.phoneNumber : null,
+        lock: {
+          connect: {
+            id: Number(parsed.data.lockId),
+          },
+        },
+        user: {
+          connect: {
+            id: parsed.data.userId,
+          },
+        },
+        createdBy: {
+          connect: {
+            id: session.user.id,
+          },
+        },
+        startAt: parsed.data.startAt ? new Date(parsed.data.startAt) : null,
+        endAt: parsed.data.endAt ? new Date(parsed.data.endAt) : null,
       },
     });
 
     return new NextResponse(
       JSON.stringify({
         success: true,
-        message: "Lock added successfully",
-        lock,
+        message: "Authorization added successfully",
+        authorization,
       }),
       {
         status: 201,

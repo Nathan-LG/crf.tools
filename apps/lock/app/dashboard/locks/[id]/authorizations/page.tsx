@@ -4,21 +4,21 @@ import { prisma } from "@repo/db";
 import { generateMetadataCustom } from "@/app/utils/data/actions";
 import { redirect } from "next/navigation";
 import {
-  IconEdit,
   IconInfinity,
   IconMoodEmpty,
   IconPlus,
-  IconSearch,
   IconTrash,
 } from "@tabler/icons-react";
 import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
 import Pagination from "@/components/ui/Pagination";
 import Link from "next/link";
+import SearchInput from "@/components/ui/SearchInput";
+import DeleteModal from "@/components/ui/DeleteModal";
 
 // Metadata
 
-type Props = Promise<{ id: string; page: null | string }>;
+type Props = Promise<{ id: string }>;
 
 export async function generateMetadata(props: {
   params: Props;
@@ -36,9 +36,16 @@ export async function generateMetadata(props: {
 const AUTHORIZATIONS_PER_PAGE = 30;
 const now = Date.now();
 
-const LockAuthorization = async (props: { params: Props }) => {
+const LockAuthorization = async (props: {
+  params: Props;
+  searchParams: Promise<{ [id: string]: string | undefined }>;
+}) => {
   const params = await props.params;
-  const currentPage = Number(params?.page) || 1;
+  const urlParams = await props.searchParams;
+
+  const currentPage = Number(urlParams?.page) || 1;
+  const search = urlParams?.search || "";
+
   let totalPages;
 
   // Fetch lock or redirect to 404
@@ -74,6 +81,7 @@ const LockAuthorization = async (props: { params: Props }) => {
         startAt: true,
         endAt: true,
         createdAt: true,
+        active: true,
         user: {
           select: {
             id: true,
@@ -103,6 +111,12 @@ const LockAuthorization = async (props: { params: Props }) => {
       },
       where: {
         lockId: lock.id,
+        user: {
+          name: {
+            contains: search,
+            mode: "insensitive",
+          },
+        },
       },
       skip: (currentPage - 1) * AUTHORIZATIONS_PER_PAGE,
       take: AUTHORIZATIONS_PER_PAGE,
@@ -149,17 +163,7 @@ const LockAuthorization = async (props: { params: Props }) => {
               </div>
               <div className="col-md-auto col-sm-12">
                 <div className="ms-auto d-flex flex-wrap btn-list">
-                  <div className="input-group input-group-flat w-auto">
-                    <span className="input-group-text">
-                      <IconSearch className="icon icon-1" />
-                    </span>
-                    <input
-                      id="advanced-table-search"
-                      type="text"
-                      className="form-control"
-                      autoComplete="off"
-                    />
-                  </div>
+                  <SearchInput />
 
                   <Link
                     href={`/dashboard/locks/${lock.id}/authorizations/add`}
@@ -207,13 +211,14 @@ const LockAuthorization = async (props: { params: Props }) => {
                   ) : (
                     <></>
                   )}
+
                   {authorizations.map((authorization) => {
                     const realStart = authorization.startAt
                       ? authorization.startAt
                       : new Date(0);
                     const realEnd = authorization.endAt
                       ? authorization.endAt
-                      : new Date(Math.max());
+                      : new Date(2099, 12, 31);
 
                     let lastTime;
 
@@ -223,7 +228,7 @@ const LockAuthorization = async (props: { params: Props }) => {
                           locale: fr,
                         }) || "un moment";
                     } catch {
-                      lastTime = "un moment";
+                      lastTime = "Jamais";
                     }
 
                     return (
@@ -241,21 +246,29 @@ const LockAuthorization = async (props: { params: Props }) => {
                         </td>
                         <td>
                           {authorization.startAt
-                            ? authorization.startAt
-                            : authorization.createdAt}
+                            ? authorization.startAt.toLocaleDateString("fr-FR")
+                            : authorization.createdAt.toLocaleDateString(
+                                "fr-FR",
+                              )}
                         </td>
                         <td>
                           {authorization.endAt ? (
-                            authorization.endAt
+                            authorization.endAt.toLocaleDateString("fr-FR")
                           ) : (
                             <IconInfinity className="icon" />
                           )}
                         </td>
                         <td>
                           {now > realStart && now < realEnd ? (
-                            <span className="badge bg-success-lt">Actif</span>
+                            authorization.active ? (
+                              <span className="badge bg-success-lt">Actif</span>
+                            ) : (
+                              <span className="badge bg-error-lt">
+                                Désactivé
+                              </span>
+                            )
                           ) : (
-                            <span className="badge bg-error-lt">Inactif</span>
+                            <span className="badge bg-error-lt">Expiré</span>
                           )}
                         </td>
                         <td>{authorization.createdBy.name}</td>
@@ -263,12 +276,13 @@ const LockAuthorization = async (props: { params: Props }) => {
                         <td>{lastTime}</td>
                         <td>
                           <div className="btn-actions">
-                            <a className="btn btn-action">
-                              <IconEdit className="icon icon-1" />
-                            </a>
-                            <a className="btn btn-action">
+                            <button
+                              className="btn btn-action"
+                              data-bs-toggle="modal"
+                              data-bs-target={`#modal-delete-${authorization.id}`}
+                            >
                               <IconTrash className="icon icon-1" />
-                            </a>
+                            </button>
                           </div>
                         </td>
                       </tr>
@@ -286,7 +300,20 @@ const LockAuthorization = async (props: { params: Props }) => {
             </div>
           </div>
         </div>
-      </div>{" "}
+      </div>
+      {authorizations.map((authorization) => {
+        return (
+          <>
+            <DeleteModal
+              id={authorization.id}
+              alert="Cela supprimera ou désactivera définitivement l'autorisation."
+              message="Autorisation supprimée ou désactivée avec succès"
+              url="/api/authorizations/"
+              key={authorization.id}
+            />
+          </>
+        );
+      })}
     </ContentLayout>
   );
 };

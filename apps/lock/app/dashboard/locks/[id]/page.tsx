@@ -37,6 +37,7 @@ const Lock = async (props: { params: Props }) => {
   // Fetch lock or redirect to 404
 
   let lock;
+  let countAuthorizations;
 
   try {
     lock = await prisma.lock.findUniqueOrThrow({
@@ -65,12 +66,57 @@ const Lock = async (props: { params: Props }) => {
           },
           take: 20,
         },
-        _count: {
-          select: { authorizations: true },
-        },
       },
       where: {
         id: Number(params.id),
+      },
+    });
+
+    countAuthorizations = await prisma.authorization.count({
+      where: {
+        lockId: lock.id,
+        OR: [
+          {
+            AND: [
+              {
+                startAt: { lte: new Date() },
+              },
+              {
+                endAt: { gte: new Date() },
+              },
+            ],
+          },
+          {
+            AND: [
+              {
+                startAt: { lte: new Date() },
+              },
+              {
+                endAt: null,
+              },
+            ],
+          },
+          {
+            AND: [
+              {
+                startAt: null,
+              },
+              {
+                endAt: { gte: new Date() },
+              },
+            ],
+          },
+          {
+            AND: [
+              {
+                startAt: null,
+              },
+              {
+                endAt: null,
+              },
+            ],
+          },
+        ],
       },
     });
   } catch {
@@ -265,8 +311,10 @@ const Lock = async (props: { params: Props }) => {
             <div className="col-md-4">
               <div className="card">
                 <div className="card-body">
-                  <div className="subheader">Personnes ayant accès</div>
-                  <div className="h3 m-0">{lock._count.authorizations}</div>
+                  <div className="subheader">
+                    Personnes ayant accès actuellement
+                  </div>
+                  <div className="h3 m-0">{countAuthorizations}</div>
                 </div>
               </div>
             </div>

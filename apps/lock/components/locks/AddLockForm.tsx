@@ -22,7 +22,16 @@ const AddLockForm = () => {
   return (
     <form
       onSubmit={handleSubmit((data) =>
-        onSubmit(data, setIsLoading, setError, "locks", router, "POST", null),
+        onSubmit(
+          data,
+          setIsLoading,
+          setError,
+          "locks",
+          router,
+          "POST",
+          null,
+          "/dashboard/locks",
+        ),
       )}
     >
       <div className="row row-cards">
